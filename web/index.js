@@ -10,6 +10,7 @@ import GDPRWebhookHandlers from "./gdpr.js";
 import { compressRoute } from './routes/compressRoute.js'
 import { createUserRoute } from './routes/createUserRoute.js'
 import { getUserImagesRoute } from './routes/getUserImagesRoute.js'
+import { getUserFreeCountRoute } from './routes/getUserFreeCountRoute.js'
 import { removeRoute } from './routes/removeRoute.js'
 import { uploadImageRoute } from './routes/uploadImageRoute.js'
 
@@ -43,6 +44,7 @@ app.use(express.json());
 
 app.get("/api/compress", compressRoute);
 app.get("/api/create-user", createUserRoute);
+app.get("/api/get-user-free-count", getUserFreeCountRoute);
 app.get("/api/get-user-images", getUserImagesRoute);
 app.get("/api/remove-bg", removeRoute);
 app.get("/api/upload", uploadImageRoute);

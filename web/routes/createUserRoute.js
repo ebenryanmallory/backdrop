@@ -31,6 +31,13 @@ export const createUserRoute = async (_req, res) => {
     }
   }
 
+  // Check if user_id already exists
+  const existingUser = await db.get("SELECT user_id FROM users WHERE user_id = ?", user.user_id);
+
+  if (existingUser) {
+    console.log("User ID already exists.");
+    return res.send(user.user_id);
+  }
   // Insert the new user into the database
   await db.run(`INSERT INTO users(user_id, shop, created_at)
           VALUES(?,?,?)`, [user.user_id, user.shop, user.created_at], function(err) {

@@ -7,8 +7,6 @@ import {
   Text,
   SkeletonDisplayText,
   SkeletonBodyText,
-  Bleed,
-  Divider,
   Badge
 } from "@shopify/polaris";
 import {
@@ -21,7 +19,9 @@ import { useState, useEffect } from 'react';
 
 import { EmptyStateCard } from "../components/EmptyStateCard";
 import { UserImagesCard } from "../components/UserImagesCard";
+import { PricingCard } from "../components/PricingCard";
 import { BackdropSVG } from "../components/BackdropSVG";
+import { SkeletonLabel } from "../components/SkeletonLabel";
 
 export default function HomePage() {
   
@@ -52,18 +52,6 @@ export default function HomePage() {
       setIsLoading(false);
     }
   }
-
-  const SkeletonLabel = (props) => {
-    return (
-      <Box
-        background="surface-neutral"
-        minHeight="1rem"
-        maxWidth="5rem"
-        borderRadius="base"
-        {...props}
-      />
-    );
-  };
   
   return (
     <Page
@@ -113,50 +101,19 @@ export default function HomePage() {
               <Columns columns={{ xs: 1, md: 2 }}>
                 <Box border="divider" borderRadius="base" minHeight="10rem">
                   <Text size="small">Quickstart Guide</Text>
+                  <Text size="small">See image demo</Text>
                 </Box>
                 <Box border="divider" borderRadius="base" minHeight="10rem">
-                <Text size="small">Documentation + Videos</Text>
-                <Text size="small">Bulk processing</Text>
+                  <Text size="small">Documentation + Videos</Text>
+                  <Text size="small">Limitations and recommendations</Text>
+                  <Text size="small">Bulk processing</Text>
                 </Box>
               </Columns>
             </AlphaStack>
           </AlphaCard>
         </AlphaStack>
         <AlphaStack gap={{ xs: "4", md: "2" }}>
-          <AlphaCard roundedAbove="sm">
-            <AlphaStack gap="4">
-              { isLoading &&
-              <SkeletonDisplayText size="small" />
-              }
-              { !isLoading &&
-                <>
-                  <Text>Pricing</Text>
-                </>
-              }
-              <Box border="divider" borderRadius="base" minHeight="2rem" />
-              <Box>
-                <Bleed marginInline={{ xs: 4, sm: 5 }}>
-                  <Divider borderStyle="divider" />
-                </Bleed>
-              </Box>
-              { isLoading &&
-                <SkeletonLabel />
-              }
-              { !isLoading &&
-                <>
-                  <Text>You have used 0 of 5 free images.</Text>
-                  <Text>$10 plan - up to 100 images / $20 - up to 250 images</Text>
-                </>
-              }
-              <Divider borderStyle="divider" />
-              <SkeletonBodyText />
-              { !isLoading &&
-                <>
-                  <Text>Manage subscription</Text>
-                </>
-              }
-            </AlphaStack>
-          </AlphaCard>
+          <PricingCard />
           <AlphaCard roundedAbove="sm">
             <AlphaStack gap="4">
               <SkeletonLabel />

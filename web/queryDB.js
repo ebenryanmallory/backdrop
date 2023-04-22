@@ -24,7 +24,7 @@ function createUsersTable() {
   
   function addField() {
     db = db ?? new sqlite3.Database(DB_PATH);
-    db.run('ALTER TABLE user_images ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP', [], (err) => {
+    db.run('ALTER TABLE users ADD COLUMN plan_type TEXT DEFAULT \'free\' CHECK(plan_type IN (\'free\', \'basic\', \'professional\'));', (err) => {
       if (err) {
         console.error(err);
       } else {
@@ -33,9 +33,19 @@ function createUsersTable() {
     });
     db.close();
   }
-  
-  // addField();
 
+  function deleteField() {
+    db = db ?? new sqlite3.Database(DB_PATH);
+    db.run('ALTER TABLE users DROP COLUMN name', [], (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Deleted');
+      }
+    });
+    db.close();
+  }
+  
   // createUsersTable();
 
 function printTableNames() {
@@ -66,7 +76,21 @@ function printUserIds() {
   db.close();
 }
 
-// printUserIds();
+function printUserInfo() {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  db.all('SELECT id, user_id, plan_type, free_count FROM users;', (err, rows) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log('Users:');
+      rows.forEach((row) => {
+        console.log(`ID: ${row.id}, User ID: ${row.user_id}, Plan Type: ${row.plan_type}, Free Count: ${row.free_count}`);
+      });
+    }
+  });
+  db.close();
+}
+
 function createUserImagesTable() {
   db = db ?? new sqlite3.Database(DB_PATH);
   db.run(`CREATE TABLE user_images (
@@ -84,5 +108,44 @@ function createUserImagesTable() {
   });
   db.close();
 }
+
+function printUsers() {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  db.all('PRAGMA table_info(users);', (err, rows) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      const columnNames = rows.map(row => row.name);
+      console.log(columnNames);
+    }
+  });
+  db.close();
+}
+
+async function getCount(userId) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = 'SELECT * FROM users WHERE user_id = ?';
+  db.get(sql, [userId], (err, row) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      const { id, free_count, plan_type } = row;
+      console.log(id)
+      const responseObject = {
+        plan: plan_type,
+        free: free_count
+      };
+      console.log(responseObject)
+    }
+  });
+  db.close();
+}
+
 // createUserImagesTable();
-printTableNames();
+// printTableNames();
+// addField();
+// printUsers()
+// printUserIds();
+// deleteField()
+// printUserInfo()
+getCount('offline_motionstoryline-dev.myshopify.com')
