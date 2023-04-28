@@ -1,14 +1,5 @@
 import {
-    Box,
-    AlphaCard,
-    AlphaStack,
-    Thumbnail,
-    Text,
-    Link,
-    DropZone,
-    List,
-    Banner,
-    Button
+    Box
   } from "@shopify/polaris"; 
   
 export const SkeletonLabel = (props) => {

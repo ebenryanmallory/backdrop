@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   AlphaCard,
-  AlphaStack,
+  VerticalStack,
   Box,
   SkeletonDisplayText,
   SkeletonBodyText,
@@ -32,7 +32,7 @@ export function PricingCard() {
   return (
     <>
       <AlphaCard roundedAbove="sm">
-        <AlphaStack gap="4">
+        <VerticalStack gap="4">
           { isLoading &&
           <SkeletonDisplayText size="small" />
           }
@@ -66,7 +66,7 @@ export function PricingCard() {
               <Text>Manage subscription</Text>
             </>
           }
-        </AlphaStack>
+        </VerticalStack>
       </AlphaCard>
     </>
   );

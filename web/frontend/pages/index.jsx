@@ -1,32 +1,37 @@
 import {
   Box,
   Page,
-  Columns,
-  AlphaStack,
+  HorizontalGrid,
+  VerticalStack,
   AlphaCard,
   Text,
   SkeletonDisplayText,
   SkeletonBodyText,
-  Badge
+  Badge,
 } from "@shopify/polaris";
 import {
   SettingsMinor,
   BalanceMajor
 } from '@shopify/polaris-icons';
+import { useNavigate } from '@shopify/app-bridge-react';
+
 import { useAuthenticatedFetch } from "../hooks";
 
 import { useState, useEffect } from 'react';
 
 import { EmptyStateCard } from "../components/EmptyStateCard";
+import { PlanModal } from "../components/Modals/PlanModal";
 import { UserImagesCard } from "../components/UserImagesCard";
 import { PricingCard } from "../components/PricingCard";
-import { BackdropSVG } from "../components/BackdropSVG";
+import { BackdropSVG } from "../assets/BackdropSVG";
 import { SkeletonLabel } from "../components/SkeletonLabel";
 
 export default function HomePage() {
   
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
+  const [planModalOpen, setPlanModalOpen] = useState(false);
   const fetch = useAuthenticatedFetch();
 
   useEffect(() => {
@@ -62,26 +67,26 @@ export default function HomePage() {
           content: "Backdrop Settings",
           icon: SettingsMinor,
           accessibilityLabel: "Secondary action label",
-          onAction: () => alert("Go to settings"),
+          onAction: () => { navigate('/settings') }
         },
         {
           content: "Plan",
           icon: BalanceMajor,
           accessibilityLabel: "Secondary action label",
-          onAction: () => alert("Account modal"),
+          onAction: () => setPlanModalOpen(true),
         }
       ]}
     >
-      <Columns columns={{ xs: 1, md: "2fr 1fr" }} gap="4">
-        <AlphaStack gap="4">
+      <HorizontalGrid columns={{ xs: 1, md: "2fr 1fr" }} gap="4">
+        <VerticalStack gap="4">
           { isLoading &&
             <AlphaCard roundedAbove="sm">
-              <AlphaStack gap="4">
+              <VerticalStack gap="4">
                 <SkeletonLabel />
                 <Box border="divider" borderRadius="base" minHeight="2rem" />
                 <SkeletonLabel maxWidth="8rem" />
                 <Box border="divider" borderRadius="base" minHeight="20rem" />
-              </AlphaStack>
+              </VerticalStack>
             </AlphaCard>
           }
           { !isLoading && images.length === 0 &&
@@ -91,14 +96,14 @@ export default function HomePage() {
               <UserImagesCard images={images} />
           }
           <AlphaCard roundedAbove="sm">
-            <AlphaStack gap="4">
+            <VerticalStack gap="4">
               { isLoading &&
                 <SkeletonDisplayText size="small" />
               }
               { !isLoading &&
                 <Text size="small">About</Text>
               }
-              <Columns columns={{ xs: 1, md: 2 }}>
+              <HorizontalGrid columns={{ xs: 1, md: 2 }}>
                 <Box border="divider" borderRadius="base" minHeight="10rem">
                   <Text size="small">Quickstart Guide</Text>
                   <Text size="small">See image demo</Text>
@@ -108,14 +113,14 @@ export default function HomePage() {
                   <Text size="small">Limitations and recommendations</Text>
                   <Text size="small">Bulk processing</Text>
                 </Box>
-              </Columns>
-            </AlphaStack>
+              </HorizontalGrid>
+            </VerticalStack>
           </AlphaCard>
-        </AlphaStack>
-        <AlphaStack gap={{ xs: "4", md: "2" }}>
+        </VerticalStack>
+        <VerticalStack gap={{ xs: "4", md: "2" }}>
           <PricingCard />
           <AlphaCard roundedAbove="sm">
-            <AlphaStack gap="4">
+            <VerticalStack gap="4">
               <SkeletonLabel />
               <Text>Contact Support</Text>
               <Box border="divider" borderRadius="base" minHeight="2rem" />
@@ -123,10 +128,13 @@ export default function HomePage() {
               <Box border="divider" borderRadius="base" minHeight="2rem" />
               <SkeletonLabel />
               <SkeletonBodyText />
-            </AlphaStack>
+            </VerticalStack>
           </AlphaCard>
-        </AlphaStack>
-      </Columns>
+        </VerticalStack>
+      </HorizontalGrid>
+      { planModalOpen &&
+        <PlanModal />
+      }
     </Page>
   );
 }
