@@ -4,6 +4,20 @@ import fs from 'fs';
 import path from 'path'
 
 export const removeRoute = async (_req, res) => {
+
+	const buffer = _req.files[0].buffer;
+
+	const session = res.locals.shopify.session;
+	const { id, shop } = session;
+	const checkForShop = `${process.cwd()}/images/${shop}`;
+	if (!fs.existsSync(checkForShop)) {
+	  fs.mkdirSync(checkForShop);
+	}
+	const filePath = `${process.cwd()}/images/${shop}/${_req.body.filename}`;
+	fs.writeFileSync(filePath, buffer);
+
+	return res.send(_req.body.filename);
+
 	const inputPath = `${process.cwd()}/app-icon.jpeg`;
 	const formData = new FormData();
 	formData.append('size', 'auto');

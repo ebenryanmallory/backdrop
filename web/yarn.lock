@@ -59,17 +59,17 @@
     "mkdirp" "^1.0.4"
     "rimraf" "^3.0.2"
 
-"@shopify/network@^1.5.1":
-  "integrity" "sha512-V+//Et386LnYdtNhQ3e33AKYfU25XEt8H5XYeMqPvJZpVvC9Z1lHKQMpmM/zq13VXjPUjt9/sNxHxMP3I6cbJg=="
-  "resolved" "https://registry.npmjs.org/@shopify/network/-/network-1.6.4.tgz"
-  "version" "1.6.4"
+"@shopify/network@^3.2.1":
+  "integrity" "sha512-Ih/6Oe80dynlUsRfEqptWBfsySCqI0rjQvPAjS8HuWeK9nZ+TvmYScfxjucKXZ2deXwAClnU6SMdh3/B1lMMog=="
+  "resolved" "https://registry.npmjs.org/@shopify/network/-/network-3.2.1.tgz"
+  "version" "3.2.1"
 
-"@shopify/shopify-api@^6.2.0":
-  "integrity" "sha512-f1IexEB7ijeMw0xG1taaO0Z0jQfD/8CVqjecSbVqlSypjBTCliCQ/Wv7yHxsmJbIMjIpRLcOHHbUy5ed+CEVvg=="
-  "resolved" "https://registry.npmjs.org/@shopify/shopify-api/-/shopify-api-6.2.0.tgz"
-  "version" "6.2.0"
+"@shopify/shopify-api@^7.0.0":
+  "integrity" "sha512-i5Tp5RuUBX2Ajc4aGNoBZRp1VhhkNoRZb4TiqiyXN+S7dyRHnA8M22SwAshArtvV8k2bsj66dsOIN6jiqI6yPw=="
+  "resolved" "https://registry.npmjs.org/@shopify/shopify-api/-/shopify-api-7.0.0.tgz"
+  "version" "7.0.0"
   dependencies:
-    "@shopify/network" "^1.5.1"
+    "@shopify/network" "^3.2.1"
     "@types/node-fetch" "^2.5.7"
     "@types/supertest" "^2.0.10"
     "jose" "^4.9.1"
@@ -78,44 +78,44 @@
     "tslib" "^2.0.3"
     "uuid" "^9.0.0"
 
-"@shopify/shopify-app-express@^1.1.0":
-  "integrity" "sha512-MjMXkOlzOwVCygkxXpP1LZ9o25cJnKp4SIDgEEjPM6Fy2NpO+T5luCO0VCI2/cuPwkTLbl4C1GD8oT8346/NOQ=="
-  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-express/-/shopify-app-express-1.2.2.tgz"
-  "version" "1.2.2"
+"@shopify/shopify-app-express@^2.1.0":
+  "integrity" "sha512-vdy9ZFbIpi+yEO+T5Mu8vIIk4SN+66PLrw3xXG898yA6Nh6G7iKNKJIfuaECpsCLmBA7ZeUD0/fykLyewXXslA=="
+  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-express/-/shopify-app-express-2.1.0.tgz"
+  "version" "2.1.0"
   dependencies:
-    "@shopify/shopify-api" "^6.2.0"
-    "@shopify/shopify-app-session-storage" "^1.1.1"
-    "@shopify/shopify-app-session-storage-memory" "^1.0.4"
+    "@shopify/shopify-api" "^7.0.0"
+    "@shopify/shopify-app-session-storage" "^1.1.2"
+    "@shopify/shopify-app-session-storage-memory" "^1.0.5"
     "cookie-parser" "^1.4.6"
     "express" "^4.18.1"
-    "semver" "^7.3.8"
+    "semver" "^7.4.0"
     "tslib" "^2.4.0"
 
-"@shopify/shopify-app-session-storage-memory@^1.0.4":
-  "integrity" "sha512-uOWyYgfSeAk+7+RRW1QVgjuQkKX2STeTER/+tp3xAr4kY1A/2DojURZPT8FquWchK6yEhIiYjoWoQlPIl+DExA=="
-  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-session-storage-memory/-/shopify-app-session-storage-memory-1.0.4.tgz"
-  "version" "1.0.4"
+"@shopify/shopify-app-session-storage-memory@^1.0.5":
+  "integrity" "sha512-jb74BjqCdMd1khYs1dFIFkegY84eFXT7ppFAPLOr+ITRrGJFSYiKVNjpsqE/cdEKa8vJFmW2n1NLFHVfK+8r1w=="
+  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-session-storage-memory/-/shopify-app-session-storage-memory-1.0.5.tgz"
+  "version" "1.0.5"
   dependencies:
-    "@shopify/shopify-api" "^6.2.0"
-    "@shopify/shopify-app-session-storage" "^1.1.1"
+    "@shopify/shopify-api" "^7.0.0"
+    "@shopify/shopify-app-session-storage" "^1.1.2"
     "tslib" "^2.4.0"
 
-"@shopify/shopify-app-session-storage-sqlite@^1.0.0":
-  "integrity" "sha512-4wGgw8iJGw4bUTVrqQxcgJ8SkKQf57r13k5Yit5u7cPX+0PfrJjnHyjxEj9n72dfrXlvwnP2RbhRba4bT5KRkg=="
-  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-session-storage-sqlite/-/shopify-app-session-storage-sqlite-1.2.0.tgz"
-  "version" "1.2.0"
+"@shopify/shopify-app-session-storage-sqlite@^1.2.1":
+  "integrity" "sha512-EGVDEWLeyHg4l3TTndZGodsoMUMTw3tSlCzBRXcL/w20d2KMzK9jZpzDoOP28Du0ZYiLBdX9/xi12JZJa3HI9Q=="
+  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-session-storage-sqlite/-/shopify-app-session-storage-sqlite-1.2.1.tgz"
+  "version" "1.2.1"
   dependencies:
-    "@shopify/shopify-api" "^6.2.0"
-    "@shopify/shopify-app-session-storage" "^1.1.1"
-    "sqlite3" "^5.1.4"
+    "@shopify/shopify-api" "^7.0.0"
+    "@shopify/shopify-app-session-storage" "^1.1.2"
+    "sqlite3" "^5.1.6"
     "tslib" "^2.4.0"
 
-"@shopify/shopify-app-session-storage@^1.1.1":
-  "integrity" "sha512-1OK51Fi/8pzdbUrlk6IdoyW0RieGo+p0bv4wX6U5RQCyB5cugHPEYn7yi/O4UzMJZq4xIQWyOb6wiE5Z8LpLvw=="
-  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-session-storage/-/shopify-app-session-storage-1.1.1.tgz"
-  "version" "1.1.1"
+"@shopify/shopify-app-session-storage@^1.1.2":
+  "integrity" "sha512-VCpWLRFSZMT8QdO17Hl9W9GGWfpmmVC1WBGtiICP9s0Ilc/JSvPREnC29hflGwC/2mq0LoBuIk2mUOMJ57fHKA=="
+  "resolved" "https://registry.npmjs.org/@shopify/shopify-app-session-storage/-/shopify-app-session-storage-1.1.2.tgz"
+  "version" "1.1.2"
   dependencies:
-    "@shopify/shopify-api" "^6.2.0"
+    "@shopify/shopify-api" "^7.0.0"
     "tslib" "^2.4.0"
 
 "@sindresorhus/is@^0.7.0":
@@ -152,14 +152,14 @@
     "form-data" "^3.0.0"
 
 "@types/node@*":
-  "integrity" "sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-18.15.11.tgz"
-  "version" "18.15.11"
+  "integrity" "sha512-OPs5WnnT1xkCBiuQrZA4+YAV4HEJejmHneyraIaxsbev5yCEr6KMwINNFP9wQeFIw8FWcoTqF3vQsa5CDaI+8Q=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-18.16.3.tgz"
+  "version" "18.16.3"
 
 "@types/superagent@*":
-  "integrity" "sha512-tLfnlJf6A5mB6ddqF159GqcDizfzbMUB1/DeT59/wBNqzRTNNKsaw79A/1TZ84X+f/EwWH8FeuSkjlCLyqS/zQ=="
-  "resolved" "https://registry.npmjs.org/@types/superagent/-/superagent-4.1.16.tgz"
-  "version" "4.1.16"
+  "integrity" "sha512-FFK/rRjNy24U6J1BvQkaNWu2ohOIF/kxRQXRsbT141YQODcOcZjzlcc4DGdI2SkTa0rhmF+X14zu6ICjCGIg+w=="
+  "resolved" "https://registry.npmjs.org/@types/superagent/-/superagent-4.1.17.tgz"
+  "version" "4.1.17"
   dependencies:
     "@types/cookiejar" "*"
     "@types/node" "*"
@@ -227,6 +227,11 @@
   dependencies:
     "normalize-path" "^3.0.0"
     "picomatch" "^2.0.4"
+
+"append-field@^1.0.0":
+  "integrity" "sha512-klpgFSWLW1ZEs8svjfb7g4qWY0YS5imI82dTg+QahUvJ8YqAY0P10Uk8tTyh9ZGuYEZEMaeJYCF5BFuX552hsw=="
+  "resolved" "https://registry.npmjs.org/append-field/-/append-field-1.0.0.tgz"
+  "version" "1.0.0"
 
 "aproba@^1.0.3 || ^2.0.0":
   "integrity" "sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ=="
@@ -427,6 +432,11 @@
   "resolved" "https://registry.npmjs.org/buffer-fill/-/buffer-fill-1.0.0.tgz"
   "version" "1.0.0"
 
+"buffer-from@^1.0.0":
+  "integrity" "sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ=="
+  "resolved" "https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.2.tgz"
+  "version" "1.1.2"
+
 "buffer@^5.2.1":
   "integrity" "sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ=="
   "resolved" "https://registry.npmjs.org/buffer/-/buffer-5.7.1.tgz"
@@ -434,6 +444,13 @@
   dependencies:
     "base64-js" "^1.3.1"
     "ieee754" "^1.1.13"
+
+"busboy@^1.0.0":
+  "integrity" "sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA=="
+  "resolved" "https://registry.npmjs.org/busboy/-/busboy-1.6.0.tgz"
+  "version" "1.6.0"
+  dependencies:
+    "streamsearch" "^1.1.0"
 
 "bytes@3.0.0":
   "integrity" "sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw=="
@@ -593,6 +610,16 @@
   "integrity" "sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg=="
   "resolved" "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
   "version" "0.0.1"
+
+"concat-stream@^1.5.2":
+  "integrity" "sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw=="
+  "resolved" "https://registry.npmjs.org/concat-stream/-/concat-stream-1.6.2.tgz"
+  "version" "1.6.2"
+  dependencies:
+    "buffer-from" "^1.0.0"
+    "inherits" "^2.0.3"
+    "readable-stream" "^2.2.2"
+    "typedarray" "^0.0.6"
 
 "config-chain@^1.1.11":
   "integrity" "sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ=="
@@ -1660,9 +1687,9 @@
     "is-object" "^1.0.1"
 
 "jose@^4.9.1":
-  "integrity" "sha512-MSJQC5vXco5Br38mzaQKiq9mwt7lwj2eXpgpRyQYNHYt2lq1PjkWa7DLXX0WVcQLE9HhMh3jPiufS7fhJf+CLQ=="
-  "resolved" "https://registry.npmjs.org/jose/-/jose-4.13.1.tgz"
-  "version" "4.13.1"
+  "integrity" "sha512-YPM9Q+dmsna4CGWNn5+oHFsuXJdxvKAOVoNjpe2nje3odSoX5Xz4s71rP50vM8uUKJyQtMnEGPmbVCVR+G4W5g=="
+  "resolved" "https://registry.npmjs.org/jose/-/jose-4.14.3.tgz"
+  "version" "4.14.3"
 
 "json-buffer@3.0.0":
   "integrity" "sha512-CuUqjv0FUZIdXkHPI8MezCnFCdaTAacej1TZYulLoAg1h/PhwkdXFN4V/gzY4g+fMBCOV2xF+rp7t2XD2ns/NQ=="
@@ -1828,6 +1855,11 @@
   dependencies:
     "brace-expansion" "^1.1.7"
 
+"minimist@^1.2.6":
+  "integrity" "sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA=="
+  "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.8.tgz"
+  "version" "1.2.8"
+
 "minipass-collect@^1.0.2":
   "integrity" "sha512-6T6lH0H8OG9kITm/Jm6tdooIbogG9e0tLgpY6mphXSm/A9u8Nq1ryBG+Qspiub9LjWlBPsPS3tWQ/Botq4FdxA=="
   "resolved" "https://registry.npmjs.org/minipass-collect/-/minipass-collect-1.0.2.tgz"
@@ -1887,6 +1919,13 @@
     "minipass" "^3.0.0"
     "yallist" "^4.0.0"
 
+"mkdirp@^0.5.4":
+  "integrity" "sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw=="
+  "resolved" "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.6.tgz"
+  "version" "0.5.6"
+  dependencies:
+    "minimist" "^1.2.6"
+
 "mkdirp@^1.0.3", "mkdirp@^1.0.4":
   "integrity" "sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw=="
   "resolved" "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
@@ -1924,6 +1963,19 @@
   "integrity" "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
   "version" "2.1.3"
+
+"multer@^1.4.5-lts.1":
+  "integrity" "sha512-ywPWvcDMeH+z9gQq5qYHCCy+ethsk4goepZ45GLD63fOu0YcNecQxi64nDs3qluZB+murG3/D4dJ7+dGctcCQQ=="
+  "resolved" "https://registry.npmjs.org/multer/-/multer-1.4.5-lts.1.tgz"
+  "version" "1.4.5-lts.1"
+  dependencies:
+    "append-field" "^1.0.0"
+    "busboy" "^1.0.0"
+    "concat-stream" "^1.5.2"
+    "mkdirp" "^0.5.4"
+    "object-assign" "^4.1.1"
+    "type-is" "^1.6.4"
+    "xtend" "^4.0.0"
 
 "multimatch@^4.0.0":
   "integrity" "sha512-lDmx79y1z6i7RNx0ZGCPq1bzJ6ZoDDKbvh7jxr9SJcWLkShMzXrHbYVpTdnhNM5MXpDUxCQ4DgqVttVXlBgiBQ=="
@@ -2425,6 +2477,19 @@
     "string_decoder" "~1.1.1"
     "util-deprecate" "~1.0.1"
 
+"readable-stream@^2.2.2":
+  "integrity" "sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA=="
+  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.8.tgz"
+  "version" "2.3.8"
+  dependencies:
+    "core-util-is" "~1.0.0"
+    "inherits" "~2.0.3"
+    "isarray" "~1.0.0"
+    "process-nextick-args" "~2.0.0"
+    "safe-buffer" "~5.1.1"
+    "string_decoder" "~1.1.1"
+    "util-deprecate" "~1.0.1"
+
 "readable-stream@^2.3.0":
   "integrity" "sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA=="
   "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.8.tgz"
@@ -2574,10 +2639,10 @@
   "resolved" "https://registry.npmjs.org/semver/-/semver-6.3.0.tgz"
   "version" "6.3.0"
 
-"semver@^7.3.5", "semver@^7.3.8":
-  "integrity" "sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A=="
-  "resolved" "https://registry.npmjs.org/semver/-/semver-7.3.8.tgz"
-  "version" "7.3.8"
+"semver@^7.3.5", "semver@^7.3.8", "semver@^7.4.0":
+  "integrity" "sha512-+XC0AD/R7Q2mPSRuy2Id0+CGTZ98+8f+KvwirxOKIEyid+XSx6HbC63p+O4IndTHuX5Z+JxQ0TghCkO5Cg/2HA=="
+  "resolved" "https://registry.npmjs.org/semver/-/semver-7.5.0.tgz"
+  "version" "7.5.0"
   dependencies:
     "lru-cache" "^6.0.0"
 
@@ -2605,7 +2670,7 @@
     "range-parser" "~1.2.1"
     "statuses" "2.0.1"
 
-"serve-static@^1.14.1", "serve-static@1.15.0":
+"serve-static@^1.15.0", "serve-static@1.15.0":
   "integrity" "sha512-XGuRDNjXUijsUL0vl6nSD7cwURuzEgglbOaFuZM9g3kwDXOWVTck0jLzjPzGD+TazWbboZYu52/9/XPdUgne9g=="
   "resolved" "https://registry.npmjs.org/serve-static/-/serve-static-1.15.0.tgz"
   "version" "1.15.0"
@@ -2723,7 +2788,7 @@
   dependencies:
     "is-plain-obj" "^1.0.0"
 
-"sqlite3@^5.1.4":
+"sqlite3@^5.1.6":
   "integrity" "sha512-olYkWoKFVNSSSQNvxVUfjiVbz3YtBwTJj+mfV5zpHmqW3sELx2Cf4QCdirMelhM5Zh+KDVaKgQHqCxrqiWHybw=="
   "resolved" "https://registry.npmjs.org/sqlite3/-/sqlite3-5.1.6.tgz"
   "version" "5.1.6"
@@ -2745,6 +2810,11 @@
   "integrity" "sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ=="
   "resolved" "https://registry.npmjs.org/statuses/-/statuses-2.0.1.tgz"
   "version" "2.0.1"
+
+"streamsearch@^1.1.0":
+  "integrity" "sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg=="
+  "resolved" "https://registry.npmjs.org/streamsearch/-/streamsearch-1.1.0.tgz"
+  "version" "1.1.0"
 
 "strict-uri-encode@^1.0.0":
   "integrity" "sha512-R3f198pcvnB+5IpnBlRkphuE9n46WyVl8I39W/ZUTZLz4nqSP/oLYUrcnJrw462Ds8he4YKMov2efsTIw1BDGQ=="
@@ -2936,13 +3006,18 @@
   dependencies:
     "safe-buffer" "^5.0.1"
 
-"type-is@~1.6.18":
+"type-is@^1.6.4", "type-is@~1.6.18":
   "integrity" "sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g=="
   "resolved" "https://registry.npmjs.org/type-is/-/type-is-1.6.18.tgz"
   "version" "1.6.18"
   dependencies:
     "media-typer" "0.3.0"
     "mime-types" "~2.1.24"
+
+"typedarray@^0.0.6":
+  "integrity" "sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA=="
+  "resolved" "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
+  "version" "0.0.6"
 
 "unbzip2-stream@^1.0.9":
   "integrity" "sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg=="

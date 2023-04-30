@@ -93,17 +93,37 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
       } else {
         setProgress(100);
         setToastProps({
-          content: "There was an error removing background",
+          content: "There was an error creating a new user",
           error: true,
         });
       }
     }
-    // const imageResponse = await fetch("/api/remove-bg");
+    const formData = new FormData();
+    formData.append('file', files[0]);
+    formData.append('filename', files[0].name);
+
+    const imageResponse = await fetch('/api/remove-bg', {
+      method: 'POST',
+      body: formData
+    })
+    const returnedName = imageResponse.json;
+    console.log('BG removal successful:', returnedName);
     setProgress(60);
-    const compressedResponse = await fetch("/api/compress");
+    const compressedResponse = await fetch("/api/compress", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: files[0].name })
+    })
+    const returnedCompressionResult = compressedResponse.json;
+    console.log('Compression successful:', returnedCompressionResult);
     setProgress(80);
-    const uploadResponse = await fetch("/api/upload");
+    const uploadResponse = await fetch("/api/upload", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: files[0].name })
+    })
     const cdn_url = await uploadResponse.text();
+    console.log('Upload successful:', cdn_url);
     if (uploadResponse.ok) {
       setProgress(100);
       setToastProps({ content: "Success!" });

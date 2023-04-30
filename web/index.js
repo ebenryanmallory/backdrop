@@ -3,6 +3,7 @@ import { join } from "path";
 import { readFileSync } from "fs";
 import express from "express";
 import serveStatic from "serve-static";
+import multer from 'multer';
 
 import shopify from "./shopify.js";
 import GDPRWebhookHandlers from "./gdpr.js";
@@ -41,13 +42,17 @@ app.post(
 app.use("/api/*", shopify.validateAuthenticatedSession());
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/api/compress", compressRoute);
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+app.post("/api/compress", compressRoute);
 app.get("/api/create-user", createUserRoute);
 app.get("/api/get-user-free-count", getUserFreeCountRoute);
 app.get("/api/get-user-images", getUserImagesRoute);
-app.get("/api/remove-bg", removeRoute);
-app.get("/api/upload", uploadImageRoute);
+app.post("/api/remove-bg", upload.any(), removeRoute);
+app.post("/api/upload", uploadImageRoute);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

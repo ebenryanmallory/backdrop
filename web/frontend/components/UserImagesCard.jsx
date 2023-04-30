@@ -26,18 +26,37 @@ export function UserImagesCard({ images }) {
         },
       });
 
+      const css = `
+      .thumbnail {
+        max-width: 8rem;
+        max-height: 8rem;
+        cursor: pointer;
+      }
+      `
     return (
         <>
-        <div onClick={() => { setLightboxOpen(true) }}>
-          <Thumbnail
-              source={images[0]}
-              size="large"
-              alt="first image"
+          <style>{css}</style>
+          <div onClick={() => { setLightboxOpen(true) }}>
+            { images.map((image, index) => {
+                return (
+                  <>
+                  <img
+                    className="thumbnail"
+                    src={image}
+                    alt={image}
+                    key={`image-${index}`}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                  </>
+                );
+              })
+            }
+          </div>
+          <ImageDropzone 
+            setUserHasUploadedFile={setUserHasUploadedFile}
           />
-        </div>
-        <ImageDropzone 
-          setUserHasUploadedFile={setUserHasUploadedFile}
-        />
           <Lightbox 
             lightboxOpen={lightboxOpen}
             setLightboxOpen={setLightboxOpen}

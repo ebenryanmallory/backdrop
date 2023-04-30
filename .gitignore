@@ -26,3 +26,7 @@ extensions/*/build
 
 # Node library SQLite database
 web/database.sqlite
+
+# Temp image folder
+web/images/
+web/images/*

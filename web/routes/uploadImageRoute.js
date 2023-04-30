@@ -24,19 +24,24 @@ const STAGE_UPLOAD_IMAGE_MUTATION = `
 `;
 
 export const uploadImageRoute = async (_req, res) => {
-  const imageFile = fs.readFileSync(`${process.cwd()}/app-icon.jpeg`);
+
+  console.log(_req.body)
   const session = res.locals.shopify.session;
+	const { id, shop } = session;
+	const filePath = `${process.cwd()}/images/${shop}/compressed/${_req.body.filename}`;
   const client = new shopify.api.clients.Graphql({ session });
 
+  const imageFile = fs.readFileSync(filePath);
+
   try {
-    // GQL image staging to CDN
+    // image staging to CDN
     const stagedUpload = await client.query({
       data: {
         query: STAGE_UPLOAD_IMAGE_MUTATION,
         variables: {
           input: [
             {
-              filename: "test.jpeg",
+              filename: _req.body.filename,
               mimeType: "image/jpeg",
               resource: "IMAGE",
               httpMethod: "PUT"
@@ -60,25 +65,70 @@ export const uploadImageRoute = async (_req, res) => {
     if (!imageUploadResponse.ok) {
       throw new Error(`Failed to upload image: ${imageUploadResponse.statusText}`);
     } else {
-        async function addImageUrl(userId, imageUrl, created_at) {
-          let db = null;
-          try {
-            db = new sqlite3.Database('database.sqlite')
-            const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
-            await db.run(query, [userId, imageUrl, timestamp]);
-          } catch (err) {
-            console.error(err);
-          } finally {
-            if (db) {
-              db.close();
+      const createdFile = await client.query({
+        data: {
+          "query": `mutation fileCreate($files: [FileCreateInput!]!) {
+            fileCreate(files: $files) {
+              files {
+                alt
+                createdAt
+              }
+            }
+          }`,
+          "variables": {
+            "files": {
+              "alt": "",
+              "contentType": "IMAGE", // image/jpeg
+              "originalSource": stagedUploadUrl
+            }
+          },
+        },
+      });
+      const createdFilter = createdFile.body.data.fileCreate.files[0].createdAt;
+
+      const uploadedImageQuery = await client.query({
+        data: `query {
+          files(first: 1, query: "created_at:${createdFilter}") {
+            edges {
+              node {
+                ... on MediaImage {
+                  id
+                  image {
+                    id
+                    originalSrc: url
+                    width
+                    height
+                  }
+                }
+              }
             }
           }
+        }`,
+      });
+      if (uploadedImageQuery.body.data.files.edges.length < 1) {
+        return res.send('Created image not found')
+      }
+      console.log(uploadedImageQuery.body.data.files.edges[0].node.image);
+      const hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image.originalSrc;
+      async function addImageUrl(userId, imageUrl, timestamp) {
+        let db = null;
+        try {
+          db = new sqlite3.Database('database.sqlite')
+          const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
+          await db.run(query, [userId, imageUrl, timestamp]);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          if (db) {
+            db.close();
+          }
         }
-        const { id } = session;
-        const timestamp = new Date().toISOString();
-        addImageUrl(id, resourceUrl, timestamp);
+      }
+      const { id } = session;
+      const timestamp = new Date().toISOString();
+      addImageUrl(id, hostedCDNurl, timestamp);
+      return res.send(hostedCDNurl);
     }
-    return res.send(resourceUrl);
   } catch (error) {
     if (error instanceof GraphqlQueryError) {
       throw new Error(
