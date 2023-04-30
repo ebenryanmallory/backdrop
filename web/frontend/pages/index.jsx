@@ -8,6 +8,8 @@ import {
   SkeletonDisplayText,
   SkeletonBodyText,
   Badge,
+  FooterHelp,
+  Link
 } from "@shopify/polaris";
 import {
   SettingsMinor,
@@ -132,6 +134,12 @@ export default function HomePage() {
           </AlphaCard>
         </VerticalStack>
       </HorizontalGrid>
+      <FooterHelp>
+      Learn more about{' '}
+        <Link url="">
+          using Backdrop
+        </Link>
+      </FooterHelp>
       { planModalOpen &&
         <PlanModal />
       }

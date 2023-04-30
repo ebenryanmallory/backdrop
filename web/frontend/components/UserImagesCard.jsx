@@ -39,7 +39,6 @@ export function UserImagesCard({ images }) {
           <div onClick={() => { setLightboxOpen(true) }}>
             { images.map((image, index) => {
                 return (
-                  <>
                   <img
                     className="thumbnail"
                     src={image}
@@ -49,7 +48,6 @@ export function UserImagesCard({ images }) {
                       e.target.style.display = 'none';
                     }}
                   />
-                  </>
                 );
               })
             }

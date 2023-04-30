@@ -11,7 +11,9 @@ import {
   ColorPicker,
   RangeSlider,
   Collapsible,
-  Button
+  Button,
+  FooterHelp,
+  Link
 } from "@shopify/polaris";
 import { BalanceMajor } from '@shopify/polaris-icons';
 import { useContextualSaveBar } from '@shopify/app-bridge-react';
@@ -156,6 +158,12 @@ export default function Settings() {
           </AlphaCard>
         </HorizontalGrid>
       </VerticalStack>
+      <FooterHelp>
+      Learn more about{' '}
+        <Link url="">
+          Backdrop settings
+        </Link>
+      </FooterHelp>
       { planModalOpen &&
         <PlanModal />
       }

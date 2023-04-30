@@ -25,7 +25,6 @@ const STAGE_UPLOAD_IMAGE_MUTATION = `
 
 export const uploadImageRoute = async (_req, res) => {
 
-  console.log(_req.body)
   const session = res.locals.shopify.session;
 	const { id, shop } = session;
 	const filePath = `${process.cwd()}/images/${shop}/compressed/${_req.body.filename}`;
@@ -108,7 +107,6 @@ export const uploadImageRoute = async (_req, res) => {
       if (uploadedImageQuery.body.data.files.edges.length < 1) {
         return res.send('Created image not found')
       }
-      console.log(uploadedImageQuery.body.data.files.edges[0].node.image);
       const hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image.originalSrc;
       async function addImageUrl(userId, imageUrl, timestamp) {
         let db = null;

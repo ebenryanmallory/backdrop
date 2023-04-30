@@ -12,14 +12,22 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images }) {
   
     const [pickerOpen, setPickerOpen] = useState(false);
 
+    const Footer = () => {
+        return (
+            <p>Footer content</p>
+        )
+    }
+    
     return (
         <Modal
-            title=""
+            title="Image Name"
+            titleHidden
             large={true}
             fullScreen={true}
             noScroll={true}
             onClose={() => setLightboxOpen(false)}
             open={lightboxOpen}
+            footer={<Footer />}
         >
             <Modal.Section>
                 <Divider />

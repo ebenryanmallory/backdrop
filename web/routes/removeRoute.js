@@ -1,7 +1,6 @@
 import axios from 'axios';
 import FormData from 'form-data';
 import fs from 'fs';
-import path from 'path'
 
 export const removeRoute = async (_req, res) => {
 
@@ -9,19 +8,18 @@ export const removeRoute = async (_req, res) => {
 
 	const session = res.locals.shopify.session;
 	const { id, shop } = session;
-	const checkForShop = `${process.cwd()}/images/${shop}`;
-	if (!fs.existsSync(checkForShop)) {
-	  fs.mkdirSync(checkForShop);
+	const imagesFolder = `${process.cwd()}/images`;
+	if (!fs.existsSync(imagesFolder)) {
+	  fs.mkdirSync(imagesFolder);
 	}
-	const filePath = `${process.cwd()}/images/${shop}/${_req.body.filename}`;
-	fs.writeFileSync(filePath, buffer);
+	const shopFolder = `${process.cwd()}/images/${shop}`;
+	if (!fs.existsSync(shopFolder)) {
+	  fs.mkdirSync(shopFolder);
+	}
 
-	return res.send(_req.body.filename);
-
-	const inputPath = `${process.cwd()}/app-icon.jpeg`;
 	const formData = new FormData();
 	formData.append('size', 'auto');
-	formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+	formData.append('image_file', buffer);
 
 	axios({
 		method: 'post',
@@ -36,9 +34,11 @@ export const removeRoute = async (_req, res) => {
 	  })
 	  .then((response) => {
 		if(response.status != 200) return console.error('Error:', response.status, response.statusText);
-		fs.writeFileSync("no-bg.png", response.data);
+		const filePath = `${process.cwd()}/images/${shop}/${_req.body.filename}`;
+		fs.writeFileSync(filePath, response.data);
+		return res.send(_req.body.filename);
 	  })
 	  .catch((error) => {
-		  return console.error('Request failed:', error);
+		  return res.send({error : error});
 	  });
   };
