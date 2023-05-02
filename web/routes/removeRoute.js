@@ -30,6 +30,7 @@ export const removeRoute = async (_req, res) => {
 		  ...formData.getHeaders(),
 		  'X-Api-Key': process.env.REMOVE_API,
 		},
+		format: 'JPG', // 'ZIP', 'PNG'
 		encoding: null
 	  })
 	  .then((response) => {

@@ -13,7 +13,7 @@ import {
 } from "@shopify/polaris";
 import {
   SettingsMinor,
-  BalanceMajor
+  PlanMajor
 } from '@shopify/polaris-icons';
 import { useNavigate } from '@shopify/app-bridge-react';
 
@@ -73,7 +73,7 @@ export default function HomePage() {
         },
         {
           content: "Plan",
-          icon: BalanceMajor,
+          icon: PlanMajor,
           accessibilityLabel: "Secondary action label",
           onAction: () => setPlanModalOpen(true),
         }

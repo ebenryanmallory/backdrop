@@ -1,5 +1,6 @@
 import imagemin from 'imagemin';
 import imageminMozjpeg from 'imagemin-mozjpeg';
+import imageminPngquant from 'imagemin-pngquant';
 import fs from 'fs';
 
 export const compressRoute = async (_req, res) => {

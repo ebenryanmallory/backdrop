@@ -3,40 +3,68 @@ import {
     Text,
     HorizontalGrid,
     VerticalStack,
-    Divider
+    Divider,
+    Icon
 } from "@shopify/polaris";
+import {
+    CircleChevronLeftMinor,
+    CircleChevronRightMinor
+} from '@shopify/polaris-icons';
 import { useState } from 'react';
 import { ResourcePicker } from '@shopify/app-bridge-react';
+import { LightboxFooter } from './LightboxFooter';
 
-export function Lightbox({ lightboxOpen, setLightboxOpen, images }) {
+export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, setImageIndex }) {
   
     const [pickerOpen, setPickerOpen] = useState(false);
 
-    const Footer = () => {
-        return (
-            <p>Footer content</p>
-        )
-    }
-    
+    const css = `
+        .w-full {
+            width: 100%
+        }
+        .h-full {
+            height: 100%
+        }
+    `;
     return (
         <Modal
             title="Image Name"
             titleHidden
+            instant={true}
             large={true}
             fullScreen={true}
             noScroll={true}
-            onClose={() => setLightboxOpen(false)}
+            onClose={() => {
+                setImageIndex(null);
+                setLightboxOpen(false);
+            }}
             open={lightboxOpen}
-            footer={<Footer />}
+            footer={<LightboxFooter />}
         >
+            <style>{css}</style>
             <Modal.Section>
                 <Divider />
                 <HorizontalGrid columns={{ xs: 1, md: "2fr 1fr" }} gap="4">
                     <VerticalStack>
                         <div>
-                            <Text>Previous</Text>
-                            <img src={images[0]} />
-                            <Text>Next</Text>
+                            <div onClick={() => setImageIndex(imageIndex - 1)}>
+                                <Icon
+                                    source={CircleChevronLeftMinor}
+                                    color="base"
+                                    classList="cursor-pointer"
+                                />
+                            </div>
+                            <img
+                                src={images[imageIndex]}
+                                className="w-full h-full"
+                            />
+                            <div onClick={() => setImageIndex(imageIndex + 1)}>
+                                <Icon
+                                    source={CircleChevronRightMinor}
+                                    color="base"
+                                    classList="cursor-pointer"
+                                />
+                            </div>
                         </div>
                     </VerticalStack>
                     <VerticalStack gap={{ xs: "4", md: "2" }}>

@@ -10,12 +10,12 @@ import {
   useBreakpoints,
   ColorPicker,
   RangeSlider,
-  Collapsible,
-  Button,
+  Popover,
+  HorizontalStack,
   FooterHelp,
   Link
 } from "@shopify/polaris";
-import { BalanceMajor } from '@shopify/polaris-icons';
+import { PlanMajor } from '@shopify/polaris-icons';
 import { useContextualSaveBar } from '@shopify/app-bridge-react';
 import { useState, useCallback } from 'react';
 import { PlanModal } from "../components/Modals/PlanModal";
@@ -32,6 +32,14 @@ export default function Settings() {
   const [colorOpen, setColorOpen] = useState(false);
 
   const toggleColor = useCallback(() => setColorOpen((colorOpen) => !colorOpen), []);
+
+  const colorCircle = (
+    <div 
+      onClick={toggleColor}
+      className="color--disabled color-circle"
+    >
+    </div>
+  );
 
   const [color, setColor] = useState({
     hue: 0,
@@ -57,6 +65,19 @@ export default function Settings() {
     [],
   );
 
+  const css = `
+    .color--disabled {
+      background: linear-gradient(to bottom right,var(--p-color-bg) calc(50% - 0.125rem),var(--p-color-border-subdued) calc(50% - 0.125rem) calc(50% + 0.125rem),var(--p-color-bg) calc(50% + 0.125rem));
+    }
+    .color-circle {
+      width: 40px;
+      height: 40px;
+      border: 1px gray solid;
+      border-radius: 3rem;
+      cursor: pointer;
+    }
+  `;
+
   return (
     <Page
       divider
@@ -65,12 +86,13 @@ export default function Settings() {
       secondaryActions={[
         {
           content: "Plan",
-          icon: BalanceMajor,
+          icon: PlanMajor,
           accessibilityLabel: "Secondary action label",
           onAction: () => setPlanModalOpen(true),
         }
       ]}
     >
+      <style>{css}</style>
       <VerticalStack gap={{ xs: "8", sm: "4" }}>
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
           <Box
@@ -125,7 +147,7 @@ export default function Settings() {
           >
             <VerticalStack gap="4">
               <Text as="h3" variant="headingMd">
-                Default background color
+                Background color
               </Text>
               <Text as="p" variant="bodyMd">
                 Apply a color background after foreground is removed (default white).
@@ -133,28 +155,27 @@ export default function Settings() {
             </VerticalStack>
           </Box>
           <AlphaCard roundedAbove="sm">
-            <VerticalStack gap="4">
+            <HorizontalStack gap="4">
             <Checkbox
                 label="Transparent"
                 checked={useTransparent}
                 onChange={toggleUseTransparent}
               />
-              <Button
-                onClick={toggleColor}
-                ariaExpanded={colorOpen}
-                ariaControls="basic-collapsible"
-              >
-                Solid color
-              </Button>
-              <Collapsible
-                open={colorOpen}
-                id="basic-collapsible"
-                transition={{duration: '500ms', timingFunction: 'ease-in-out'}}
-                expandOnPrint
-              >
-              <ColorPicker onChange={setColor} color={color} allowAlpha />
-              </Collapsible>
-            </VerticalStack>
+              <div>
+                <Popover
+                  active={colorOpen}
+                  activator={colorCircle}
+                  preferredPosition='below'
+                  preferredAlignment='left'
+                  autofocusTarget="first-node"
+                  onClose={toggleColor}
+                >
+                  <ColorPicker onChange={setColor} color={color} allowAlpha />
+                </Popover>
+                <Text>Background color</Text>
+              </div>
+              <Text>Used as default background color on images after removal.</Text>
+            </HorizontalStack>
           </AlphaCard>
         </HorizontalGrid>
       </VerticalStack>

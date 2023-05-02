@@ -1,4 +1,5 @@
 import { DeliveryMethod } from "@shopify/shopify-api";
+import sqlite3 from "sqlite3";
 
 export default {
   /**
@@ -12,6 +13,29 @@ export default {
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
       const payload = JSON.parse(body);
+      const { shop_id, orders_requested, customer } = payload;
+
+      const db = new sqlite3.Database('database.sqlite');
+      const query = `SELECT * FROM users WHERE id = ${shop_id}`;
+      db.get(query, async (err, row) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Internal server error');
+        } else if (!row) {
+          console.error(`User with id ${shop_id} not found`);
+          res.status(404).send('User not found');
+        } else {
+          // Construct the response payload
+          const responsePayload = {
+            customer,
+            orders_requested,
+            user_data: row,
+          };
+
+          // Send the response back to Shopify
+          res.send(responsePayload);
+        }
+      });
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
