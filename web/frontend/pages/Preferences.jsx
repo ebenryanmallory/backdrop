@@ -15,13 +15,13 @@ import {
   FooterHelp,
   Link
 } from "@shopify/polaris";
-import { PlanMajor } from '@shopify/polaris-icons';
+import { PlanMinor } from '@shopify/polaris-icons';
 import { useContextualSaveBar } from '@shopify/app-bridge-react';
 import { useState, useCallback } from 'react';
 import { PlanModal } from "../components/Modals/PlanModal";
 import { BackdropSVG } from "../assets/BackdropSVG";
 
-export default function Settings() {
+export default function Preferences() {
   const { smUp } = useBreakpoints();
   const [useCompression, setUseCompression] = useState(true);
   const [useTransparent, setUseTransparent] = useState(true);
@@ -82,11 +82,11 @@ export default function Settings() {
     <Page
       divider
       title={<BackdropSVG />}
-      titleMetadata={<Text>Settings</Text>}
+      titleMetadata={<Text>Preferences</Text>}
       secondaryActions={[
         {
           content: "Plan",
-          icon: PlanMajor,
+          icon: PlanMinor,
           accessibilityLabel: "Secondary action label",
           onAction: () => setPlanModalOpen(true),
         }
@@ -182,11 +182,13 @@ export default function Settings() {
       <FooterHelp>
       Learn more about{' '}
         <Link url="">
-          Backdrop settings
+          Backdrop preferences
         </Link>
       </FooterHelp>
       { planModalOpen &&
-        <PlanModal />
+        <PlanModal 
+          setPlanModalOpen={setPlanModalOpen}
+        />
       }
     </Page>
   );

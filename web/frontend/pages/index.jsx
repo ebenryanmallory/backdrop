@@ -13,7 +13,7 @@ import {
 } from "@shopify/polaris";
 import {
   SettingsMinor,
-  PlanMajor
+  PlanMinor
 } from '@shopify/polaris-icons';
 import { useNavigate } from '@shopify/app-bridge-react';
 
@@ -66,14 +66,14 @@ export default function HomePage() {
       titleMetadata={<Badge status="attention">Verified</Badge>}
       secondaryActions={[
         {
-          content: "Backdrop Settings",
+          content: "Backdrop Preferences",
           icon: SettingsMinor,
           accessibilityLabel: "Secondary action label",
-          onAction: () => { navigate('/settings') }
+          onAction: () => { navigate('/preferences') }
         },
         {
           content: "Plan",
-          icon: PlanMajor,
+          icon: PlanMinor,
           accessibilityLabel: "Secondary action label",
           onAction: () => setPlanModalOpen(true),
         }
@@ -141,7 +141,9 @@ export default function HomePage() {
         </Link>
       </FooterHelp>
       { planModalOpen &&
-        <PlanModal />
+        <PlanModal 
+          setPlanModalOpen={setPlanModalOpen}
+        />
       }
     </Page>
   );

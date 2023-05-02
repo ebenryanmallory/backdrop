@@ -14,6 +14,7 @@ import { getUserImagesRoute } from './routes/getUserImagesRoute.js'
 import { getUserFreeCountRoute } from './routes/getUserFreeCountRoute.js'
 import { removeRoute } from './routes/removeRoute.js'
 import { uploadImageRoute } from './routes/uploadImageRoute.js'
+import { deleteUserImageRoute } from './routes/deleteUserImageRoute.js'
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -53,6 +54,7 @@ app.get("/api/get-user-free-count", getUserFreeCountRoute);
 app.get("/api/get-user-images", getUserImagesRoute);
 app.post("/api/remove-bg", upload.any(), removeRoute);
 app.post("/api/upload", uploadImageRoute);
+app.post("/api/delete-user-image", deleteUserImageRoute);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

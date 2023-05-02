@@ -7,7 +7,10 @@ import {
 import { useAppQuery } from "../hooks";
 import { useState, useEffect } from "react";
 import { Lightbox } from "./Modals/Lightbox";
+import { AddProductImage } from "./AddProductImage";
+import { AddCollectionImage } from "./AddCollectionImage";
 import { ImageDropzone } from "./ImageDropzone";
+import { useAuthenticatedFetch } from "../hooks";
 
 export function UserImagesCard({ images }) {
 
@@ -15,6 +18,9 @@ export function UserImagesCard({ images }) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [userHasUploadedFile, setUserHasUploadedFile] = useState(false);
     const [imageIndex, setImageIndex] = useState(null);
+
+    const [productPickerOpen, setProductPickerOpen] = useState(false);
+    const [collectionPickerOpen, setCollectionPickerOpen] = useState(false);
 
     useEffect(() => {
       imageIndex !== null && setLightboxOpen(true);
@@ -34,6 +40,26 @@ export function UserImagesCard({ images }) {
         },
       });
 
+      const fetch = useAuthenticatedFetch();
+      const deleteImage = async () => {
+        try {
+          const deleteImageResponse = await fetch('/api/delete-user-image', {
+            method: 'POST',
+            body: { url: images[imageIndex] }
+          });
+    
+          if (!deleteImageResponse.ok) {
+            throw new Error(deleteImageResponse.statusText);
+          }
+    
+          const { jsonResponse } = await deleteImageResponse.json();
+          console.log(jsonResponse?.message)
+    
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
       const css = `
         .thumbnail {
           max-width: 8rem;
@@ -46,6 +72,9 @@ export function UserImagesCard({ images }) {
         .hidden {
           display: none;
         }
+        .image--container:hover .hidden {
+          display: block;
+        }
       `
     return (
         <>
@@ -55,10 +84,9 @@ export function UserImagesCard({ images }) {
                 return (
                   <div 
                     key={`user-image-${index}`}
-                    onMouseOver={(e) => {e.target.querySelectorAll('.hidden').forEach(hidden => hidden.classList.remove('hidden'))}}
-                    onMouseLeave={(e) => {e.target.querySelectorAll('.absolute').forEach(absolute => absolute.classList.add('hidden'))}}
+                    className="image--container"
                   >
-                    <div className="absolute hidden">
+                    <div className="absolute hidden cursor-pointer">
                       <Icon
                         source={DeleteMinor}
                         color="base"
@@ -88,7 +116,25 @@ export function UserImagesCard({ images }) {
             images={images}
             imageIndex={imageIndex}
             setImageIndex={setImageIndex}
-          />
+            setCollectionPickerOpen={setCollectionPickerOpen}
+            setProductPickerOpen={setProductPickerOpen}
+            />
+          { productPickerOpen &&
+            <AddProductImage 
+              images={images}
+              imageIndex={imageIndex}
+              productPickerOpen={productPickerOpen}
+              setProductPickerOpen={setProductPickerOpen}
+            />
+          }
+          { collectionPickerOpen &&
+            <AddCollectionImage 
+              images={images}
+              imageIndex={imageIndex}
+              collectionPickerOpen={collectionPickerOpen}
+              setCollectionPickerOpen={setCollectionPickerOpen}
+            />
+          }
         </>
     )
 }

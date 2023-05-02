@@ -6,10 +6,13 @@ import {
 } from "@shopify/polaris";
 import { useState, useCallback } from 'react';
 
-export function PlanModal() {
+export function PlanModal({ setPlanModalOpen }) {
   
     const [active, setActive] = useState(true);
-    const toggleActive = useCallback(() => setActive((active) => !active), []);
+    const toggleActive = useCallback(() => {
+        setPlanModalOpen(false);
+        setActive((active) => !active)
+    }, []);
 
     return (
         <Modal

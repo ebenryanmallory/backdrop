@@ -3,21 +3,17 @@ import {
     Text,
     HorizontalGrid,
     VerticalStack,
-    Divider,
     Icon
 } from "@shopify/polaris";
 import {
-    CircleChevronLeftMinor,
-    CircleChevronRightMinor
+    ChevronLeftMinor,
+    ChevronRightMinor
 } from '@shopify/polaris-icons';
-import { useState } from 'react';
-import { ResourcePicker } from '@shopify/app-bridge-react';
 import { LightboxFooter } from './LightboxFooter';
 
-export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, setImageIndex }) {
+export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, setImageIndex, 
+    setCollectionPickerOpen, setProductPickerOpen }) {
   
-    const [pickerOpen, setPickerOpen] = useState(false);
-
     const css = `
         .w-full {
             width: 100%
@@ -25,11 +21,17 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
         .h-full {
             height: 100%
         }
+        .bg-inverse {
+            background-color: var(--p-color-bg-inverse);
+        }
+        .Polaris-Modal-Dialog__Modal {
+            background-color: #1a1a1a;
+            color: #f1f1f1;
+        }
     `;
     return (
         <Modal
-            title="Image Name"
-            titleHidden
+            title={`Media ${ imageIndex + 1 } of ${ images.length }`}
             instant={true}
             large={true}
             fullScreen={true}
@@ -42,14 +44,15 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
             footer={<LightboxFooter />}
         >
             <style>{css}</style>
-            <Modal.Section>
-                <Divider />
+            <Modal.Section className="modal-section">
                 <HorizontalGrid columns={{ xs: 1, md: "2fr 1fr" }} gap="4">
-                    <VerticalStack>
+                    <VerticalStack
+                        className="bg-inverse"
+                    >
                         <div>
                             <div onClick={() => setImageIndex(imageIndex - 1)}>
                                 <Icon
-                                    source={CircleChevronLeftMinor}
+                                    source={ChevronLeftMinor}
                                     color="base"
                                     classList="cursor-pointer"
                                 />
@@ -60,7 +63,7 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                             />
                             <div onClick={() => setImageIndex(imageIndex + 1)}>
                                 <Icon
-                                    source={CircleChevronRightMinor}
+                                    source={ChevronRightMinor}
                                     color="base"
                                     classList="cursor-pointer"
                                 />
@@ -68,27 +71,21 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                         </div>
                     </VerticalStack>
                     <VerticalStack gap={{ xs: "4", md: "2" }}>
-                        <Text>Actions:</Text>
-                        <Divider />
-                        <Text>Icons:</Text>
-                        <Text>Download</Text>
-                        <Text onClick={() => setPickerOpen(true)}>
-                            Push to product image
-                        </Text>
-                        <ResourcePicker 
-                            resourceType="Product"
-                            open={pickerOpen}
-                            onSelection={(selectPayload) => {
-                                console.log(selectPayload.id)
-                                console.log(selectPayload.selection)
-                            }}
-                            showHidden={true}
-                            showDraft={true}
-                            showVariants={true}
-                            selectMultiple={true}
-                            onCancel={() => setPickerOpen(false)}
-                        />
-                        <Text>Push to collection</Text>
+                        <Text>Push this image out to a product image, product variant image, or collection image.</Text>
+                        <div onClick={() => {
+                            setLightboxOpen(false);
+                            setProductPickerOpen(true);
+                        }}>
+                            <Text>
+                                Push to product image
+                            </Text>
+                        </div>
+                        <div onClick={() => {
+                            setLightboxOpen(false);
+                            setCollectionPickerOpen(true);
+                        }}>
+                            <Text>Push to collection</Text>
+                        </div>
                     </VerticalStack>
                 </HorizontalGrid>
             </Modal.Section>

@@ -21,8 +21,8 @@ export default function App() {
             <NavigationMenu
               navigationLinks={[
                 {
-                  label: "Settings",
-                  destination: "/settings",
+                  label: "Preferences",
+                  destination: "/preferences",
                 },
               ]}
             />
