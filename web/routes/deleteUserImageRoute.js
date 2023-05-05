@@ -1,9 +1,14 @@
 import sqlite3 from "sqlite3";
 
 export const deleteUserImageRoute = async (_req, res) => {
+  
   const db = new sqlite3.Database('database.sqlite');
   db.on('error', (err) => {
     console.error('Database error:', err);
+  });
+  res.on('finish', () => {
+    console.log('database connection closed')
+    db.close();
   });
   const session = res.locals.shopify.session;
   const { id } = session;
@@ -11,18 +16,19 @@ export const deleteUserImageRoute = async (_req, res) => {
 
   async function deleteUserImage(userId, imageURL) {
     try {
-        db.all(`DELETE FROM images WHERE user_id = ? AND url = ?`, [userId, imageURL], (err) => {
-            if (err) {
-                throw err;
-            } else {
-                res.send({ message: "Image deleted successfully" })
-            }
-            db.close();
+        db.run(`DELETE FROM user_images WHERE user_id = ? AND image_url = ?`, [userId, imageURL], function() {
+          if (this.changes === 0) {
+            res.send({ message: "No image found" })
+          } 
+          if (this.changes === 1) {
+            res.send({ message: "Image deleted successfully" })
+          } 
+          if (this.changes > 1) {
+            res.send({ message: "Multiple images found and deleted successfully" })
+          }
         });
     } catch (err) {
-        console.error(err.message);
         res.send({ message: err.message })
-        db.close();
     }
   }
   deleteUserImage(id, url);

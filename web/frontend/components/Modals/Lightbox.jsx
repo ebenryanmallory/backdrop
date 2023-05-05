@@ -41,7 +41,10 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                 setLightboxOpen(false);
             }}
             open={lightboxOpen}
-            footer={<LightboxFooter />}
+            footer={<LightboxFooter 
+                images={images}
+                imageIndex={imageIndex}
+            />}
         >
             <style>{css}</style>
             <Modal.Section className="modal-section">

@@ -141,11 +141,30 @@ async function getCount(userId) {
   db.close();
 }
 
+async function getUserImages(userId) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = `SELECT image_url FROM user_images WHERE user_id = ?`;
+  db.all(sql, [userId], (err, rows) => {
+    console.log(rows)
+  });
+  db.close();
+}
+
+async function deleteUserImages(userId, imageURL) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = 'DELETE FROM user_images WHERE user_id = ? AND image_url = ?';
+  db.run(sql, [userId, imageURL] , function() {
+    console.log(this.changes)
+  });
+  db.close();
+}
+
 // createUserImagesTable();
 // printTableNames();
 // addField();
-// printUsers()
 // printUserIds();
 // deleteField()
 // printUserInfo()
-getCount('offline_motionstoryline-dev.myshopify.com')
+// getCount('offline_motionstoryline-dev.myshopify.com')
+// deleteUserImages('offline_motionstoryline-dev.myshopify.com', 'https://shopify-staged-uploads.storage.googleapis.com/tmp/73997156649/products/c89d4685-6126-4b3b-bbb6-bd7be6a5066b/test.jpeg')
+getUserImages('offline_motionstoryline-dev.myshopify.com')

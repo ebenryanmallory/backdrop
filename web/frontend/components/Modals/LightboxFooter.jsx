@@ -6,18 +6,24 @@ import {
     DeleteMajor,
     PageDownMajor
 } from '@shopify/polaris-icons';
+import { deleteImage } from "../../shared/deleteImage";
+import { downloadImage } from "../../shared/downloadImage";
+import { useAuthenticatedFetch } from "../../hooks";
 
-export const LightboxFooter = () => {
+export const LightboxFooter = ({ images, imageIndex }) => {
+
+    const fetch = useAuthenticatedFetch();
+
     return (
         <HorizontalStack>
-            <div onClick={() => setImageIndex(imageIndex + 1)}>
+            <div onClick={() => deleteImage(images, imageIndex, fetch)}>
                 <Icon
                     source={DeleteMajor}
                     color="base"
                     classList="cursor-pointer"
                 />
             </div>
-            <div onClick={() => setImageIndex(imageIndex + 1)}>
+            <div onClick={() => downloadImage(images, imageIndex)}>
                 <Icon
                     source={PageDownMajor}
                     color="base"

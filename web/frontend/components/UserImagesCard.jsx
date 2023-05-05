@@ -1,5 +1,6 @@
 import {
-  Icon
+  Icon,
+  HorizontalStack
 } from "@shopify/polaris";
 import {
   DeleteMinor
@@ -10,9 +11,12 @@ import { Lightbox } from "./Modals/Lightbox";
 import { AddProductImage } from "./AddProductImage";
 import { AddCollectionImage } from "./AddCollectionImage";
 import { ImageDropzone } from "./ImageDropzone";
+import { deleteImage } from "../shared/deleteImage";
 import { useAuthenticatedFetch } from "../hooks";
 
 export function UserImagesCard({ images }) {
+
+    const fetch = useAuthenticatedFetch();
 
     const [isLoading, setIsLoading] = useState(true);
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -40,26 +44,6 @@ export function UserImagesCard({ images }) {
         },
       });
 
-      const fetch = useAuthenticatedFetch();
-      const deleteImage = async () => {
-        try {
-          const deleteImageResponse = await fetch('/api/delete-user-image', {
-            method: 'POST',
-            body: { url: images[imageIndex] }
-          });
-    
-          if (!deleteImageResponse.ok) {
-            throw new Error(deleteImageResponse.statusText);
-          }
-    
-          const { jsonResponse } = await deleteImageResponse.json();
-          console.log(jsonResponse?.message)
-    
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
       const css = `
         .thumbnail {
           max-width: 8rem;
@@ -72,25 +56,38 @@ export function UserImagesCard({ images }) {
         .hidden {
           display: none;
         }
+        .icon--container {
+          right: 0px;
+          background: #00000094;
+          padding: 3px;
+          cursor: pointer;
+        }
+        .image--container {
+          position: relative;
+        }
         .image--container:hover .hidden {
           display: block;
         }
+        .icon--container svg {
+          fill: var(--p-color-icon-on-color);
+        }
       `
+
     return (
         <>
           <style>{css}</style>
-          <div>
+          <HorizontalStack>
             { images.map((image, index) => {
                 return (
                   <div 
                     key={`user-image-${index}`}
                     className="image--container"
                   >
-                    <div className="absolute hidden cursor-pointer">
+                    <div className="absolute hidden cursor-pointer icon--container"
+                      onClick={() => deleteImage(images, index, fetch)}>
                       <Icon
                         source={DeleteMinor}
                         color="base"
-                        
                       />
                     </div>
                     <img
@@ -106,7 +103,7 @@ export function UserImagesCard({ images }) {
                 );
               })
             }
-          </div>
+          </HorizontalStack>
           <ImageDropzone 
             setUserHasUploadedFile={setUserHasUploadedFile}
           />
