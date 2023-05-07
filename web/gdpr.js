@@ -15,27 +15,8 @@ export default {
       const payload = JSON.parse(body);
       const { shop_id, orders_requested, customer } = payload;
 
-      const db = new sqlite3.Database('database.sqlite');
-      const query = `SELECT * FROM users WHERE id = ${shop_id}`;
-      db.get(query, async (err, row) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send('Internal server error');
-        } else if (!row) {
-          console.error(`User with id ${shop_id} not found`);
-          res.status(404).send('User not found');
-        } else {
-          // Construct the response payload
-          const responsePayload = {
-            customer,
-            orders_requested,
-            user_data: row,
-          };
+      // This Shopify app does not request scopes to access customer data
 
-          // Send the response back to Shopify
-          res.send(responsePayload);
-        }
-      });
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
@@ -68,6 +49,10 @@ export default {
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
       const payload = JSON.parse(body);
+      const { shop_id, shop_domain, customer, orders_to_redact } = payload;
+      // This Shopify app does not request scopes to access customer data
+
+      res.status(200).send('OK');
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
@@ -97,6 +82,19 @@ export default {
     callbackUrl: "/api/webhooks",
     callback: async (topic, shop, body, webhookId) => {
       const payload = JSON.parse(body);
+      const { shop_id, shop_domain } = payload;
+
+      const db = new sqlite3.Database('database.sqlite');
+      const query = `DELETE FROM users WHERE id = ${shop_id}`;
+      db.get(query, async (err, row) => {
+        if (err) {
+          console.error(err);
+        } else if (!row) {
+          console.error(`User with id ${shop_id} not found`);
+        } else {
+          res.status(200).send('OK');
+        }
+      });
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
