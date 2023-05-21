@@ -37,19 +37,20 @@ export const createUserRoute = async (_req, res) => {
   if (existingUser) {
     console.log("User ID already exists.");
     return res.send(user.user_id);
-  }
-  // Insert the new user into the database
-  await db.run(`INSERT INTO users(user_id, shop, created_at)
-          VALUES(?,?,?)`, [user.user_id, user.shop, user.created_at], function(err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    console.log(`A new user has been added with user_id ${user.user_id}.`);
+  } else {
+    // Insert the new user into the database
+    await db.run(`INSERT INTO users(user_id, shop, created_at)
+            VALUES(?,?,?)`, [user.user_id, user.shop, user.created_at], function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log(`A new user has been added with user_id ${user.user_id}.`);
 
-    res.send(user.user_id);
-    res.on('finish', () => {
-      console.log('database connection closed')
-      db.close();
+      res.send(user.user_id);
+      res.on('finish', () => {
+        console.log('database connection closed')
+        db.close();
+      });
     });
-  });
+  }
 }

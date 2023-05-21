@@ -1,17 +1,15 @@
 import {
   EmptyState,
-  AlphaCard,
-  Link,
+  AlphaCard
 } from "@shopify/polaris";
-import { ResourcePicker } from "@shopify/app-bridge-react";
 import { noImage } from "../assets";
 import { useState } from 'react';
-import { ImageDropzone } from "./ImageDropzone";
+import { Import } from "../components/Import"
+import { ImageDropzone } from "../components/ImageDropzone";
 
 export function EmptyStateCard() {
 
   const [userHasUploadedFile, setUserHasUploadedFile] = useState(false);
-  const [resourcePickerOpen, setResourcePickerOpen] = useState(false);
 
   return (
     <>
@@ -22,23 +20,6 @@ export function EmptyStateCard() {
             content: 'Learn more',
             url: 'https://help.shopify.com',
           }}
-          footerContent={
-            <>
-              <p>
-                Or, you can also remove backgrounds from your {' '}
-                <Link monochrome url="/settings" onClick={() => setResourcePickerOpen(true)}>
-                  existing images
-                </Link>
-                .
-              </p>
-              { resourcePickerOpen &&
-              <>
-                <ResourcePicker resourceType="Product" open />
-                <ResourcePicker resourceType="Collection" open />
-              </>
-              }
-            </>
-          }
           image={ userHasUploadedFile ? noImage : null}
         >
           <ImageDropzone

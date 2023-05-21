@@ -1,16 +1,18 @@
 import {
-  VerticalStack,
   Thumbnail,
   Text,
   DropZone,
   List,
   Banner,
   Button,
-  ProgressBar
+  ProgressBar,
+  Box,
+  HorizontalGrid
 } from "@shopify/polaris";
 import { Toast } from "@shopify/app-bridge-react";
 import { useState, useCallback, useEffect } from 'react';
 import { useAuthenticatedFetch } from "../hooks";
+import { Import } from "./Import";
 
 export function ImageDropzone({ setUserHasUploadedFile }) {
   
@@ -40,11 +42,11 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
 
   const fileUpload = !files.length > 0 && <DropZone.FileUpload />;
   const uploadedFiles = files.length > 0 && (
-    <VerticalStack align="left" style={{
-      padding: 'var(--p-space-4)'
+    <HorizontalGrid align="left" style={{
+      padding: '1rem' // 'var(--p-space-4)'
     }}>
       {files.map((file, index) => (
-        <VerticalStack align="left" key={index}>
+        <HorizontalGrid align="left" key={index}>
           <Thumbnail
             size="large"
             alt={file.name}
@@ -56,9 +58,9 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
               {file.size} bytes
             </Text>
           </div>
-        </VerticalStack>
+        </HorizontalGrid>
       ))}
-    </VerticalStack>
+    </HorizontalGrid>
   );
 
   const errorMessage = hasError && (
@@ -82,25 +84,27 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
 
   const applyRemoval = async () => {
     setProgress(10);
-    let userExists = true;
+    // setUserHasUploadedFile is passed in only from empty state
+    let userExists = setUserHasUploadedFile ? false : true;
     if (!userExists) {
       const userResponse = await fetch("/api/create-user");
       const result = await userResponse.text();
       console.log(result)
       if (userResponse.ok) {
         setProgress(20);
-        userExists = true 
+        userExists = true;
       } else {
         setProgress(100);
         setToastProps({
           content: "There was an error creating a new user",
-          error: true,
+          error: true
         });
       }
     }
     const formData = new FormData();
     formData.append('file', files[0]);
     formData.append('filename', files[0].name);
+    formData.append('bg_color', '#FFFFFFF');
 
     const imageResponse = await fetch('/api/remove-bg', {
       method: 'POST',
@@ -142,8 +146,18 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
         {fileUpload}
       </DropZone>
       { files.length > 0 &&
-        <Button primary fullWidth={false} size="medium" onClick={() => applyRemoval()}>Apply removal</Button>
+        <Button primary fullWidth={false} size="medium" style={{ marginTop: '1rem' }}
+          onClick={() => applyRemoval()}>
+            Apply removal
+        </Button>
       }
+      <Box padding="4">
+        <Import
+          files={files}
+          setFiles={setFiles}
+          setToastProps={setToastProps}
+        />
+      </Box>
     </>
   );
 }

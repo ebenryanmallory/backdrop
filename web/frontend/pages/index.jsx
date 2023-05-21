@@ -21,10 +21,12 @@ import { useAuthenticatedFetch } from "../hooks";
 
 import { useState, useEffect } from 'react';
 
-import { EmptyStateCard } from "../components/EmptyStateCard";
-import { PlanModal } from "../components/Modals/PlanModal";
-import { UserImagesCard } from "../components/UserImagesCard";
-import { PricingCard } from "../components/PricingCard";
+import { EmptyStateCard } from "../cards/EmptyStateCard";
+import { PlanModal } from "../modals/PlanModal";
+import { UserImagesCard } from "../cards/UserImagesCard";
+import { PricingCard } from "../cards/PricingCard";
+import { AboutCard } from "../cards/AboutCard";
+import { ContactCard } from "../cards/ContactCard";
 import { BackdropSVG } from "../assets/BackdropSVG";
 import { SkeletonLabel } from "../components/SkeletonLabel";
 
@@ -97,46 +99,21 @@ export default function HomePage() {
           { !isLoading && images.length > 0 &&
               <UserImagesCard images={images} />
           }
-          <AlphaCard roundedAbove="sm">
-            <VerticalStack gap="4">
-              { isLoading &&
-                <SkeletonDisplayText size="small" />
-              }
-              { !isLoading &&
-                <Text size="small">About</Text>
-              }
-              <HorizontalGrid columns={{ xs: 1, md: 2 }}>
-                <Box border="divider" borderRadius="base" minHeight="10rem">
-                  <Text size="small">Quickstart Guide</Text>
-                  <Text size="small">See image demo</Text>
-                </Box>
-                <Box border="divider" borderRadius="base" minHeight="10rem">
-                  <Text size="small">Documentation + Videos</Text>
-                  <Text size="small">Limitations and recommendations</Text>
-                  <Text size="small">Bulk processing</Text>
-                </Box>
-              </HorizontalGrid>
-            </VerticalStack>
-          </AlphaCard>
+          <AboutCard />
         </VerticalStack>
         <VerticalStack gap={{ xs: "4", md: "2" }}>
-          <PricingCard />
-          <AlphaCard roundedAbove="sm">
-            <VerticalStack gap="4">
-              <SkeletonLabel />
-              <Text>Contact Support</Text>
-              <Box border="divider" borderRadius="base" minHeight="2rem" />
-              <SkeletonLabel maxWidth="4rem" />
-              <Box border="divider" borderRadius="base" minHeight="2rem" />
-              <SkeletonLabel />
-              <SkeletonBodyText />
-            </VerticalStack>
-          </AlphaCard>
+          <PricingCard 
+            setPlanModalOpen={setPlanModalOpen}
+          />
+          <ContactCard />
         </VerticalStack>
       </HorizontalGrid>
       <FooterHelp>
       Learn more about{' '}
-        <Link url="">
+        <Link url="https://backdrop.motionstoryline.com/quickstart-guide/" 
+          external={true}
+          target="_blank"
+        >
           using Backdrop
         </Link>
       </FooterHelp>

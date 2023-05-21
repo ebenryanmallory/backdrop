@@ -3,80 +3,25 @@ import {
   Page,
   Text,
   Box,
-  AlphaCard,
-  Checkbox,
   HorizontalGrid,
   Divider,
   useBreakpoints,
-  ColorPicker,
-  RangeSlider,
-  Popover,
-  HorizontalStack,
   FooterHelp,
   Link
 } from "@shopify/polaris";
 import { PlanMinor } from '@shopify/polaris-icons';
 import { useContextualSaveBar } from '@shopify/app-bridge-react';
-import { useState, useCallback } from 'react';
-import { PlanModal } from "../components/Modals/PlanModal";
+import { useState } from 'react';
+import { PlanModal } from "../modals/PlanModal";
+import { CompressionCard } from "../cards--preferences/CompressionCard";
+import { ColorCard } from "../cards--preferences/ColorCard";
 import { BackdropSVG } from "../assets/BackdropSVG";
 
 export default function Preferences() {
   const { smUp } = useBreakpoints();
-  const [useCompression, setUseCompression] = useState(true);
-  const [useTransparent, setUseTransparent] = useState(true);
-  const [rangeValue, setRangeValue] = useState(20);
   const [planModalOpen, setPlanModalOpen] = useState(false);
 
   const {show, hide, saveAction, discardAction} = useContextualSaveBar();
-  const [colorOpen, setColorOpen] = useState(false);
-
-  const toggleColor = useCallback(() => setColorOpen((colorOpen) => !colorOpen), []);
-
-  const colorCircle = (
-    <div 
-      onClick={toggleColor}
-      className="color--disabled color-circle"
-    >
-    </div>
-  );
-
-  const [color, setColor] = useState({
-    hue: 0,
-    brightness: 1,
-    saturation: 0,
-    alpha: 1,
-  });
-
-  const toggleUseCompression = useCallback(
-    (updatedToggle) => setUseCompression(updatedToggle),
-    [],
-  );
-
-  const toggleUseTransparent = useCallback(
-    (updatedToggle) => setUseTransparent(updatedToggle),
-    [],
-  );
-
-  const setCompressionValue = useCallback(
-    (updatedValue) => {
-      setRangeValue(updatedValue)
-    },
-    [],
-  );
-
-  const css = `
-    .color--disabled {
-      background: linear-gradient(to bottom right,var(--p-color-bg) calc(50% - 0.125rem),var(--p-color-border-subdued) calc(50% - 0.125rem) calc(50% + 0.125rem),var(--p-color-bg) calc(50% + 0.125rem));
-    }
-    .color-circle {
-      width: 40px;
-      height: 40px;
-      border: 1px gray solid;
-      border-radius: 3rem;
-      cursor: pointer;
-    }
-  `;
 
   return (
     <Page
@@ -92,7 +37,6 @@ export default function Preferences() {
         }
       ]}
     >
-      <style>{css}</style>
       <VerticalStack gap={{ xs: "8", sm: "4" }}>
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
           <Box
@@ -109,34 +53,7 @@ export default function Preferences() {
               </Text>
             </VerticalStack>
           </Box>
-          <AlphaCard roundedAbove="sm">
-            <VerticalStack gap="4">
-              <Checkbox
-                label="Use compression"
-                checked={useCompression}
-                onChange={toggleUseCompression}
-              />
-              <RangeSlider
-                output
-                label="Compression"
-                min={0}
-                max={100}
-                value={rangeValue}
-                onChange={setCompressionValue}
-                prefix={<p>Amount</p>}
-                suffix={
-                  <p
-                    style={{
-                      minWidth: '24px',
-                      textAlign: 'right',
-                    }}
-                  >
-                    {rangeValue}
-                  </p>
-                }
-              />
-            </VerticalStack>
-          </AlphaCard>
+          <CompressionCard />
         </HorizontalGrid>
         {smUp ? <Divider borderStyle="base" /> : null}
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
@@ -154,34 +71,15 @@ export default function Preferences() {
               </Text>
             </VerticalStack>
           </Box>
-          <AlphaCard roundedAbove="sm">
-            <HorizontalStack gap="4">
-            <Checkbox
-                label="Transparent"
-                checked={useTransparent}
-                onChange={toggleUseTransparent}
-              />
-              <div>
-                <Popover
-                  active={colorOpen}
-                  activator={colorCircle}
-                  preferredPosition='below'
-                  preferredAlignment='left'
-                  autofocusTarget="first-node"
-                  onClose={toggleColor}
-                >
-                  <ColorPicker onChange={setColor} color={color} allowAlpha />
-                </Popover>
-                <Text>Background color</Text>
-              </div>
-              <Text>Used as default background color on images after removal.</Text>
-            </HorizontalStack>
-          </AlphaCard>
+          <ColorCard />
         </HorizontalGrid>
       </VerticalStack>
       <FooterHelp>
       Learn more about{' '}
-        <Link url="">
+        <Link url="https://backdrop.motionstoryline.com/preferences/"
+          external={true}
+          target="_blank"
+        >
           Backdrop preferences
         </Link>
       </FooterHelp>

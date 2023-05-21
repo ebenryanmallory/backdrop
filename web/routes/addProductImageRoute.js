@@ -7,18 +7,18 @@ export const addProductImageRoute = async (_req, res) => {
 	const { id, shop } = session;
   const client = new shopify.api.clients.Graphql({ session });
   const product_id = _req.body.product_id;
-  const image_id = _req.body.image_id;
   const image_url = _req.body.image_url;
-  console.log(product_id)
   try {
     const returnedStatus = await client.query({
       data: {
-        "query": `mutation productImageUpdate($productId: ID!, $image: ImageInput!) {
-          productImageUpdate(productId: $productId, image: $image) {
-            image {
+        "query": `mutation productAppendImages($input: ProductAppendImagesInput!) {
+          productAppendImages(input: $input) {
+            newImages {
               id
               altText
-              src
+            }
+            product {
+              id
             }
             userErrors {
               field
@@ -27,16 +27,19 @@ export const addProductImageRoute = async (_req, res) => {
           }
         }`,
         "variables": {
-          "productId": product_id,
-          "image": {
-            "id": image_id,
-            "altText": "updated product shot",
-            "src": image_url
+          "input": {
+            "id": product_id,
+            "images": [
+              {
+                "altText": "updated product shot",
+                "src": image_url
+              }
+            ]
           }
-        },
+        }
       },
     });
-    return res.send({ message: returnedStatus.body.data.productImageUpdate.image.src})
+    return res.send({ message: returnedStatus.body.data.productAppendImages?.newImages})
   } catch (error) {
     if (error instanceof GraphqlQueryError) {
       throw new Error(

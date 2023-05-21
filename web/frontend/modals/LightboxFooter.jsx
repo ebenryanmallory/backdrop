@@ -6,9 +6,9 @@ import {
     DeleteMajor,
     PageDownMajor
 } from '@shopify/polaris-icons';
-import { deleteImage } from "../../shared/deleteImage";
-import { downloadImage } from "../../shared/downloadImage";
-import { useAuthenticatedFetch } from "../../hooks";
+import { deleteImage } from "../shared/deleteImage";
+import { downloadImage } from "../shared/downloadImage";
+import { useAuthenticatedFetch } from "../hooks";
 
 export const LightboxFooter = ({ images, imageIndex }) => {
 

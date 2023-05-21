@@ -31,6 +31,7 @@ export const removeRoute = async (_req, res) => {
 		  'X-Api-Key': process.env.REMOVE_API,
 		},
 		format: 'JPG', // 'ZIP', 'PNG'
+		bg_color: _req.body?.bg_color || '#FFFFFF',
 		encoding: null
 	  })
 	  .then((response) => {
