@@ -17,6 +17,8 @@ import { uploadImageRoute } from './routes/uploadImageRoute.js'
 import { deleteUserImageRoute } from './routes/deleteUserImageRoute.js'
 import { addProductImageRoute } from './routes/addProductImageRoute.js'
 import { addCollectionImageRoute } from './routes/addCollectionImageRoute.js'
+import { updatePreferencesRoute } from './routes/updatePreferencesRoute.js'
+import { getPreferencesRoute } from './routes/getPreferencesRoute.js'
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -49,16 +51,19 @@ app.use(express.urlencoded({ extended: true }));
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
-app.post("/api/remove-bg", upload.any(), removeRoute);
 
-app.post("/api/compress", compressRoute);
 app.get("/api/create-user", createUserRoute);
 app.get("/api/get-user-free-count", getUserFreeCountRoute);
 app.get("/api/get-user-images", getUserImagesRoute);
+app.get("/api/get-preferences", getPreferencesRoute);
+
+app.post("/api/remove-bg", upload.any(), removeRoute);
+app.post("/api/compress", compressRoute);
 app.post("/api/upload", uploadImageRoute);
 app.post("/api/delete-user-image", deleteUserImageRoute);
 app.post("/api/add-product-image", addProductImageRoute);
 app.post("/api/add-collection-image", addCollectionImageRoute);
+app.post("/api/update-preferences", updatePreferencesRoute);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

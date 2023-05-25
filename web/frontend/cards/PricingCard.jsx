@@ -33,7 +33,7 @@ export function PricingCard({ setPlanModalOpen }) {
     <>
       <AlphaCard roundedAbove="sm">
         <VerticalStack gap="4">
-          <Text>Pricing</Text>
+          <Text fontWeight="semibold">Pricing</Text>
           <Box>
             <Bleed marginInline={{ xs: 4, sm: 5 }}>
               <Divider borderStyle="divider" />
@@ -50,7 +50,7 @@ export function PricingCard({ setPlanModalOpen }) {
           { !isLoading && data && data.plan_type === 'free' && data.free_count <= 5 &&
             <Text>You have { 5 - data.free_count } free images left.</Text>
           }
-          <Link onClick={() => setPlanModalOpen(true)} monochrome>
+          <Link onClick={() => setPlanModalOpen(true)} monochrome removeUnderline={true}>
             Manage subscription
           </Link>
         </VerticalStack>

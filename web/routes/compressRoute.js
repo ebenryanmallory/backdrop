@@ -7,6 +7,9 @@ export const compressRoute = async (_req, res) => {
 	
 	const session = res.locals.shopify.session;
 	const { id, shop } = session;
+
+	const { compression } = _req.body;
+
 	const filePath = `${process.cwd()}/images/${shop}`;
 	const compressedDir = `${process.cwd()}/images/${shop}/compressed`;
 	if (!fs.existsSync(compressedDir)) {
@@ -16,7 +19,7 @@ export const compressRoute = async (_req, res) => {
 		`${filePath}/*.png`, `${filePath}/*.gif`], {
 		destination: compressedDir,
 		plugins: [
-			imageminMozjpeg({quality: 20})
+			imageminMozjpeg({quality: compression || 20})
 		],
     
 	});

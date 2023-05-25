@@ -10,7 +10,7 @@ import {
   Link
 } from "@shopify/polaris";
 import { PlanMinor } from '@shopify/polaris-icons';
-import { useContextualSaveBar } from '@shopify/app-bridge-react';
+import { ContextualSaveBar } from '@shopify/app-bridge-react';
 import { useState } from 'react';
 import { PlanModal } from "../modals/PlanModal";
 import { CompressionCard } from "../cards--preferences/CompressionCard";
@@ -20,8 +20,38 @@ import { BackdropSVG } from "../assets/BackdropSVG";
 export default function Preferences() {
   const { smUp } = useBreakpoints();
   const [planModalOpen, setPlanModalOpen] = useState(false);
+  const [showSavebar, setShowSavebar] = useState(false);
 
-  const {show, hide, saveAction, discardAction} = useContextualSaveBar();
+  const fetch = useAuthenticatedFetch();
+
+  const saveAction = {
+    disabled: false,
+    loading: false,
+    onAction: async() => {
+      const imageResponse = await fetch('/api/update-preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            compression: 20,
+            use_compression: true,
+            bg_color: '#FFFFFF',
+            use_bg_color: true
+          })
+      })
+      if (!imageResponse.ok) {
+          throw new Error(imageResponse.statusText);
+      }
+    }
+  }
+
+  const discardAction = {
+    disabled: false,
+    loading: false,
+    discardConfirmationModal: true,
+    onAction: () => {
+      setShowSavebar(false)
+    }
+  }
 
   return (
     <Page
@@ -49,11 +79,13 @@ export default function Preferences() {
                 Compression
               </Text>
               <Text as="p" variant="bodyMd">
-                How much compression is set to images for web export
+                Amount of compression applied to each image. A lower number will reduce the file size by applying more compression.
               </Text>
             </VerticalStack>
           </Box>
-          <CompressionCard />
+          <CompressionCard 
+            setShowSavebar={setShowSavebar}
+          />
         </HorizontalGrid>
         {smUp ? <Divider borderStyle="base" /> : null}
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
@@ -64,14 +96,16 @@ export default function Preferences() {
           >
             <VerticalStack gap="4">
               <Text as="h3" variant="headingMd">
-                Background color
+                Background
               </Text>
               <Text as="p" variant="bodyMd">
-                Apply a color background after foreground is removed (default white).
+                Applies background style after foreground is removed. Can be solid color or transparent.
               </Text>
             </VerticalStack>
           </Box>
-          <ColorCard />
+          <ColorCard 
+            setShowSavebar={setShowSavebar}
+          />
         </HorizontalGrid>
       </VerticalStack>
       <FooterHelp>
@@ -86,6 +120,15 @@ export default function Preferences() {
       { planModalOpen &&
         <PlanModal 
           setPlanModalOpen={setPlanModalOpen}
+        />
+      }
+      { showSavebar &&
+        <ContextualSaveBar
+          saveAction={saveAction}
+          discardAction={discardAction}
+          fullWidth
+          leaveConfirmationDisable
+          visible
         />
       }
     </Page>

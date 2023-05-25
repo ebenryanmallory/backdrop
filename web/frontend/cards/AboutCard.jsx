@@ -6,7 +6,8 @@ import {
   Box,
   Bleed,
   Divider,
-  Text
+  Text,
+  Link
 } from "@shopify/polaris";
 
 export function AboutCard() {
@@ -15,7 +16,7 @@ export function AboutCard() {
   return (
     <AlphaCard roundedAbove="sm">
       <VerticalStack gap="4">
-        <Text size="small">About</Text>
+        <Text size="small" fontWeight="semibold">About</Text>
         <Box>
           <Bleed marginInline={{ xs: 4, sm: 5 }}>
             <Divider borderStyle="divider" />
@@ -23,13 +24,31 @@ export function AboutCard() {
         </Box>
         <HorizontalGrid columns={{ xs: 1, md: 2 }}>
           <Box border="divider" borderRadius="base" minHeight="10rem">
-            <Text size="small">Quickstart Guide</Text>
-            <Text size="small">See image demo</Text>
+            <Link monochrome url="https://backdrop.motionstoryline.com/quickstart-guide/" 
+              external removeUnderline={true} target="_blank">
+              Quickstart Guide
+            </Link>
+            <Box minHeight="1rem" />
+            <Link monochrome url="https://backdrop.motionstoryline.com/image-demo/" 
+              external removeUnderline={true} target="_blank">
+              See image demo
+            </Link>
           </Box>
           <Box border="divider" borderRadius="base" minHeight="10rem">
-            <Text size="small">Documentation + Videos</Text>
-            <Text size="small">Limitations and recommendations</Text>
-            <Text size="small">Bulk processing</Text>
+            <Link monochrome url="https://backdrop.motionstoryline.com/"
+              external removeUnderline={true} target="_blank">
+              Documentation + Videos
+            </Link>
+            <Box minHeight="1rem" />
+            <Link monochrome url="https://backdrop.motionstoryline.com/limitations-and-recommendations/"
+              external removeUnderline={true} target="_blank">
+              Limitations and recommendations
+            </Link>
+            <Box minHeight="1rem" />
+            <Link monochrome url="https://backdrop.motionstoryline.com/bulk-processing/"
+              external removeUnderline={true} target="_blank">
+              Bulk processing
+            </Link>
           </Box>
         </HorizontalGrid>
       </VerticalStack>

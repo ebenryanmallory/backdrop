@@ -8,10 +8,25 @@ import {
 } from "@shopify/polaris";
 import { useState, useCallback } from 'react';
 
-export function CompressionCard() {
+export function CompressionCard({ setShowSavebar }) {
   const [useCompression, setUseCompression] = useState(true);
   const [rangeValue, setRangeValue] = useState(20);
+  const [isLoading, setIsLoading] = useState(true);
 
+  const {
+    data,
+    refetch: refetchProductCount,
+    isLoading: isLoadingImages,
+    isRefetching: isRefetchingImages,
+  } = useAppQuery({
+    url: "/api/get-preferences",
+    reactQueryOptions: {
+      onSuccess: () => {
+        setIsLoading(false);
+      },
+    },
+  });
+  
   const toggleUseCompression = useCallback(
     (updatedToggle) => setUseCompression(updatedToggle),
     [],

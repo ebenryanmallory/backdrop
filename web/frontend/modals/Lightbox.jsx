@@ -3,7 +3,8 @@ import {
     Text,
     HorizontalGrid,
     VerticalStack,
-    Icon
+    Icon,
+    Link
 } from "@shopify/polaris";
 import {
     ChevronLeftMinor,
@@ -75,20 +76,18 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                     </VerticalStack>
                     <VerticalStack gap={{ xs: "4", md: "2" }}>
                         <Text>Push this image out to a product image, product variant image, or collection image.</Text>
-                        <div onClick={() => {
+                        <Link monochrome removeUnderline={true} onClick={() => {
                             setLightboxOpen(false);
                             setProductPickerOpen(true);
                         }}>
-                            <Text>
-                                Push to product image
-                            </Text>
-                        </div>
-                        <div onClick={() => {
+                            Push to product image
+                        </Link>
+                        <Link monochrome removeUnderline={true} onClick={() => {
                             setLightboxOpen(false);
                             setCollectionPickerOpen(true);
                         }}>
-                            <Text>Push to collection</Text>
-                        </div>
+                            Push to collection
+                        </Link>
                     </VerticalStack>
                 </HorizontalGrid>
             </Modal.Section>

@@ -15,7 +15,7 @@ export function ContactCard() {
   return (
     <AlphaCard roundedAbove="sm">
       <VerticalStack gap="4">
-        <Text>Contact Support</Text>
+        <Text fontWeight="semibold">Support</Text>
         <Box>
           <Bleed marginInline={{ xs: 4, sm: 5 }}>
             <Divider borderStyle="divider" />
@@ -25,6 +25,13 @@ export function ContactCard() {
           url="https://backdrop.motionstoryline.com/" 
           external={true}
           target="_blank"
+          removeUnderline={true}
+        >Chat</Link>
+        <Link monochrome
+          url="https://backdrop.motionstoryline.com/" 
+          external={true}
+          target="_blank"
+          removeUnderline={true}
         >Contact Form</Link>
       </VerticalStack>
     </AlphaCard>

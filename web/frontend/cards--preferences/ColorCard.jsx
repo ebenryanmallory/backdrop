@@ -10,20 +10,39 @@ import {
 import { useState, useCallback, useEffect } from 'react';
 import { hbsaToHex } from '../shared/convertToHex';
 
-export function ColorCard() {
+export function ColorCard({ setShowSavebar }) {
   const [colorOpen, setColorOpen] = useState(false);
   const [useTransparent, setUseTransparent] = useState(false);
-  const [color, setColor] = useState({
+  const initialColor = {
     hue: 0,
     brightness: 1,
     saturation: 0
-  });
+  }
+  const [color, setColor] = useState(initialColor);
   const [hexColor, setHexColor] = useState('transparent');
+  const [isLoading, setIsLoading] = useState(true);
 
-  const toggleColor = useCallback(() => setColorOpen((colorOpen) => !colorOpen), []);
+  const {
+    data,
+    refetch: refetchProductCount,
+    isLoading: isLoadingImages,
+    isRefetching: isRefetchingImages,
+  } = useAppQuery({
+    url: "/api/get-preferences",
+    reactQueryOptions: {
+      onSuccess: () => {
+        setIsLoading(false);
+      },
+    },
+  });
+
+  const toggleColor = useCallback(() => {
+    setColorOpen((colorOpen) => !colorOpen);
+    setShowSavebar(true);
+  }, []);
 
   useEffect(() => {
-    setHexColor(hbsaToHex(color))
+    setHexColor(hbsaToHex(color));
   }), [color];
 
   const colorCircle = (
@@ -34,10 +53,9 @@ export function ColorCard() {
     </div>
   );
 
-  const toggleUseTransparent = useCallback(
-    (updatedToggle) => setUseTransparent(updatedToggle),
-    [],
-  );
+  const toggleUseTransparent = useCallback((updatedToggle) => {
+    setUseTransparent(updatedToggle);
+  }, []);
 
   const css = `
   .color--disabled {
@@ -68,7 +86,8 @@ export function ColorCard() {
               onClose={toggleColor}
             >
               <ColorPicker onChange={(color) => {
-                setColor(color)
+                setColor(color);
+                setShowSavebar(true);
               }} color={color} />
               <Text>{hexColor}</Text>
             </Popover>

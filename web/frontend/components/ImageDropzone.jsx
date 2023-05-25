@@ -84,6 +84,9 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
 
   const applyRemoval = async () => {
     setProgress(10);
+
+    const formData = new FormData();
+
     // setUserHasUploadedFile is passed in only from empty state
     let userExists = setUserHasUploadedFile ? false : true;
     if (!userExists) {
@@ -100,11 +103,18 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
           error: true
         });
       }
+    } else {
+      const preferencesResponse = await fetch("/api/get-preferences");
+      const preferences = await preferencesResponse.json();
+      const { compression, use_compression, bg_color, use_bg_color } = preferences;
+      formData.append('compression', compression || 20);
+      formData.append('use_compression', use_compression || true);
+      formData.append('bg_color', bg_color || '#FFFFFFF');
+      formData.append('use_bg_color', use_bg_color || true);
     }
-    const formData = new FormData();
+
     formData.append('file', files[0]);
     formData.append('filename', files[0].name);
-    formData.append('bg_color', '#FFFFFFF');
 
     const imageResponse = await fetch('/api/remove-bg', {
       method: 'POST',
@@ -113,11 +123,12 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
     const returnedName = imageResponse.json;
     console.log('BG removal successful:', returnedName);
     setProgress(60);
-    const compressedResponse = await fetch("/api/compress", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ filename: files[0].name })
-    })
+    if (formData['use_compression'] === true) {
+      const compressedResponse = await fetch("/api/compress", {
+        method: 'POST',
+        body: formData
+      })
+    }
     const returnedCompressionResult = compressedResponse.json;
     console.log('Compression successful:', returnedCompressionResult);
     setProgress(80);
