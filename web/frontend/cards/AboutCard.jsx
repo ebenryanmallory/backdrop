@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  AlphaCard,
+  Card,
   VerticalStack,
   HorizontalGrid,
   Box,
@@ -14,7 +14,7 @@ export function AboutCard() {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <AlphaCard roundedAbove="sm">
+    <Card roundedAbove="sm">
       <VerticalStack gap="4">
         <Text size="small" fontWeight="semibold">About</Text>
         <Box>
@@ -52,6 +52,6 @@ export function AboutCard() {
           </Box>
         </HorizontalGrid>
       </VerticalStack>
-    </AlphaCard>
+    </Card>
   );
 }

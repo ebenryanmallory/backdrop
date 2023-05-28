@@ -14,12 +14,19 @@ export const getUserFreeCountRoute = async (_req, res) => {
     try {
       const sql = 'SELECT * FROM users WHERE user_id = ?';
       db.get(sql, [userId], (err, row) => {
-        const { free_count, plan_type } = row;
-        const responseObject = {
-          plan_type: plan_type,
-          free_count: free_count
-        };
-        return res.send(responseObject);
+        if (row === undefined) {
+          return res.json({
+            plan_type: 'free',
+            free_count: 5
+          });
+        } else {
+          const { free_count, plan_type } = row;
+          const responseObject = {
+            plan_type: plan_type,
+            free_count: free_count
+          };
+          return res.send(responseObject);
+        }
       });
     } catch (err) {
       console.error(err);

@@ -19,7 +19,7 @@ export const createUserRoute = async (_req, res) => {
     compression: 20,
     use_compression: true,
     bg_color: '#FFFFFF',
-    use_bg_color: true
+    use_transparency: false
   };
   // Check to make sure users exists
   async function createUsersTable() {
@@ -35,7 +35,7 @@ export const createUserRoute = async (_req, res) => {
           compression INTEGER DEFAULT,
           use_compression BOOLEAN DEFAULT,
           bg_color TEXT DEFAULT,
-          use_bg_color BOOLEAN DEFAULT
+          use_transparency BOOLEAN DEFAULT
         )
       `);
     } catch (err) {
@@ -54,7 +54,7 @@ export const createUserRoute = async (_req, res) => {
     compression,
     use_compression,
     bg_color,
-    use_bg_color
+    use_transparency
   )
   VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
@@ -68,7 +68,7 @@ const insertParams = [
   user.compression,
   user.use_compression,
   user.bg_color,
-  user.use_bg_color
+  user.use_transparency
 ];
 
   // Check if user_id already exists

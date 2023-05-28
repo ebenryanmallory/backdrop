@@ -3,10 +3,7 @@ import {
   Page,
   HorizontalGrid,
   VerticalStack,
-  AlphaCard,
-  Text,
-  SkeletonDisplayText,
-  SkeletonBodyText,
+  Card,
   Badge,
   FooterHelp,
   Link
@@ -84,14 +81,14 @@ export default function HomePage() {
       <HorizontalGrid columns={{ xs: 1, md: "2fr 1fr" }} gap="4">
         <VerticalStack gap="4">
           { isLoading &&
-            <AlphaCard roundedAbove="sm">
+            <Card roundedAbove="sm">
               <VerticalStack gap="4">
                 <SkeletonLabel />
                 <Box border="divider" borderRadius="base" minHeight="2rem" />
                 <SkeletonLabel maxWidth="8rem" />
                 <Box border="divider" borderRadius="base" minHeight="20rem" />
               </VerticalStack>
-            </AlphaCard>
+            </Card>
           }
           { !isLoading && images.length === 0 &&
             <EmptyStateCard />

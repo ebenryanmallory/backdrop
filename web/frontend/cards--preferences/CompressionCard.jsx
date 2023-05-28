@@ -1,45 +1,33 @@
 import {
-  AlphaCard,
+  Card,
   VerticalStack,
   RangeSlider,
   Checkbox,
   Text,
   Box
 } from "@shopify/polaris";
-import { useState, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
-export function CompressionCard({ setShowSavebar }) {
-  const [useCompression, setUseCompression] = useState(true);
-  const [rangeValue, setRangeValue] = useState(20);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const {
-    data,
-    refetch: refetchProductCount,
-    isLoading: isLoadingImages,
-    isRefetching: isRefetchingImages,
-  } = useAppQuery({
-    url: "/api/get-preferences",
-    reactQueryOptions: {
-      onSuccess: () => {
-        setIsLoading(false);
-      },
-    },
-  });
+export function CompressionCard({ setShowSavebar, useCompression, setUseCompression, compressionAmount, setCompressionAmount, data }) {
   
+  useEffect(() => {
+    setUseCompression(data.use_compression)
+    setCompressionAmount(100 - data.compression)
+  }, []);
+
   const toggleUseCompression = useCallback(
-    (updatedToggle) => setUseCompression(updatedToggle),
-    [],
-  );
+    (updatedToggle) => {
+      setUseCompression(updatedToggle)
+      setShowSavebar(true);
+    }, []);
   const setCompressionValue = useCallback(
     (updatedValue) => {
-      setRangeValue(updatedValue)
-    },
-    [],
-  );
+      setCompressionAmount(updatedValue)
+      setShowSavebar(true);
+    }, []);
 
   return (
-    <AlphaCard roundedAbove="sm">
+    <Card roundedAbove="sm">
       <VerticalStack gap="4">
         <Checkbox
           label="Use compression"
@@ -52,7 +40,7 @@ export function CompressionCard({ setShowSavebar }) {
             label="Compression"
             min={0}
             max={100}
-            value={rangeValue}
+            value={compressionAmount}
             onChange={setCompressionValue}
             prefix={<p>Amount</p>}
             suffix={
@@ -62,7 +50,7 @@ export function CompressionCard({ setShowSavebar }) {
                   textAlign: 'right',
                 }}
               >
-                {rangeValue}
+                {compressionAmount}
               </p>
             }
           />
@@ -73,8 +61,8 @@ export function CompressionCard({ setShowSavebar }) {
         <Text>Compression is recommended for web use.</Text>
       }
       { useCompression === true &&
-        <Text>A default of 20 provides a high amount of compression with a minimal amount of noticeable loss of quality.</Text>
+        <Text>A default of 80 provides a high amount of compression with a minimal amount of noticeable loss of quality.</Text>
       }
-    </AlphaCard>
+    </Card>
   );
 }

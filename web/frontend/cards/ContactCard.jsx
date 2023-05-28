@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  AlphaCard,
+  Card,
   VerticalStack,
   Box,
   Bleed,
@@ -13,7 +13,7 @@ import { SkeletonLabel } from "../components/SkeletonLabel";
 export function ContactCard() {
 
   return (
-    <AlphaCard roundedAbove="sm">
+    <Card roundedAbove="sm">
       <VerticalStack gap="4">
         <Text fontWeight="semibold">Support</Text>
         <Box>
@@ -34,6 +34,6 @@ export function ContactCard() {
           removeUnderline={true}
         >Contact Form</Link>
       </VerticalStack>
-    </AlphaCard>
+    </Card>
   );
 }

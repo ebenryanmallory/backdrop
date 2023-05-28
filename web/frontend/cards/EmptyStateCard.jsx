@@ -1,6 +1,6 @@
 import {
   EmptyState,
-  AlphaCard
+  Card
 } from "@shopify/polaris";
 import { noImage } from "../assets";
 import { useState } from 'react';
@@ -13,21 +13,23 @@ export function EmptyStateCard() {
 
   return (
     <>
-      <AlphaCard>
+      <Card>
         <EmptyState
           heading="Upload an image for background removal"
           secondaryAction={{
             content: 'Learn more',
-            url: 'https://help.shopify.com',
+            url: 'https://backdrop.motionstoryline.com/',
+            external: true,
+            target: "_blank"
           }}
-          image={ userHasUploadedFile ? noImage : null}
+          image={ userHasUploadedFile ? null : noImage}
         >
           <ImageDropzone
             setUserHasUploadedFile={setUserHasUploadedFile}
           />
           <p>One click background removal for creating product showcase images.</p>
         </EmptyState>
-      </AlphaCard>
+      </Card>
     </>
   );
 }

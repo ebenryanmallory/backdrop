@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  AlphaCard,
+  Card,
   VerticalStack,
   Box,
   Bleed,
@@ -31,7 +31,7 @@ export function PricingCard({ setPlanModalOpen }) {
 
   return (
     <>
-      <AlphaCard roundedAbove="sm">
+      <Card roundedAbove="sm">
         <VerticalStack gap="4">
           <Text fontWeight="semibold">Pricing</Text>
           <Box>
@@ -47,14 +47,21 @@ export function PricingCard({ setPlanModalOpen }) {
           { isLoading &&
             <SkeletonLabel />
           }
-          { !isLoading && data && data.plan_type === 'free' && data.free_count <= 5 &&
-            <Text>You have { 5 - data.free_count } free images left.</Text>
+          { !isLoading && data && data.plan_type === 'free' && data.free_count > 0 &&
+            <Text>You have { data.free_count } free images left.</Text>
+          }
+          { !isLoading && data && data.plan_type === 'free' && data.free_count === 0 &&
+            <Text>You have used all your free images.
+              <Link onClick={() => setPlanModalOpen(true)} monochrome removeUnderline={true}>
+                Upgrade
+              </Link>
+            </Text>
           }
           <Link onClick={() => setPlanModalOpen(true)} monochrome removeUnderline={true}>
             Manage subscription
           </Link>
         </VerticalStack>
-      </AlphaCard>
+      </Card>
     </>
   );
 }

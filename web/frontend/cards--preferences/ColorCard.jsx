@@ -1,5 +1,5 @@
 import {
-  AlphaCard,
+  Card,
   Checkbox,
   ColorPicker,
   Popover,
@@ -10,31 +10,9 @@ import {
 import { useState, useCallback, useEffect } from 'react';
 import { hbsaToHex } from '../shared/convertToHex';
 
-export function ColorCard({ setShowSavebar }) {
+export function ColorCard({ setShowSavebar, color, setColor, useTransparent, setUseTransparent }) {
   const [colorOpen, setColorOpen] = useState(false);
-  const [useTransparent, setUseTransparent] = useState(false);
-  const initialColor = {
-    hue: 0,
-    brightness: 1,
-    saturation: 0
-  }
-  const [color, setColor] = useState(initialColor);
   const [hexColor, setHexColor] = useState('transparent');
-  const [isLoading, setIsLoading] = useState(true);
-
-  const {
-    data,
-    refetch: refetchProductCount,
-    isLoading: isLoadingImages,
-    isRefetching: isRefetchingImages,
-  } = useAppQuery({
-    url: "/api/get-preferences",
-    reactQueryOptions: {
-      onSuccess: () => {
-        setIsLoading(false);
-      },
-    },
-  });
 
   const toggleColor = useCallback(() => {
     setColorOpen((colorOpen) => !colorOpen);
@@ -72,7 +50,7 @@ export function ColorCard({ setShowSavebar }) {
 `;
 
   return (
-    <AlphaCard roundedAbove="sm">
+    <Card roundedAbove="sm">
       <HorizontalStack gap="4">
         {useTransparent === false &&
           <HorizontalStack>
@@ -107,6 +85,6 @@ export function ColorCard({ setShowSavebar }) {
       { useTransparent === true &&
         <Text>Use for creating a composite background. PNG images will have larger file sizes.</Text>
       }
-    </AlphaCard>
+    </Card>
   );
 }

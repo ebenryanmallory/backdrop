@@ -16,18 +16,45 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
     setCollectionPickerOpen, setProductPickerOpen }) {
   
     const css = `
+        .Polaris-Modal-Dialog__Modal .Polaris-Box {
+            border-color: var(--p-color-bg-inverse);
+        }
         .w-full {
             width: 100%
         }
         .h-full {
             height: 100%
         }
-        .bg-inverse {
-            background-color: var(--p-color-bg-inverse);
-        }
         .Polaris-Modal-Dialog__Modal {
             background-color: #1a1a1a;
             color: #f1f1f1;
+        }
+        .flex {
+            display: flex;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .absolute {
+            position: absolute;
+        }
+        .relative {
+            position: relative;
+        }
+        .right-0 {
+            right: 0;
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        .next span, .prev span {
+            height: 2rem;
+            width: 2rem;
+        }
+        .next:hover, .prev:hover {
+            border: #414141 0.5px solid;
+            padding-top: 5px;
+            padding-bottom: 5px;
         }
     `;
     return (
@@ -53,23 +80,31 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                     <VerticalStack
                         className="bg-inverse"
                     >
-                        <div>
-                            <div onClick={() => setImageIndex(imageIndex - 1)}>
+                        <div className="flex items-center relative">
+                            <div onClick={() => {
+                                if ((imageIndex - 1) >= 0) {
+                                    setImageIndex(imageIndex - 1)
+                                }
+                            }} className="absolute cursor-pointer prev">
                                 <Icon
                                     source={ChevronLeftMinor}
                                     color="base"
-                                    classList="cursor-pointer"
+                                    accessibilityLabel="Previous image"
                                 />
                             </div>
                             <img
                                 src={images[imageIndex]}
                                 className="w-full h-full"
                             />
-                            <div onClick={() => setImageIndex(imageIndex + 1)}>
+                            <div onClick={() => {
+                                if ((imageIndex + 1) < images.length) {
+                                    setImageIndex(imageIndex + 1)
+                                }
+                            }} className="absolute right-0 cursor-pointer next">
                                 <Icon
                                     source={ChevronRightMinor}
                                     color="base"
-                                    classList="cursor-pointer"
+                                    accessibilityLabel="Next image"
                                 />
                             </div>
                         </div>

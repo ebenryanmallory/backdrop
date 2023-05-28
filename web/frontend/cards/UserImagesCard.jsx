@@ -1,6 +1,6 @@
 import {
   Icon,
-  AlphaCard,
+  Card,
   Box,
   HorizontalStack
 } from "@shopify/polaris";
@@ -8,14 +8,13 @@ import {
   DeleteMinor
 } from '@shopify/polaris-icons';
 import { Toast } from "@shopify/app-bridge-react";
-import { useAppQuery } from "../hooks";
+import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 import { useState, useEffect } from "react";
 import { Lightbox } from "../modals/Lightbox";
 import { AddProductImage } from "../components/AddProductImage";
 import { AddCollectionImage } from "../components/AddCollectionImage";
 import { ImageDropzone } from "../components/ImageDropzone";
 import { deleteImage } from "../shared/deleteImage";
-import { useAuthenticatedFetch } from "../hooks";
 
 export function UserImagesCard({ images }) {
 
@@ -84,7 +83,7 @@ export function UserImagesCard({ images }) {
       `
 
     return (
-      <AlphaCard>
+      <Card>
         <style>{css}</style>
         {toastMarkup}
         <HorizontalStack>
@@ -146,6 +145,6 @@ export function UserImagesCard({ images }) {
             setToastProps={setToastProps}
           />
         }
-      </AlphaCard>
+      </Card>
     )
 }

@@ -106,11 +106,11 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
     } else {
       const preferencesResponse = await fetch("/api/get-preferences");
       const preferences = await preferencesResponse.json();
-      const { compression, use_compression, bg_color, use_bg_color } = preferences;
+      const { compression, use_compression, bg_color, use_transparency } = preferences;
       formData.append('compression', compression || 20);
       formData.append('use_compression', use_compression || true);
       formData.append('bg_color', bg_color || '#FFFFFFF');
-      formData.append('use_bg_color', use_bg_color || true);
+      formData.append('use_transparency', use_transparency || false);
     }
 
     formData.append('file', files[0]);
@@ -128,10 +128,10 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
         method: 'POST',
         body: formData
       })
+      const returnedCompressionResult = compressedResponse.json;
+      console.log('Compression successful:', returnedCompressionResult);
+      setProgress(80);
     }
-    const returnedCompressionResult = compressedResponse.json;
-    console.log('Compression successful:', returnedCompressionResult);
-    setProgress(80);
     const uploadResponse = await fetch("/api/upload", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

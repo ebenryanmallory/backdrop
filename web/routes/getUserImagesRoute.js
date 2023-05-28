@@ -11,9 +11,9 @@ export const getUserImagesRoute = async (_req, res) => {
   async function getUserImages(userId) {
     try {
         db.all('SELECT image_url FROM user_images WHERE user_id = ?', userId, (err, rows) => {
-            if (err) {
-                throw err;
-            } else {
+          if (rows === undefined) {
+            return res.json({ images: [] });
+          } else {
                 const imageUrls = [...rows.map(row => row.image_url)];
                 res.send({ images: imageUrls })
             }

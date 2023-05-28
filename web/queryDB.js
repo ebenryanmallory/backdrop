@@ -24,11 +24,29 @@ function createUsersTable() {
   
   function addField() {
     db = db ?? new sqlite3.Database(DB_PATH);
-    db.run('ALTER TABLE users ADD COLUMN plan_type TEXT DEFAULT \'free\' CHECK(plan_type IN (\'free\', \'basic\', \'professional\'));', (err) => {
+    const sql = `ALTER TABLE users ADD COLUMN bg_color VARCHAR(9)`;
+
+    db.run(sql, (err) => {
       if (err) {
         console.error(err);
       } else {
         console.log('Added');
+      }
+    });
+    db.close();
+  }
+
+  function updateField() {
+    db = db ?? new sqlite3.Database(DB_PATH);
+    const sql = `ALTER TABLE users
+    ALTER COLUMN free_count SET DEFAULT 5;
+    `;
+
+    db.run(sql, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('ok');
       }
     });
     db.close();
@@ -48,14 +66,15 @@ function createUsersTable() {
   
   // createUsersTable();
 
-function printTableNames() {
+function printTableInfo() {
   db = db ?? new sqlite3.Database(DB_PATH);
-  db.all("SELECT name FROM sqlite_master WHERE type='table'", [], (err, rows) => {
+  db.all("SELECT * FROM sqlite_master WHERE type='table'", [], (err, rows) => {
       if (err) {
         console.error(err);
       } else {
         rows.forEach((row) => {
           console.log("Table: " + row.name);
+          console.log(row)
         });
       }
     });
@@ -122,18 +141,23 @@ function printUsers() {
   db.close();
 }
 
-async function getCount(userId) {
+async function getAll(userId) {
   db = db ?? new sqlite3.Database(DB_PATH);
   const sql = 'SELECT * FROM users WHERE user_id = ?';
   db.get(sql, [userId], (err, row) => {
     if (err) {
       console.error(err.message);
     } else {
-      const { id, free_count, plan_type } = row;
+      const { id, created_at, free_count, plan_type, compression, use_compression, bg_color } = row;
       console.log(id)
       const responseObject = {
+        id: id,
+        created_at: created_at,
         plan: plan_type,
-        free: free_count
+        free: free_count,
+        compression: compression,
+        use_compression: use_compression,
+        bg_color: bg_color
       };
       console.log(responseObject)
     }
@@ -159,12 +183,23 @@ async function deleteUserImages(userId, imageURL) {
   db.close();
 }
 
+async function deleteUser(userId) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = 'DELETE FROM users WHERE user_id = ?';
+  db.run(sql, [userId] , function() {
+    console.log(this.changes)
+  });
+  db.close();
+}
+
 // createUserImagesTable();
-// printTableNames();
+printTableInfo();
 // addField();
+// updateField();
 // printUserIds();
 // deleteField()
 // printUserInfo()
-// getCount('offline_motionstoryline-dev.myshopify.com')
+// getAll('offline_motionstoryline-dev.myshopify.com')
 // deleteUserImages('offline_motionstoryline-dev.myshopify.com', 'https://shopify-staged-uploads.storage.googleapis.com/tmp/73997156649/products/c89d4685-6126-4b3b-bbb6-bd7be6a5066b/test.jpeg')
-getUserImages('offline_motionstoryline-dev.myshopify.com')
+// getUserImages('offline_motionstoryline-dev.myshopify.com')
+// deleteUser('offline_motionstoryline-dev.myshopify.com')

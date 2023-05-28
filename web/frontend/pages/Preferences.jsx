@@ -10,19 +10,49 @@ import {
   Link
 } from "@shopify/polaris";
 import { PlanMinor } from '@shopify/polaris-icons';
-import { ContextualSaveBar } from '@shopify/app-bridge-react';
+import { ContextualSaveBar, Toast } from '@shopify/app-bridge-react';
 import { useState } from 'react';
 import { PlanModal } from "../modals/PlanModal";
 import { CompressionCard } from "../cards--preferences/CompressionCard";
 import { ColorCard } from "../cards--preferences/ColorCard";
 import { BackdropSVG } from "../assets/BackdropSVG";
+import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
 export default function Preferences() {
+
+  const emptyToastProps = { content: null };
+  const [toastProps, setToastProps] = useState(emptyToastProps);
+
   const { smUp } = useBreakpoints();
   const [planModalOpen, setPlanModalOpen] = useState(false);
   const [showSavebar, setShowSavebar] = useState(false);
 
+  const [useCompression, setUseCompression] = useState(true);
+  const [compressionAmount, setCompressionAmount] = useState(80);
+  const [useTransparent, setUseTransparent] = useState(false);
+  const [color, setColor] = useState({
+    hue: 0,
+    brightness: 1,
+    saturation: 0
+  });
+
   const fetch = useAuthenticatedFetch();
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const {
+    data,
+    refetch: refetchPreferences,
+    isLoading: isLoadingPreferences,
+    isRefetching: isRefetchingPreferences,
+  } = useAppQuery({
+    url: "/api/get-preferences",
+    reactQueryOptions: {
+      onSuccess: () => {
+        setIsLoading(false);
+      },
+    },
+  });
 
   const saveAction = {
     disabled: false,
@@ -32,14 +62,17 @@ export default function Preferences() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-            compression: 20,
-            use_compression: true,
-            bg_color: '#FFFFFF',
-            use_bg_color: true
+            compression: compressionAmount,
+            use_compression: useCompression,
+            bg_color: color,
+            use_transparency: useTransparent
           })
       })
       if (!imageResponse.ok) {
           throw new Error(imageResponse.statusText);
+      } else {
+        setShowSavebar(false)
+        setToastProps({ content: "Preferences have been updated!" });
       }
     }
   }
@@ -49,9 +82,15 @@ export default function Preferences() {
     loading: false,
     discardConfirmationModal: true,
     onAction: () => {
+      setUseCompression(data.use_compression)
+      setCompressionAmount(100 - data.compression)
       setShowSavebar(false)
     }
   }
+
+  const toastMarkup = toastProps.content && (
+    <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
+  );
 
   return (
     <Page
@@ -67,6 +106,7 @@ export default function Preferences() {
         }
       ]}
     >
+      {toastMarkup}
       <VerticalStack gap={{ xs: "8", sm: "4" }}>
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
           <Box
@@ -79,13 +119,21 @@ export default function Preferences() {
                 Compression
               </Text>
               <Text as="p" variant="bodyMd">
-                Amount of compression applied to each image. A lower number will reduce the file size by applying more compression.
+                Amount of compression applied to each image.
+                More compression will reduce the file size, but too much can degrade image quality.
               </Text>
             </VerticalStack>
           </Box>
-          <CompressionCard 
-            setShowSavebar={setShowSavebar}
-          />
+          { isLoading === false &&
+            <CompressionCard 
+              setShowSavebar={setShowSavebar}
+              useCompression={useCompression}
+              setUseCompression={setUseCompression}
+              compressionAmount={compressionAmount}
+              setCompressionAmount={setCompressionAmount}
+              data={data}
+            />
+          }
         </HorizontalGrid>
         {smUp ? <Divider borderStyle="base" /> : null}
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
@@ -103,9 +151,15 @@ export default function Preferences() {
               </Text>
             </VerticalStack>
           </Box>
-          <ColorCard 
-            setShowSavebar={setShowSavebar}
-          />
+          { isLoading === false &&
+            <ColorCard 
+              setShowSavebar={setShowSavebar}
+              useTransparent={useTransparent}
+              setUseTransparent={setUseTransparent}
+              color={color}
+              setColor={setColor}
+            />
+          }
         </HorizontalGrid>
       </VerticalStack>
       <FooterHelp>
