@@ -157,10 +157,12 @@ export function ImageDropzone({ setUserHasUploadedFile }) {
         {fileUpload}
       </DropZone>
       { files.length > 0 &&
-        <Button primary fullWidth={false} size="medium" style={{ marginTop: '1rem' }}
-          onClick={() => applyRemoval()}>
-            Apply removal
-        </Button>
+        <Box padding="4">
+          <Button primary fullWidth={false} size="medium" style={{ marginTop: '1rem' }}
+            onClick={() => applyRemoval()}>
+              Apply removal
+          </Button>
+        </Box>
       }
       <Box padding="4">
         <Import

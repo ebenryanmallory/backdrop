@@ -15,7 +15,7 @@ export function EmptyStateCard() {
     <>
       <Card>
         <EmptyState
-          heading="Upload an image for background removal"
+          heading={userHasUploadedFile ? "Add additional images:" : "Upload an image for background removal"}
           secondaryAction={{
             content: 'Learn more',
             url: 'https://backdrop.motionstoryline.com/',

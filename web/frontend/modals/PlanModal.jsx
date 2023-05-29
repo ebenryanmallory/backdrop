@@ -2,7 +2,8 @@ import {
     Modal,
     Text,
     HorizontalGrid,
-    Card
+    Card,
+    DescriptionList
 } from "@shopify/polaris";
 import { useState, useCallback } from 'react';
 import { useAppQuery } from "../hooks";
@@ -88,6 +89,26 @@ export function PlanModal({ setPlanModalOpen }) {
                                 }}
                                 src={Free}
                             />
+                            <DescriptionList
+                                items={[
+                                    {
+                                        description:
+                                            '✓ Up to 5 images',
+                                    },
+                                    {
+                                    description:
+                                        '✓ Full functionality',
+                                    },
+                                    {
+                                    description:
+                                        '✓ Free forever',
+                                    },
+                                    {
+                                    description:
+                                        'Ⓧ Intended only for feature and quality demonstration purposes.',
+                                    }
+                                ]}
+                            />
                         </Card>
                     </div>
                     <div onClick={(e) => borderSelect(e.target)} className="professional]">
@@ -106,6 +127,18 @@ export function PlanModal({ setPlanModalOpen }) {
                                 }}
                                 src={Professional}
                             />
+                            <DescriptionList
+                                items={[
+                                    {
+                                    description:
+                                        '✓ Up to 100 images per month',
+                                    },
+                                    {
+                                    description:
+                                        '✓ Billed only after you go over your free tier limit',
+                                    }
+                                ]}
+                            />
                         </Card>
                     </div>
                     <div onClick={(e) => borderSelect(e.target)} className="studio">
@@ -122,6 +155,18 @@ export function PlanModal({ setPlanModalOpen }) {
                                 objectPosition: 'center'
                                 }}
                                 src={Studio}
+                            />
+                            <DescriptionList
+                                items={[
+                                    {
+                                    description:
+                                        '✓ Up to 250 images per month',
+                                    },
+                                    {
+                                    description:
+                                        '✓ Billed only after you go over your professional tier limit, or you are billed at the lower rate.',
+                                    }
+                                ]}
                             />
                         </Card>
                     </div>
