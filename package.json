@@ -9,7 +9,8 @@
     "dev": "shopify app dev",
     "info": "shopify app info",
     "generate": "shopify app generate",
-    "deploy": "shopify app deploy"
+    "deploy": "shopify app deploy",
+    "flydeploy": "flyctl deploy --build-arg SHOPIFY_API_KEY=<SHOPIFY_API_KEY> --remote-only"
   },
   "dependencies": {
     "@shopify/app": "3.44.1",
