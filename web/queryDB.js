@@ -193,7 +193,7 @@ async function deleteUser(userId) {
 }
 
 // createUserImagesTable();
-printTableInfo();
+// printTableInfo();
 // addField();
 // updateField();
 // printUserIds();
@@ -201,5 +201,5 @@ printTableInfo();
 // printUserInfo()
 // getAll('offline_motionstoryline-dev.myshopify.com')
 // deleteUserImages('offline_motionstoryline-dev.myshopify.com', 'https://shopify-staged-uploads.storage.googleapis.com/tmp/73997156649/products/c89d4685-6126-4b3b-bbb6-bd7be6a5066b/test.jpeg')
-// getUserImages('offline_motionstoryline-dev.myshopify.com')
+getUserImages('offline_motionstoryline-dev.myshopify.com')
 // deleteUser('offline_motionstoryline-dev.myshopify.com')

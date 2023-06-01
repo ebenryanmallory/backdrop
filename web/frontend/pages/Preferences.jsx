@@ -14,7 +14,9 @@ import { ContextualSaveBar, Toast } from '@shopify/app-bridge-react';
 import { useState } from 'react';
 import { PlanModal } from "../modals/PlanModal";
 import { CompressionCard } from "../cards--preferences/CompressionCard";
+import { CompressionCardLoading } from "../cards--preferences/CompressionCardLoading";
 import { ColorCard } from "../cards--preferences/ColorCard";
+import { ColorCardLoading } from "../cards--preferences/ColorCardLoading";
 import { BackdropSVG } from "../assets/BackdropSVG";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 
@@ -134,6 +136,9 @@ export default function Preferences() {
               data={data}
             />
           }
+          { isLoading === true &&
+            <CompressionCardLoading />
+          }
         </HorizontalGrid>
         {smUp ? <Divider borderStyle="base" /> : null}
         <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
@@ -159,6 +164,9 @@ export default function Preferences() {
               color={color}
               setColor={setColor}
             />
+          }
+          { isLoading === true &&
+            <ColorCardLoading />
           }
         </HorizontalGrid>
       </VerticalStack>

@@ -9,6 +9,7 @@ export const SkeletonLabel = (props) => {
         minHeight="1rem"
         maxWidth="5rem"
         borderRadius="base"
+        style={{background: 'red'}}
         {...props}
       />
     );

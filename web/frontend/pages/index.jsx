@@ -91,7 +91,9 @@ export default function HomePage() {
             </Card>
           }
           { !isLoading && images.length === 0 &&
-            <EmptyStateCard />
+            <EmptyStateCard 
+              getUserImages={getUserImages}
+            />
           }
           { !isLoading && images.length > 0 &&
               <UserImagesCard images={images} />

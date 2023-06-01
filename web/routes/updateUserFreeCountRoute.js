@@ -16,7 +16,7 @@ export const getUserFreeCountRoute = async (_req, res) => {
       db.run(sql, [count, userId], (err, row) => {
         const responseObject = {
           free_count: count
-        };
+        }
         return res.send(responseObject);
       });
     } catch (err) {

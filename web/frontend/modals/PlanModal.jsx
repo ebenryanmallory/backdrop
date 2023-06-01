@@ -3,8 +3,12 @@ import {
     Text,
     HorizontalGrid,
     Card,
-    DescriptionList
+    DescriptionList,
+    Icon
 } from "@shopify/polaris";
+import {
+    CancelMinor
+} from '@shopify/polaris-icons';
 import { useState, useCallback } from 'react';
 import { useAppQuery } from "../hooks";
 import { Free } from "../assets";
@@ -92,20 +96,20 @@ export function PlanModal({ setPlanModalOpen }) {
                             <DescriptionList
                                 items={[
                                     {
-                                        description:
-                                            '✓ Up to 5 images',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Up to 5 images',
                                     },
                                     {
-                                    description:
-                                        '✓ Full functionality',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Full functionality',
                                     },
                                     {
-                                    description:
-                                        '✓ Free forever',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Free forever',
                                     },
                                     {
-                                    description:
-                                        'Ⓧ Intended only for feature and quality demonstration purposes.',
+                                        term: <div style={{ textAlign: 'right' }}>ⓧ</div>,
+                                        description: 'Intended only for feature and quality demonstration purposes.',
                                     }
                                 ]}
                             />
@@ -130,12 +134,12 @@ export function PlanModal({ setPlanModalOpen }) {
                             <DescriptionList
                                 items={[
                                     {
-                                    description:
-                                        '✓ Up to 100 images per month',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Up to 100 images per month',
                                     },
                                     {
-                                    description:
-                                        '✓ Billed only after you go over your free tier limit',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Billed only after you go over your free tier limit',
                                     }
                                 ]}
                             />
@@ -159,12 +163,12 @@ export function PlanModal({ setPlanModalOpen }) {
                             <DescriptionList
                                 items={[
                                     {
-                                    description:
-                                        '✓ Up to 250 images per month',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Up to 250 images per month',
                                     },
                                     {
-                                    description:
-                                        '✓ Billed only after you go over your professional tier limit, or you are billed at the lower rate.',
+                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
+                                        description: 'Billed only after you go over your professional tier limit, or you are billed at the lower rate.',
                                     }
                                 ]}
                             />

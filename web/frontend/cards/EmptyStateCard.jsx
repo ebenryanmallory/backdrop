@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Import } from "../components/Import"
 import { ImageDropzone } from "../components/ImageDropzone";
 
-export function EmptyStateCard() {
+export function EmptyStateCard({ getUserImages }) {
 
   const [userHasUploadedFile, setUserHasUploadedFile] = useState(false);
 
@@ -26,6 +26,7 @@ export function EmptyStateCard() {
         >
           <ImageDropzone
             setUserHasUploadedFile={setUserHasUploadedFile}
+            getUserImages={getUserImages}
           />
           <p>One click background removal for creating product showcase images.</p>
         </EmptyState>

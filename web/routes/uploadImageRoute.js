@@ -27,9 +27,11 @@ export const uploadImageRoute = async (_req, res) => {
 
   const session = res.locals.shopify.session;
 	const { id, shop } = session;
-	const filePath = `${process.cwd()}/images/${shop}/compressed/${_req.body.filename}`;
   const client = new shopify.api.clients.Graphql({ session });
+  const { use_compression, filename } = _req.body;
 
+  const filePath = use_compression === true ? `${process.cwd()}/images/${shop}/compressed/${filename}` :
+    `${process.cwd()}/images/${shop}/${filename}`;
   const imageFile = fs.readFileSync(filePath);
 
   try {
@@ -40,7 +42,7 @@ export const uploadImageRoute = async (_req, res) => {
         variables: {
           input: [
             {
-              filename: _req.body.filename,
+              filename: filename,
               mimeType: "image/jpeg",
               resource: "IMAGE",
               httpMethod: "PUT"
@@ -84,7 +86,6 @@ export const uploadImageRoute = async (_req, res) => {
         },
       });
       const createdFilter = createdFile.body.data.fileCreate.files[0].createdAt;
-
       const uploadedImageQuery = await client.query({
         data: `query {
           files(first: 1, query: "created_at:${createdFilter}") {
@@ -107,13 +108,37 @@ export const uploadImageRoute = async (_req, res) => {
       if (uploadedImageQuery.body.data.files.edges.length < 1) {
         return res.send('Created image not found')
       }
-      const hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image.originalSrc;
+      let hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image?.originalSrc;
+      if (!hostedCDNurl.includes(filename)) {
+        const uploadedImageQuery = await client.query({
+          data: `query {
+            files(first: 1, query: "created_at:${createdFilter}") {
+              edges {
+                node {
+                  ... on MediaImage {
+                    id
+                    image {
+                      id
+                      originalSrc: url
+                      width
+                      height
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+        });
+        hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image?.originalSrc;
+      }
       async function addImageUrl(userId, imageUrl, timestamp) {
         let db = null;
         try {
           db = new sqlite3.Database('database.sqlite')
           const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
-          await db.run(query, [userId, imageUrl, timestamp]);
+          db.run(query, [userId, imageUrl, timestamp], function() {
+            console.log(this.changes)
+          });
         } catch (err) {
           console.error(err);
         } finally {
