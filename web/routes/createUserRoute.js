@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 
 export const createUserRoute = async (_req, res) => {
+
   const db = new sqlite3.Database('database.sqlite');
   db.on('error', (err) => {
     console.error('Database error:', err);
@@ -21,75 +22,51 @@ export const createUserRoute = async (_req, res) => {
     bg_color: '#FFFFFF',
     use_transparency: false
   };
-  // Check to make sure users exists
-  async function createUsersTable() {
-    try {
-      await db.run(`
-        CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id TEXT,
-          shop TEXT,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          free_count INTEGER DEFAULT,
-          plan_type TEXT DEFAULT,
-          compression INTEGER DEFAULT,
-          use_compression BOOLEAN DEFAULT,
-          bg_color TEXT DEFAULT,
-          use_transparency BOOLEAN DEFAULT
-        )
-      `);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
 
   const insertQuery = `
-  INSERT INTO users(
-    user_id,
-    shop,
-    created_at,
-    free_count,
-    plan_type,
-    compression,
-    use_compression,
-    bg_color,
-    use_transparency
-  )
-  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
-`;
+    INSERT INTO users(
+      user_id,
+      shop,
+      created_at,
+      free_count,
+      plan_type,
+      compression,
+      use_compression,
+      bg_color,
+      use_transparency
+    )
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
-const insertParams = [
-  user.user_id,
-  user.shop,
-  user.created_at,
-  user.free_count,
-  user.plan_type,
-  user.compression,
-  user.use_compression,
-  user.bg_color,
-  user.use_transparency
-];
+  const insertParams = [
+    user.user_id,
+    user.shop,
+    user.created_at,
+    user.free_count,
+    user.plan_type,
+    user.compression,
+    user.use_compression,
+    user.bg_color,
+    user.use_transparency
+  ];
 
   // Check if user_id already exists
-  const existingUser = await db.get("SELECT user_id FROM users WHERE user_id = ?", user.user_id);
-
-  if (existingUser) {
-    console.log("User ID already exists.");
-    return res.send(user.user_id);
-  } else {
-    // Insert the new user into the database
-    await db.run(insertQuery, insertParams, function(err) {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log(`A new user has been added with user_id ${user.user_id}.`);
-
-      res.send(user.user_id);
-      res.on('finish', () => {
-        console.log('database connection closed')
-        db.close();
+  db.get("SELECT user_id FROM users WHERE user_id = ?", user.user_id, function(err, row) {
+    if (row && row.user_id === user.user_id) {
+      return res.send(user.user_id);
+    } else {
+      db.run(insertQuery, insertParams, function(err) {
+        if (err) {
+          return console.error(err.message);
+        }
+        console.log(`A new user has been added with user_id ${user.user_id}.`);
+    
+        res.send(user.user_id);
+        res.on('finish', () => {
+          console.log('database connection closed')
+          db.close();
+        });
       });
-    });
-  }
+    }
+  });
 }

@@ -1,10 +1,10 @@
 import sqlite3 from "sqlite3";
 
-export const getUserFreeCountRoute = async (_req, res) => {
+export const updateFreeCountRoute = async (_req, res) => {
 
   const session = res.locals.shopify.session;
   const { id } = session;
-  const free_count = _req.body.free_count;
+  const updated_count = _req.body.updated_count;
 
   async function updateFreeCount(userId, count) {
     const db = new sqlite3.Database('database.sqlite');
@@ -13,7 +13,9 @@ export const getUserFreeCountRoute = async (_req, res) => {
     });
     try {
       const sql = 'UPDATE users SET free_count = ? WHERE user_id = ?';
-      db.run(sql, [count, userId], (err, row) => {
+      db.run(sql, [count, userId], function(err, row) {
+        console.log(row)
+        console.log(this.changes)
         const responseObject = {
           free_count: count
         }
@@ -25,5 +27,5 @@ export const getUserFreeCountRoute = async (_req, res) => {
       db.close();
     }
   }
-  updateFreeCount(id, free_count);
+  updateFreeCount(id, updated_count);
 }

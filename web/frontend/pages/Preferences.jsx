@@ -7,11 +7,13 @@ import {
   Divider,
   useBreakpoints,
   FooterHelp,
-  Link
+  Link,
+  hsbToHex,
+  hexToRgb,
+  rgbToHsb
 } from "@shopify/polaris";
 import { PlanMinor } from '@shopify/polaris-icons';
 import { ContextualSaveBar, Toast } from '@shopify/app-bridge-react';
-import { useState } from 'react';
 import { PlanModal } from "../modals/PlanModal";
 import { CompressionCard } from "../cards--preferences/CompressionCard";
 import { CompressionCardLoading } from "../cards--preferences/CompressionCardLoading";
@@ -19,6 +21,7 @@ import { ColorCard } from "../cards--preferences/ColorCard";
 import { ColorCardLoading } from "../cards--preferences/ColorCardLoading";
 import { BackdropSVG } from "../assets/BackdropSVG";
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
+import { useState, useEffect } from 'react';
 
 export default function Preferences() {
 
@@ -56,24 +59,46 @@ export default function Preferences() {
     },
   });
 
+  useEffect(() => {
+    if (data && data.compression !== undefined) {
+      setCompressionAmount(data.compression)
+    };
+    if (data && data.use_compression !== undefined) {
+      setUseCompression(data.use_compression)
+    };
+    if (data && data.bg_color !== undefined) {
+      setColor(rgbToHsb(hexToRgb(data.bg_color)))
+    };
+    if (data && data.use_transparency !== undefined) {
+      setUseTransparent(data.use_transparency)
+    };
+  }, [data]);
+
   const saveAction = {
     disabled: false,
     loading: false,
     onAction: async() => {
+      if (data.userNotFound) {
+        const userResponse = await fetch("/api/create-user");
+        if (!userResponse.ok) {
+          throw new Error(userResponse.statusText);
+        }
+      }
       const imageResponse = await fetch('/api/update-preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             compression: compressionAmount,
             use_compression: useCompression,
-            bg_color: color,
+            bg_color: hsbToHex(color),
             use_transparency: useTransparent
           })
       })
       if (!imageResponse.ok) {
           throw new Error(imageResponse.statusText);
       } else {
-        setShowSavebar(false)
+        setShowSavebar(false);
+        refetchPreferences();
         setToastProps({ content: "Preferences have been updated!" });
       }
     }
@@ -152,7 +177,7 @@ export default function Preferences() {
                 Background
               </Text>
               <Text as="p" variant="bodyMd">
-                Applies background style after foreground is removed. Can be solid color or transparent.
+                Applies background style after foreground is removed from image. Can be solid color or transparent.
               </Text>
             </VerticalStack>
           </Box>

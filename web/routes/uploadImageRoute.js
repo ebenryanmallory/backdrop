@@ -149,6 +149,8 @@ export const uploadImageRoute = async (_req, res) => {
       }
       const { id } = session;
       const timestamp = new Date().toISOString();
+      console.log('running addImageUrl()...')
+      console.log(hostedCDNurl)
       addImageUrl(id, hostedCDNurl, timestamp);
       return res.send(hostedCDNurl);
     }

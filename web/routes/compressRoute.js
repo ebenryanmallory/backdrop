@@ -11,23 +11,18 @@ export const compressRoute = async (_req, res) => {
 	const { compression } = _req.body;
 
 	const filePath = `${process.cwd()}/images/${shop}`;
-	const compressedDir = `${process.cwd()}/images/${shop}/compressed`;
+	const compressedDir = `${filePath}/compressed`;
+
 	if (!fs.existsSync(compressedDir)) {
 	  fs.mkdirSync(compressedDir);
 	}
-	await imagemin([`${filePath}/*.jpg`, `${filePath}/*.jpeg`, 
-		`${filePath}/*.png`, `${filePath}/*.gif`], {
+	await imagemin([`${filePath}/*.jpg`, `${filePath}/*.jpeg`, `${filePath}/*.png`], {
 		destination: compressedDir,
 		plugins: [
-			imageminMozjpeg({quality: compression || 20})
+			imageminMozjpeg({quality: compression || 20}),
+			imageminPngquant({quality: [compression / 100, (compression + 5) / 100]  || [0.2, 0.2]})
 		],
     
-	});
-	await imagemin([`${filePath}/*.png`], {
-		destination: compressedDir,
-		plugins: [
-			imageminPngquant({quality: 20})
-		]
 	});
     return res.send('compressed')
   };

@@ -97,7 +97,7 @@ function printUserIds() {
 
 function printUserInfo() {
   db = db ?? new sqlite3.Database(DB_PATH);
-  db.all('SELECT id, user_id, plan_type, free_count FROM users;', (err, rows) => {
+  db.all('SELECT * FROM users;', (err, rows) => {
     if (err) {
       console.error(err.message);
     } else {
@@ -148,8 +148,7 @@ async function getAll(userId) {
     if (err) {
       console.error(err.message);
     } else {
-      const { id, created_at, free_count, plan_type, compression, use_compression, bg_color } = row;
-      console.log(id)
+      const { id, created_at, free_count, plan_type, compression, use_compression, bg_color, use_transparency } = row;
       const responseObject = {
         id: id,
         created_at: created_at,
@@ -157,7 +156,8 @@ async function getAll(userId) {
         free: free_count,
         compression: compression,
         use_compression: use_compression,
-        bg_color: bg_color
+        bg_color: bg_color,
+        use_transparency: use_transparency
       };
       console.log(responseObject)
     }
@@ -165,6 +165,20 @@ async function getAll(userId) {
   db.close();
 }
 
+async function getAllImages() {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const countSQL = 'SELECT COUNT(*) FROM user_images';
+  const selectSQL = 'SELECT * FROM user_images';
+  db.get(countSQL, (err, row) => {
+      console.log(row)
+  });
+  db.all(selectSQL, function(err, rows) {
+    rows.forEach((row) => {
+      console.log(row)
+    });
+  });
+  db.close();
+}
 async function getUserImages(userId) {
   db = db ?? new sqlite3.Database(DB_PATH);
   const sql = `SELECT image_url FROM user_images WHERE user_id = ?`;
@@ -192,6 +206,54 @@ async function deleteUser(userId) {
   db.close();
 }
 
+async function updatePreferences(userId, compression, use_compression, bg_color, use_transparency) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = `Update users SET compression = $compression, use_compression = $use_compression, bg_color = $bg_color, use_transparency = $use_transparency WHERE user_id = $userID`;
+  const updateParams = {
+    $compression: compression,
+    $use_compression: use_compression,
+    $bg_color: bg_color,
+    $use_transparency: use_transparency,
+    $userID: userId
+  };
+  db.run(sql, updateParams, function(err) {
+    console.log(this.changes)
+  });
+  db.close();
+}
+
+async function getPreferences(userId) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = 'SELECT * FROM users WHERE user_id = ?';
+  db.get(sql, [userId], (err, row) => {
+    const { compression, use_compression, bg_color, use_transparency } = row;
+    const responseObject = {
+      compression: compression,
+      use_compression: use_compression,
+      bg_color: bg_color,
+      use_transparency: use_transparency
+    };
+    console.log(responseObject)
+  });
+  db.close();
+}
+
+async function addImageUrl(userId, imageUrl, timestamp) {
+  let db = null;
+  try {
+    db = new sqlite3.Database('database.sqlite')
+    const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
+    db.run(query, [userId, imageUrl, timestamp], function() {
+      console.log(this.changes)
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    if (db) {
+      db.close();
+    }
+  }
+}
 // createUserImagesTable();
 // printTableInfo();
 // addField();
@@ -200,6 +262,10 @@ async function deleteUser(userId) {
 // deleteField()
 // printUserInfo()
 // getAll('offline_motionstoryline-dev.myshopify.com')
+getAllImages()
 // deleteUserImages('offline_motionstoryline-dev.myshopify.com', 'https://shopify-staged-uploads.storage.googleapis.com/tmp/73997156649/products/c89d4685-6126-4b3b-bbb6-bd7be6a5066b/test.jpeg')
-getUserImages('offline_motionstoryline-dev.myshopify.com')
+// getUserImages('offline_motionstoryline-dev.myshopify.com')
 // deleteUser('offline_motionstoryline-dev.myshopify.com')
+// updatePreferences('offline_motionstoryline-dev.myshopify.com', 80, false, '#FFFFFF', false)
+// getPreferences('offline_motionstoryline-dev.myshopify.com')
+// addImageUrl('offline_motionstoryline-dev.myshopify.com', '', new Date().toISOString())

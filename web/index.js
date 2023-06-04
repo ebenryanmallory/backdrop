@@ -12,6 +12,7 @@ import { compressRoute } from './routes/compressRoute.js'
 import { createUserRoute } from './routes/createUserRoute.js'
 import { getUserImagesRoute } from './routes/getUserImagesRoute.js'
 import { getUserFreeCountRoute } from './routes/getUserFreeCountRoute.js'
+import { updateFreeCountRoute } from './routes/updateFreeCountRoute.js'
 import { removeRoute } from './routes/removeRoute.js'
 import { uploadImageRoute } from './routes/uploadImageRoute.js'
 import { deleteUserImageRoute } from './routes/deleteUserImageRoute.js'
@@ -64,6 +65,7 @@ app.post("/api/delete-user-image", deleteUserImageRoute);
 app.post("/api/add-product-image", addProductImageRoute);
 app.post("/api/add-collection-image", addCollectionImageRoute);
 app.post("/api/update-preferences", updatePreferencesRoute);
+app.post("/api/update-free-count", updateFreeCountRoute);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

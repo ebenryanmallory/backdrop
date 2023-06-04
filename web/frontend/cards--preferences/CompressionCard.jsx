@@ -56,7 +56,7 @@ export function CompressionCard({ setShowSavebar, useCompression, setUseCompress
           />
         }
       </VerticalStack>
-      <Box padding="4" />
+      <Box padding="2" />
       { useCompression === false &&
         <Text>Compression is recommended for web use.</Text>
       }

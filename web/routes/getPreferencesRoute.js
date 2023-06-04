@@ -11,24 +11,27 @@ export const getPreferencesRoute = async (_req, res) => {
       console.error('Database error:', err);
     });
     try {
-      const sql = `SELECT compression, use_compression, bg_color, use_transparency FROM users WHERE id = $userId`;
-      db.run(sql, [userId], function(err, row) {
-        console.log(row)
+      const sql = 'SELECT * FROM users WHERE user_id = ?';
+      db.get(sql, [userId], (err, row) => {
         if (row === undefined) {
           return res.json({
+            userNotFound: true,
             compression: 20,
             use_compression: true,
             bg_color: '#FFFFFF',
             use_transparency: false
           });
         } else {
-          const result = {
-            compression: row.compression,
-            use_compression: row.use_compression || true,
-            bg_color: row.bg_color || '#FFFFFF',
-            use_transparency: row.use_transparency || false
+          const { compression, use_compression, bg_color, use_transparency, plan_type, free_count } = row;
+          const responseObject = {
+            compression: compression,
+            use_compression: use_compression ? true : false,
+            bg_color: bg_color,
+            use_transparency: use_transparency ? true : false,
+            plan_type: plan_type,
+            free_count: free_count
           };
-          return res.json(result);
+          return res.json(responseObject)
         }
       });
     } catch (err) {

@@ -7,6 +7,7 @@ export const removeRoute = async (_req, res) => {
 	const session = res.locals.shopify.session;
 	const { id, shop } = session;
 	const buffer = _req.files[0].buffer;
+	const { filename, bg_color } = _req.body;
 
 	const imagesFolder = `${process.cwd()}/images`;
 	if (!fs.existsSync(imagesFolder)) {
@@ -28,16 +29,16 @@ export const removeRoute = async (_req, res) => {
 		responseType: 'arraybuffer',
 		headers: {
 		  ...formData.getHeaders(),
-		  'X-Api-Key': '97EeePwnYjb2rZbj3sjqoyMd' // process.env.REMOVE_API
+		  'X-Api-Key': process.env.REMOVE_API
 		},
 		format: 'JPG', // 'ZIP', 'PNG'
-		bg_color: _req.body?.bg_color || '#FFFFFF',
+		bg_color: bg_color,
 		encoding: null
 	}).catch((error) => {
 		console.log(error)
 		return res.send(error)
 	})
-	const filePath = `${process.cwd()}/images/${shop}/${_req.body.filename}`;
+	const filePath = `${process.cwd()}/images/${shop}/${filename}`;
 	const axiosBuffer = Buffer.from(removeBGresponse.data, 'binary');
 
 	await fs.promises.writeFile(filePath, axiosBuffer);

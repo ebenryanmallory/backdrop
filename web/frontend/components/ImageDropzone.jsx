@@ -87,61 +87,77 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
 
     const formData = new FormData();
     const settings = {
-      compression: 20,
-      use_compression: true,
-      bg_color: '#FFFFFFF',
-      use_transparency: false,
       filename: files[0].name
     }
-    formData.append('compression', settings.compression);
-    formData.append('use_compression', settings.use_compression);
-    formData.append('bg_color', settings.bg_color);
-    formData.append('use_transparency', settings.use_transparency);
     formData.append('file', files[0]);
     formData.append('filename', settings.filename);
 
     // setUserHasUploadedFile is passed in only from empty state
-    let userExists = setUserHasUploadedFile ? false : true;
-    if (!userExists) {
+    const preferencesResponse = await fetch("/api/get-preferences");
+    const preferences = await preferencesResponse.json();
+    const { userNotFound, compression, use_compression, bg_color, use_transparency, free_count } = preferences;
+    formData.set('compression', compression);
+    settings['compression'] = compression;
+    formData.set('use_compression', use_compression);
+    settings['use_compression'] = use_compression;
+    formData.set('bg_color', bg_color);
+    settings['bg_color'] = bg_color;
+    formData.set('use_transparency', use_transparency);
+    settings['use_transparency'] = use_transparency;
+    if (userNotFound) {
       const userResponse = await fetch("/api/create-user");
-      const result = await userResponse.text();
       if (userResponse.ok) {
         setProgress(20);
-        userExists = true;
       } else {
         setProgress(100);
         setToastProps({
           content: "There was an error creating a new user",
           error: true
         });
+        return
+      }
+    }
+    if (free_count > 0) {
+      const userFreeResponse = await fetch('/api/update-free-count', {
+        method: 'POST',
+        body: JSON.stringify({ updated_count: free_count - 1 })
+      })
+      if (!userFreeResponse.ok) {
+        setProgress(100);
+        setToastProps({
+          content: "There was an error removing the background from your image",
+          error: true
+        });
+        return
+      }
+      const imageResponse = await fetch('/api/remove-bg', {
+        method: 'POST',
+        body: formData
+      })
+      if (imageResponse.ok) {
+        setProgress(60);
+      } else {
+        setProgress(100);
+        setToastProps({
+          content: "There was an error removing the background from your image",
+          error: true
+        });
+        return
       }
     } else {
-      const preferencesResponse = await fetch("/api/get-preferences");
-      const preferences = await preferencesResponse.json();
-      const { compression, use_compression, bg_color, use_transparency } = preferences;
-      if (compression === undefined) { return }
-      formData.set('compression', compression);
-      settings['compression'] = compression;
-      formData.set('use_compression', use_compression);
-      settings['use_compression'] = use_compression;
-      formData.set('bg_color', bg_color);
-      settings['bg_color'] = bg_color;
-      formData.set('use_transparency', use_transparency);
-      settings['use_transparency'] = use_transparency;
+      setProgress(100);
+      setToastProps({
+        content: "You have no free images left. Please upgrade",
+        error: true
+      });
+      // return
     }
-    const imageResponse = await fetch('/api/remove-bg', {
-      method: 'POST',
-      body: formData
-    })
-    const returnedName = imageResponse.json;
-    setProgress(60);
     if (settings['use_compression'] === true) {
       const compressedResponse = await fetch("/api/compress", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings)
       })
-      const returnedCompressionResult = compressedResponse.json;
       if (compressedResponse.ok) {
         setProgress(80);
       } else {
@@ -157,7 +173,6 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings)
     })
-    const cdn_url = await uploadResponse.text();
     if (uploadResponse.ok) {
       setProgress(100);
       setToastProps({ content: "Success!" });

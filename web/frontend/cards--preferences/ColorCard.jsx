@@ -8,7 +8,6 @@ import {
   Box,
   Divider,
   hsbToHex
-  // rgbToHsb
 } from "@shopify/polaris";
 import { useState, useCallback, useEffect, useRef } from 'react';
 
@@ -27,6 +26,11 @@ export function ColorCard({ setShowSavebar, color, setColor, useTransparent, set
     setHexColor(hsbToHex(color));
   }), [color];
 
+  const toggleUseTransparent = useCallback((updatedToggle) => {
+    setUseTransparent(updatedToggle);
+    setShowSavebar(true);
+  }, []);
+
   const colorCircle = (
     <div 
       ref={popoverRef}
@@ -35,10 +39,6 @@ export function ColorCard({ setShowSavebar, color, setColor, useTransparent, set
     >
     </div>
   );
-
-  const toggleUseTransparent = useCallback((updatedToggle) => {
-    setUseTransparent(updatedToggle);
-  }, []);
 
   const css = `
   .color--disabled {
@@ -62,36 +62,35 @@ export function ColorCard({ setShowSavebar, color, setColor, useTransparent, set
   return (
     <Card roundedAbove="sm">
       <style>{css}</style>
-      <Box padding={'1'}>
-        <Checkbox
-          label="Transparent"
-          checked={useTransparent}
-          onChange={toggleUseTransparent}
-        />
-      </Box>
-      <Box padding="1" />
-      <Divider />
-      <Box padding="2" />
       <HorizontalStack gap="3">
-        <Popover
-          active={colorOpen}
-          activator={colorCircle}
-          preferredPosition='below'
-          preferredAlignment='left'
-          autofocusTarget="first-node"
-          onClose={toggleColor}
-        >
-          <ColorPicker onChange={(color) => {
-            setColor(color);
-            setShowSavebar(true);
-          }} color={color} />
-          <Box padding="2">
-            <Text>{hexColor}</Text>
-          </Box>
-        </Popover>
+        <Box padding={'1'}>
+          <Checkbox
+            label="Transparent"
+            checked={useTransparent}
+            onChange={toggleUseTransparent}
+          />
+        </Box>
+        <HorizontalStack gap="3">
+          <Popover
+            active={colorOpen}
+            activator={colorCircle}
+            preferredPosition='below'
+            preferredAlignment='left'
+            autofocusTarget="first-node"
+            onClose={toggleColor}
+          >
+            <ColorPicker onChange={(color) => {
+              setColor(color);
+              setShowSavebar(true);
+            }} color={color} />
+            <Box padding="2">
+              <Text>{hexColor}</Text>
+            </Box>
+          </Popover>
           <Text>Background color</Text>
         </HorizontalStack>
-      <Box padding="3" />
+      </HorizontalStack>
+      <Box padding="1" />
       { useTransparent === false &&
         <Text>Background will be a solid color. Solid white denotes product photography.</Text>
       }
