@@ -3,25 +3,7 @@ import shopify from "../shopify.js";
 import fetch from 'node-fetch'
 import fs from 'fs';
 import sqlite3 from "sqlite3";
-
-const STAGE_UPLOAD_IMAGE_MUTATION = `
-  mutation stagedUploadsCreate($input: [StagedUploadInput!]!) {
-    stagedUploadsCreate(input: $input) {
-      stagedTargets {
-        url
-        resourceUrl
-        parameters {
-          name
-          value
-        }
-      }
-      userErrors {
-        field
-        message
-      }
-    }
-  }   
-`;
+import { STAGE_UPLOAD_IMAGE_MUTATION } from './queries/queries.js';
 
 export const uploadImageRoute = async (_req, res) => {
 
@@ -54,6 +36,8 @@ export const uploadImageRoute = async (_req, res) => {
 
     const stagedUploadUrl = stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0].url;
     const resourceUrl = stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0].resourceUrl;
+    const alt_text = filename.replace('.jpg', '').replace('.png', '').replace('.jpeg', '');
+    console.log(alt_text)
     const imageUploadResponse = await fetch(stagedUploadUrl, {
       method: "PUT",
       headers: {
@@ -78,21 +62,27 @@ export const uploadImageRoute = async (_req, res) => {
           }`,
           "variables": {
             "files": {
-              "alt": "",
-              "contentType": "IMAGE", // image/jpeg
+              "alt": alt_text,
+              "contentType": "IMAGE",
               "originalSource": stagedUploadUrl
             }
           },
         },
       });
       const createdFilter = createdFile.body.data.fileCreate.files[0].createdAt;
-      const uploadedImageQuery = await client.query({
+      const altFilter = createdFile.body.data.fileCreate.files[0].alt;
+      console.log('alt filter: ' + altFilter)
+      console.log('createdFilter: ' + createdFilter)
+      let altImageQuery = await client.query({
         data: `query {
-          files(first: 1, query: "created_at:${createdFilter}") {
+          files(first: 1, reverse: true, query: "alt:${altFilter}") {
             edges {
               node {
                 ... on MediaImage {
                   id
+                  createdAt
+                  alt
+                  fileStatus
                   image {
                     id
                     originalSrc: url
@@ -103,20 +93,23 @@ export const uploadImageRoute = async (_req, res) => {
               }
             }
           }
-        }`,
+        }`
       });
-      if (uploadedImageQuery.body.data.files.edges.length < 1) {
-        return res.send('Created image not found')
+      console.log(altImageQuery.body.data.files.edges[0]);
+      function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
       }
-      let hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image?.originalSrc;
-      if (!hostedCDNurl.includes(filename)) {
-        const uploadedImageQuery = await client.query({
+      const poll = async () => {
+        altImageQuery = await client.query({
           data: `query {
-            files(first: 1, query: "created_at:${createdFilter}") {
+            files(first: 1, reverse: true, query: "alt:${altFilter}") {
               edges {
                 node {
                   ... on MediaImage {
                     id
+                    createdAt
+                    alt
+                    fileStatus
                     image {
                       id
                       originalSrc: url
@@ -127,32 +120,44 @@ export const uploadImageRoute = async (_req, res) => {
                 }
               }
             }
-          }`,
+          }`
         });
-        hostedCDNurl = uploadedImageQuery.body.data.files.edges[0].node.image?.originalSrc;
       }
-      async function addImageUrl(userId, imageUrl, timestamp) {
-        let db = null;
-        try {
-          db = new sqlite3.Database('database.sqlite')
-          const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
-          db.run(query, [userId, imageUrl, timestamp], function() {
-            console.log(this.changes)
-          });
-        } catch (err) {
-          console.error(err);
-        } finally {
-          if (db) {
-            db.close();
+      if (altImageQuery.body.data.files.edges.length > 0 && 
+        altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
+        await sleep(250);
+        poll();
+      }
+      if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
+        await sleep(250);
+        poll();
+      }
+      if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
+        await sleep(500);
+        poll();
+      }
+      if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
+        await sleep(500);
+        poll();
+      }
+      console.log(altImageQuery.body.data.files.edges[0].node.fileStatus)
+      if (altImageQuery && altImageQuery.body.data.files.edges.length > 0 &&
+        altImageQuery.body.data.files.edges[0].node.createdAt === createdFilter) {
+          console.log(id)
+          const timestamp = new Date().toISOString();
+          const hostedCDNurl = altImageQuery.body.data.files.edges[0].node.image.originalSrc;
+          console.log(hostedCDNurl)
+          console.log(!hostedCDNurl.includes(alt_text))
+          if (!hostedCDNurl.includes(alt_text)) {
+            return res.send('image not found')
           }
-        }
+          console.log('running addImageUrl()...')
+          await addImageUrl(id, hostedCDNurl, timestamp);
+          console.log('addImageUrl() has completed')
+          return res.send(hostedCDNurl);
+      } else {
+        return res.send('image not found')
       }
-      const { id } = session;
-      const timestamp = new Date().toISOString();
-      console.log('running addImageUrl()...')
-      console.log(hostedCDNurl)
-      addImageUrl(id, hostedCDNurl, timestamp);
-      return res.send(hostedCDNurl);
     }
   } catch (error) {
     if (error instanceof GraphqlQueryError) {
@@ -161,6 +166,23 @@ export const uploadImageRoute = async (_req, res) => {
       );
     } else {
       throw error;
+    }
+  }
+}
+
+async function addImageUrl(userId, imageUrl, timestamp) {
+  let db = null;
+  try {
+    db = new sqlite3.Database('database.sqlite')
+    const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
+    db.run(query, [userId, imageUrl, timestamp], function() {
+      console.log(this.changes)
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    if (db) {
+      db.close();
     }
   }
 }

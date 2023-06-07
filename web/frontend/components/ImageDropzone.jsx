@@ -150,7 +150,7 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
         content: "You have no free images left. Please upgrade",
         error: true
       });
-      // return
+      return
     }
     if (settings['use_compression'] === true) {
       const compressedResponse = await fetch("/api/compress", {
@@ -176,7 +176,7 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
     if (uploadResponse.ok) {
       setProgress(100);
       setToastProps({ content: "Success!" });
-      getUserImages();
+      // getUserImages();
     } else {
       setProgress(100);
       setToastProps({

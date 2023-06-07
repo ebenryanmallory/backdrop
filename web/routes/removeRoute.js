@@ -7,7 +7,7 @@ export const removeRoute = async (_req, res) => {
 	const session = res.locals.shopify.session;
 	const { id, shop } = session;
 	const buffer = _req.files[0].buffer;
-	const { filename, bg_color } = _req.body;
+	const { filename, bg_color, use_transparency } = _req.body;
 
 	const imagesFolder = `${process.cwd()}/images`;
 	if (!fs.existsSync(imagesFolder)) {
@@ -31,7 +31,7 @@ export const removeRoute = async (_req, res) => {
 		  ...formData.getHeaders(),
 		  'X-Api-Key': process.env.REMOVE_API
 		},
-		format: 'JPG', // 'ZIP', 'PNG'
+		format: use_transparency ? 'PNG' : 'JPG',
 		bg_color: bg_color,
 		encoding: null
 	}).catch((error) => {
