@@ -17,7 +17,7 @@ export function Import({ files, setFiles, setToastProps }) {
         <Link monochrome onClick={() => setProductPickerOpen(true)}>
           products
         </Link>
-        {' '}or{' '}
+        {' '} or {' '}
         <Link monochrome onClick={() => setCollectionPickerOpen(true)}>
           collections
         </Link>

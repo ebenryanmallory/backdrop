@@ -96,7 +96,7 @@ export default function HomePage() {
             />
           }
           { !isLoading && images.length > 0 &&
-              <UserImagesCard images={images} />
+              <UserImagesCard />
           }
           <AboutCard />
         </VerticalStack>

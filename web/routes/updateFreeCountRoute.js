@@ -13,13 +13,11 @@ export const updateFreeCountRoute = async (_req, res) => {
     });
     try {
       const sql = 'UPDATE users SET free_count = ? WHERE user_id = ?';
-      db.run(sql, [count, userId], function(err, row) {
-        console.log(row)
+      db.run(sql, [count, userId], function(err) {
         console.log(this.changes)
-        const responseObject = {
+        return res.send({
           free_count: count
-        }
-        return res.send(responseObject);
+        });
       });
     } catch (err) {
       console.error(err);
@@ -27,5 +25,6 @@ export const updateFreeCountRoute = async (_req, res) => {
       db.close();
     }
   }
+  console.log(updated_count)
   updateFreeCount(id, updated_count);
 }

@@ -37,7 +37,7 @@ export function UserImagesCard({ images }) {
 
     const {
         data,
-        refetch: refetchProductCount,
+        refetch: refetchProducts,
         isLoading: isLoadingImages,
         isRefetching: isRefetchingImages,
       } = useAppQuery({
@@ -53,11 +53,23 @@ export function UserImagesCard({ images }) {
         <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
       );
 
+
+    useEffect(() => {
+      console.log(refetchProducts());
+    }, [refetchProducts]);
+
+    useEffect(() => {
+      console.log(data);
+    }, [data]);
+
       const css = `
         .thumbnail {
           max-width: 8rem;
           max-height: 8rem;
           cursor: pointer;
+        }
+        .thumbnail:hover {
+          border: lightgray solid .5px;
         }
         .absolute {
           position: absolute;
@@ -87,14 +99,17 @@ export function UserImagesCard({ images }) {
         <style>{css}</style>
         {toastMarkup}
         <HorizontalStack>
-          { images.map((image, index) => {
+          { data && data.images.map((image, index) => {
               return (
                 <div 
                   key={`user-image-${index}`}
                   className="image--container"
                 >
                   <div className="absolute hidden cursor-pointer icon--container"
-                    onClick={() => deleteImage(images, index, fetch)}>
+                    onClick={() => {
+                      deleteImage(images, index, fetch);
+                      refetchProducts();
+                    }}>
                     <Icon
                       source={DeleteMinor}
                       color="base"

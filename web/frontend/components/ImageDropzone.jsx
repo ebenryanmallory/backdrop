@@ -120,6 +120,7 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
     if (free_count > 0) {
       const userFreeResponse = await fetch('/api/update-free-count', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ updated_count: free_count - 1 })
       })
       if (!userFreeResponse.ok) {
@@ -134,9 +135,11 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
         method: 'POST',
         body: formData
       })
-      if (imageResponse.ok) {
+      const imageResponseJSON = await imageResponse.json();
+      if (imageResponse.ok && imageResponseJSON?.status !== 403) {
         setProgress(60);
       } else {
+        console.log('403 detected')
         setProgress(100);
         setToastProps({
           content: "There was an error removing the background from your image",

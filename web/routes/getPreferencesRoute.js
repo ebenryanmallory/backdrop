@@ -19,7 +19,9 @@ export const getPreferencesRoute = async (_req, res) => {
             compression: 20,
             use_compression: true,
             bg_color: '#FFFFFF',
-            use_transparency: false
+            use_transparency: false,
+            plan_type: 'free',
+            free_count: 5
           });
         } else {
           const { compression, use_compression, bg_color, use_transparency, plan_type, free_count } = row;
@@ -29,7 +31,7 @@ export const getPreferencesRoute = async (_req, res) => {
             bg_color: bg_color,
             use_transparency: use_transparency ? true : false,
             plan_type: plan_type,
-            free_count: free_count
+            free_count: free_count === null ? 0 : free_count
           };
           return res.json(responseObject)
         }

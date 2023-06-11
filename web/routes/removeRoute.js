@@ -31,7 +31,7 @@ export const removeRoute = async (_req, res) => {
 		  ...formData.getHeaders(),
 		  'X-Api-Key': process.env.REMOVE_API
 		},
-		format: use_transparency ? 'PNG' : 'JPG',
+		format: use_transparency ? 'png' : 'jpg', // 'auto
 		bg_color: bg_color,
 		encoding: null
 	}).catch((error) => {
