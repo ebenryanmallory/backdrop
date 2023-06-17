@@ -3,21 +3,23 @@ import {
     Text,
     HorizontalGrid,
     Card,
-    DescriptionList,
-    Icon
+    DescriptionList
 } from "@shopify/polaris";
-import {
-    CancelMinor
-} from '@shopify/polaris-icons';
-import { useState, useCallback } from 'react';
-import { useAppQuery } from "../hooks";
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 import { Free } from "../assets";
 import { Professional } from "../assets";
 import { Studio } from "../assets";
 
 export function PlanModal({ setPlanModalOpen }) {
   
+    const fetch = useAuthenticatedFetch();
+    const freeRef = useRef(null);
+    const professionalRef = useRef(null);
+    const studioRef = useRef(null);
+
     const [isLoading, setIsLoading] = useState(true);
+    const [targetPlan, setTargetPlan] = useState(true);
     const [active, setActive] = useState(true);
     const toggleActive = useCallback(() => {
         setPlanModalOpen(false);
@@ -26,22 +28,74 @@ export function PlanModal({ setPlanModalOpen }) {
 
     const {
         data,
-        refetch: refetchFreeCount,
-        isLoading: isLoadingFreeCount,
-        isRefetching: isRefetchingCount,
-    } = useAppQuery({
-        url: "/api/get-user-free-count",
+        refetch: refetchPreferences,
+        isLoading: isLoadingPreferences,
+        isRefetching: isRefetchingPreferences,
+      } = useAppQuery({
+        url: "/api/get-preferences",
         reactQueryOptions: {
           onSuccess: () => {
             setIsLoading(false);
           },
         },
-    });
+      });
+
+    useEffect(() => {
+        data && data.plan_type && document.querySelectorAll('.Polaris-Modal-Section .Polaris-Box').forEach(card => card.classList.remove('border'));
+        data && data.plan_type === 'free' && freeRef.current.firstElementChild.classList.add('border')
+        data && data.plan_type === 'professional' && professionalRef.current.firstElementChild.classList.add('border')
+        data && data.plan_type === 'studio' && studioRef.current.firstElementChild.classList.add('border')
+    }, [data]);
 
     const borderSelect = (selected) => {
         document.querySelectorAll('.Polaris-Modal-Section .Polaris-Box').forEach(card => card.classList.remove('border'));
         selected.closest('.Polaris-Box').classList.add('border')
     }
+
+    const updatePlan = async () => {
+        data.plan_type = 'professional';
+        if (data && data.plan_type === 'free') {
+            const createSubscriptionResponse = await fetch("/api/create-subscription", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({subscription: targetPlan})
+            })
+            const jsonContent = await createSubscriptionResponse.json();
+            if (!createSubscriptionResponse.ok) {
+                setToastProps({
+                    content: "There was an error updating your plan",
+                    error: true
+                });
+            }
+            if (jsonContent.message.contains('/RecurringApplicationCharge/confirm_recurring_application_charge?')) {
+                window.URL = jsonContent.message;
+            } else {
+                setToastProps({
+                    content: "There was an error updating your plan",
+                    error: true
+                });
+            }
+        }
+        if (data && (data.plan_type === 'professional' || data.plan_type === 'studio')) {
+            const createSubscriptionResponse = await fetch("/api/cancel-subscription", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subscription_target: targetPlan })
+            })
+            const jsonContent = await createSubscriptionResponse.json();
+            if (!createSubscriptionResponse.ok) {
+                setToastProps({
+                    content: "There was an error updating your plan",
+                    error: true
+                });
+            }
+            console.log(jsonContent.message)
+            setToastProps({
+                content: jsonContent.message,
+                error: true
+            });
+        }
+    };
 
     const css = `
         .Polaris-Modal-Section .Polaris-Box:hover {
@@ -63,20 +117,20 @@ export function PlanModal({ setPlanModalOpen }) {
             title="Current Plan"
             primaryAction={{
             content: 'Update plan',
-                onAction: toggleActive,
+                onAction: updatePlan
 
             }}
             secondaryActions={[
             {
                 content: 'Cancel',
-                onAction: toggleActive,
+                onAction: toggleActive
             },
             ]}
         >
             <style>{css}</style>
             <Modal.Section>
                 <HorizontalGrid gap="4" columns={3}>
-                    <div onClick={(e) => borderSelect(e.target)} className="free">
+                    <div onClick={(e) => borderSelect(e.target)} ref={freeRef}>
                         <Card className="hover-card"
                             background={"bg-subdued"}>
                             <Text as="h2" variant="headingXl">
@@ -115,7 +169,7 @@ export function PlanModal({ setPlanModalOpen }) {
                             />
                         </Card>
                     </div>
-                    <div onClick={(e) => borderSelect(e.target)} className="professional]">
+                    <div onClick={(e) => borderSelect(e.target)} ref={professionalRef}>
                         <Card background="bg-subdued">
                             <Text as="h2" variant="headingXl">
                                 Professional
@@ -145,7 +199,7 @@ export function PlanModal({ setPlanModalOpen }) {
                             />
                         </Card>
                     </div>
-                    <div onClick={(e) => borderSelect(e.target)} className="studio">
+                    <div onClick={(e) => borderSelect(e.target)} ref={studioRef}>
                         <Card background="bg-subdued">
                             <Text as="h2" variant="headingXl">
                                 Studio

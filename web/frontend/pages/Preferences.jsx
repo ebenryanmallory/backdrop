@@ -61,7 +61,7 @@ export default function Preferences() {
 
   useEffect(() => {
     if (data && data.compression !== undefined) {
-      setCompressionAmount(data.compression)
+      setCompressionAmount(100 - data.compression)
     };
     if (data && data.use_compression !== undefined) {
       setUseCompression(data.use_compression)
@@ -88,7 +88,7 @@ export default function Preferences() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-            compression: compressionAmount,
+            compression: 100 - compressionAmount,
             use_compression: useCompression,
             bg_color: hsbToHex(color),
             use_transparency: useTransparent

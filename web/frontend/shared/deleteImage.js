@@ -10,9 +10,6 @@ export const deleteImage = async (images, imageIndex, fetch) => {
         throw new Error(deleteImageResponse.statusText);
       }
 
-      const jsonResponse = await deleteImageResponse.json();
-      console.log(jsonResponse?.message)
-
     } catch (error) {
       console.error(error);
     }

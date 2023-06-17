@@ -7,14 +7,15 @@ import {
   Button,
   ProgressBar,
   Box,
-  HorizontalGrid
+  Divider,
+  HorizontalStack
 } from "@shopify/polaris";
 import { Toast } from "@shopify/app-bridge-react";
 import { useState, useCallback, useEffect } from 'react';
 import { useAuthenticatedFetch } from "../hooks";
 import { Import } from "./Import";
 
-export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
+export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
   
   const emptyToastProps = { content: null };
   const fetch = useAuthenticatedFetch();
@@ -42,11 +43,14 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
 
   const fileUpload = !files.length > 0 && <DropZone.FileUpload />;
   const uploadedFiles = files.length > 0 && (
-    <HorizontalGrid align="left" style={{
-      padding: '1rem' // 'var(--p-space-4)'
+    <div style={{
+      padding: 'var(--p-space-4)'
     }}>
       {files.map((file, index) => (
-        <HorizontalGrid align="left" key={index}>
+        <div key={index} style={{
+          marginBottom: 'var(--p-space-4)'
+        }}>
+        <HorizontalStack gap='2' align="left">
           <Thumbnail
             size="large"
             alt={file.name}
@@ -58,9 +62,10 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
               {file.size} bytes
             </Text>
           </div>
-        </HorizontalGrid>
+        </HorizontalStack>
+        </div>
       ))}
-    </HorizontalGrid>
+    </div>
   );
 
   const errorMessage = hasError && (
@@ -176,17 +181,18 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings)
     })
-    if (uploadResponse.ok) {
-      setProgress(100);
-      setToastProps({ content: "Success!" });
-      // getUserImages();
-    } else {
+    const jsonContent = await uploadResponse.json();
+    if (!uploadResponse.ok) {
       setProgress(100);
       setToastProps({
         content: "There was an error uploading your image",
         error: true
       });
+      return
     }
+    setProgress(100);
+    setToastProps(jsonContent);
+    refetchProducts();
   }
 
   return (
@@ -201,7 +207,7 @@ export function ImageDropzone({ setUserHasUploadedFile, getUserImages }) {
         {fileUpload}
       </DropZone>
       { files.length > 0 &&
-        <Box padding="4">
+        <Box paddingBlockStart="4" paddingBlockEnd="4">
           <Button primary fullWidth={false} size="medium" style={{ marginTop: '1rem' }}
             onClick={() => applyRemoval()}>
               Apply removal

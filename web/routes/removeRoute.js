@@ -29,10 +29,13 @@ export const removeRoute = async (_req, res) => {
 		responseType: 'arraybuffer',
 		headers: {
 		  ...formData.getHeaders(),
-		  'X-Api-Key': process.env.REMOVE_API
+		  'X-Api-Key': '97EeePwnYjb2rZbj3sjqoyMd' // process.env.REMOVE_API
 		},
 		format: use_transparency ? 'png' : 'jpg', // 'auto
 		bg_color: bg_color,
+		size: 'auto', // 'preview', 'full'
+		crop: true,
+		crop_margin: '30px', // 5%
 		encoding: null
 	}).catch((error) => {
 		console.log(error)
@@ -42,5 +45,5 @@ export const removeRoute = async (_req, res) => {
 	const axiosBuffer = Buffer.from(removeBGresponse.data, 'binary');
 
 	await fs.promises.writeFile(filePath, axiosBuffer);
-	return res.send(_req.body.filename);
+	return res.send({ filename: _req.body.filename });
   };

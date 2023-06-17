@@ -10,24 +10,27 @@ import { deleteImage } from "../shared/deleteImage";
 import { downloadImage } from "../shared/downloadImage";
 import { useAuthenticatedFetch } from "../hooks";
 
-export const LightboxFooter = ({ images, imageIndex }) => {
+export const LightboxFooter = ({ images, imageIndex, refetchProducts }) => {
 
     const fetch = useAuthenticatedFetch();
 
     return (
-        <HorizontalStack>
-            <div onClick={() => deleteImage(images, imageIndex, fetch)}>
+        <HorizontalStack gap="2">
+            <div className="cursor-pointer"
+                onClick={async () => {
+                    await deleteImage(images, imageIndex, fetch);
+                    refetchProducts();
+                }}>
                 <Icon
                     source={DeleteMajor}
                     color="base"
-                    classList="cursor-pointer"
                 />
             </div>
-            <div onClick={() => downloadImage(images, imageIndex)}>
+            <div className="cursor-pointer"
+                onClick={() => downloadImage(images, imageIndex)}>
                 <Icon
                     source={PageDownMajor}
                     color="base"
-                    classList="cursor-pointer"
                 />
             </div>
         </HorizontalStack>

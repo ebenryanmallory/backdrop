@@ -25,7 +25,7 @@ export function EmptyStateCard({ getUserImages }) {
         >
           <ImageDropzone
             setUserHasUploadedFile={setUserHasUploadedFile}
-            getUserImages={getUserImages}
+            refetchProducts={getUserImages}
           />
           <p><strong>Welcome to Backdrop</strong> - your one click background removal Shopify app for creating product showcase images.</p>
         </EmptyState>

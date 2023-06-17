@@ -1,7 +1,7 @@
 import { ResourcePicker } from '@shopify/app-bridge-react';
 import { useAuthenticatedFetch } from "../hooks";
 
-export function AddProductImage({ images, imageIndex, productPickerOpen, setProductPickerOpen, setToastProps }) {
+export function AddProductImage({ images, imageIndex, productPickerOpen, setProductPickerOpen, setLightboxOpen, setToastProps }) {
 
     const fetch = useAuthenticatedFetch();
 
@@ -33,13 +33,14 @@ export function AddProductImage({ images, imageIndex, productPickerOpen, setProd
                         const imageResponseJSON = await imageResponse.json();
                         if (imageResponseJSON?.message && imageResponseJSON?.message.length > 0 &&
                             imageResponseJSON?.message[0]?.id) {
-                                setToastProps({
-                                    content: "New image added to product",
-                                    error: false
-                                });
-                            }
+                            setToastProps({
+                                content: "New image added to product",
+                                error: false
+                            });
+                        }
                     });
                     setProductPickerOpen(false);
+                    setLightboxOpen(false);
                 }}
                 showHidden={true}
                 showDraft={true}

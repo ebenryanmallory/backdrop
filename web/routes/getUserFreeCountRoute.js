@@ -4,7 +4,6 @@ export const getUserFreeCountRoute = async (_req, res) => {
 
   const session = res.locals.shopify.session;
   const { id } = session;
-  console.log(id)
 
   async function getUserImages(userId) {
     const db = new sqlite3.Database('database.sqlite');
@@ -21,11 +20,10 @@ export const getUserFreeCountRoute = async (_req, res) => {
           });
         } else {
           const { free_count, plan_type } = row;
-          const responseObject = {
+          return res.send({
             plan_type: plan_type,
             free_count: free_count
-          };
-          return res.send(responseObject);
+          });
         }
       });
     } catch (err) {

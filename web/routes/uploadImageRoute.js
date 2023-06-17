@@ -3,7 +3,11 @@ import shopify from "../shopify.js";
 import fetch from 'node-fetch'
 import fs from 'fs';
 import sqlite3 from "sqlite3";
-import { STAGE_UPLOAD_IMAGE_MUTATION } from './queries/queries.js';
+import { STAGE_UPLOAD_IMAGE_MUTATION } from './queries/STAGE_UPLOAD_IMAGE_MUTATION.js';
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export const uploadImageRoute = async (_req, res) => {
 
@@ -35,9 +39,10 @@ export const uploadImageRoute = async (_req, res) => {
     });
 
     const stagedUploadUrl = stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0].url;
-    const resourceUrl = stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0].resourceUrl;
-    const alt_text = filename.replace('.jpg', '').replace('.png', '').replace('.jpeg', '');
-    console.log(alt_text)
+    const urlRemoved = stagedUploadUrl.substring(stagedUploadUrl.lastIndexOf('/') + 1);
+    const queryRemoved = urlRemoved.split('?')[0];
+    const alt_text = queryRemoved.replace('.jpg', '').replace('.png', '').replace('.jpeg', '');
+
     const imageUploadResponse = await fetch(stagedUploadUrl, {
       method: "PUT",
       headers: {
@@ -70,9 +75,8 @@ export const uploadImageRoute = async (_req, res) => {
         },
       });
       const createdFilter = createdFile.body.data.fileCreate.files[0].createdAt;
+      console.log(createdFilter)
       const altFilter = createdFile.body.data.fileCreate.files[0].alt;
-      console.log('alt filter: ' + altFilter)
-      console.log('createdFilter: ' + createdFilter)
       let altImageQuery = await client.query({
         data: `query {
           files(first: 1, reverse: true, query: "alt:${altFilter}") {
@@ -95,10 +99,6 @@ export const uploadImageRoute = async (_req, res) => {
           }
         }`
       });
-      console.log(altImageQuery.body.data.files.edges[0]);
-      function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      }
       const poll = async () => {
         altImageQuery = await client.query({
           data: `query {
@@ -123,40 +123,52 @@ export const uploadImageRoute = async (_req, res) => {
           }`
         });
       }
+      await poll();
       if (altImageQuery.body.data.files.edges.length > 0 && 
         altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
         await sleep(250);
-        poll();
+        await poll();
       }
       if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
         await sleep(250);
-        poll();
+        await poll();
       }
       if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
         await sleep(500);
-        poll();
+        await poll();
       }
       if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
         await sleep(500);
-        poll();
+        await poll();
       }
-      console.log(altImageQuery.body.data.files.edges[0].node.fileStatus)
+      if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
+        await sleep(3000);
+        await poll();
+      }
+      if (altImageQuery.body.data.files.edges[0].node.fileStatus === 'PROCESSING') {
+        return res.send({ 
+          content: "Image upload took longer than expected. Please check internet connection.",
+          error: true
+        })
+      }
       if (altImageQuery && altImageQuery.body.data.files.edges.length > 0 &&
         altImageQuery.body.data.files.edges[0].node.createdAt === createdFilter) {
-          console.log(id)
           const timestamp = new Date().toISOString();
           const hostedCDNurl = altImageQuery.body.data.files.edges[0].node.image.originalSrc;
-          console.log(hostedCDNurl)
-          console.log(!hostedCDNurl.includes(alt_text))
-          if (!hostedCDNurl.includes(alt_text)) {
-            return res.send('image not found')
+          if (!hostedCDNurl.includes('https://cdn.shopify.com/s/files')) {
+            console.log('CDN URL seems wrong')
+            return res.send({ 
+              content: "Image upload took longer than expected. Please check your files.",
+              error: true
+            })
           }
-          console.log('running addImageUrl()...')
           await addImageUrl(id, hostedCDNurl, timestamp);
-          console.log('addImageUrl() has completed')
-          return res.send(hostedCDNurl);
+          return res.send({ content: "Success!" });
       } else {
-        return res.send('image not found')
+        return res.send({ 
+          content: "Image upload took longer than expected. Please check your files.",
+          error: true
+        })
       }
     }
   } catch (error) {
@@ -176,7 +188,7 @@ async function addImageUrl(userId, imageUrl, timestamp) {
     db = new sqlite3.Database('database.sqlite')
     const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
     db.run(query, [userId, imageUrl, timestamp], function() {
-      console.log(this.changes)
+      if (this.changes !== 1) { console.log('no update made...')}
     });
   } catch (err) {
     console.error(err);

@@ -25,6 +25,5 @@ export const updateFreeCountRoute = async (_req, res) => {
       db.close();
     }
   }
-  console.log(updated_count)
   updateFreeCount(id, updated_count);
 }

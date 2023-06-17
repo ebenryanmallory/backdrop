@@ -13,7 +13,7 @@ import {
 import { LightboxFooter } from './LightboxFooter';
 
 export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, setImageIndex, 
-    setCollectionPickerOpen, setProductPickerOpen }) {
+    setCollectionPickerOpen, setProductPickerOpen, refetchProducts }) {
   
     const css = `
         .Polaris-Modal-Dialog__Modal .Polaris-Box {
@@ -72,6 +72,7 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
             footer={<LightboxFooter 
                 images={images}
                 imageIndex={imageIndex}
+                refetchProducts={refetchProducts}
             />}
         >
             <style>{css}</style>

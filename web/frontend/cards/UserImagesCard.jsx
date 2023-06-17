@@ -16,7 +16,7 @@ import { AddCollectionImage } from "../components/AddCollectionImage";
 import { ImageDropzone } from "../components/ImageDropzone";
 import { deleteImage } from "../shared/deleteImage";
 
-export function UserImagesCard({ images }) {
+export function UserImagesCard() {
 
     const fetch = useAuthenticatedFetch();
 
@@ -53,14 +53,14 @@ export function UserImagesCard({ images }) {
         <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
       );
 
-
-    useEffect(() => {
-      console.log(refetchProducts());
-    }, [refetchProducts]);
-
-    useEffect(() => {
-      console.log(data);
-    }, [data]);
+      const testImage = async (e, i) => {
+        e.target.style.display = 'none';
+        const retunedFetch = await fetch(e.target.src);
+        if (!retunedFetch.ok && retunedFetch.status === 404) {
+          await deleteImage(data.images, i, fetch);
+          refetchProducts();
+        }
+      }
 
       const css = `
         .thumbnail {
@@ -106,8 +106,8 @@ export function UserImagesCard({ images }) {
                   className="image--container"
                 >
                   <div className="absolute hidden cursor-pointer icon--container"
-                    onClick={() => {
-                      deleteImage(images, index, fetch);
+                    onClick={async () => {
+                      await deleteImage(data.images, index, fetch);
                       refetchProducts();
                     }}>
                     <Icon
@@ -119,10 +119,8 @@ export function UserImagesCard({ images }) {
                     className="thumbnail"
                     src={image}
                     alt={image}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                    onClick={() => {setImageIndex(index)}}
+                    onError={(e) => testImage(e, index)}
+                    onClick={() => setImageIndex(index)}
                   />
                 </div>
               );
@@ -132,30 +130,36 @@ export function UserImagesCard({ images }) {
         <Box padding="4" />
         <ImageDropzone 
           setUserHasUploadedFile={setUserHasUploadedFile}
+          refetchProducts={refetchProducts}
         />
-        <Lightbox 
-          lightboxOpen={lightboxOpen}
-          setLightboxOpen={setLightboxOpen}
-          images={images}
-          imageIndex={imageIndex}
-          setImageIndex={setImageIndex}
-          setCollectionPickerOpen={setCollectionPickerOpen}
-          setProductPickerOpen={setProductPickerOpen}
-        />
-        { productPickerOpen &&
+        { data && data.images &&
+          <Lightbox 
+            lightboxOpen={lightboxOpen}
+            setLightboxOpen={setLightboxOpen}
+            images={data.images}
+            imageIndex={imageIndex}
+            setImageIndex={setImageIndex}
+            setCollectionPickerOpen={setCollectionPickerOpen}
+            setProductPickerOpen={setProductPickerOpen}
+            refetchProducts={refetchProducts}
+          />
+        }
+        { data && data.images && productPickerOpen &&
           <AddProductImage 
-            images={images}
+            images={data.images}
             imageIndex={imageIndex}
             productPickerOpen={productPickerOpen}
             setProductPickerOpen={setProductPickerOpen}
+            setLightboxOpen={setLightboxOpen}
             setToastProps={setToastProps}
           />
         }
-        { collectionPickerOpen &&
+        { data && data.images && collectionPickerOpen &&
           <AddCollectionImage 
-            images={images}
+            images={data.images}
             imageIndex={imageIndex}
             collectionPickerOpen={collectionPickerOpen}
+            setLightboxOpen={setLightboxOpen}
             setCollectionPickerOpen={setCollectionPickerOpen}
             setToastProps={setToastProps}
           />

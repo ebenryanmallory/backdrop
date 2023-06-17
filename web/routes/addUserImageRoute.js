@@ -1,5 +1,4 @@
 import { GraphqlQueryError } from "@shopify/shopify-api";
-import fs from 'fs';
 import sqlite3 from "sqlite3";
 
 export const uploadImageRoute = async (_req, res) => {
