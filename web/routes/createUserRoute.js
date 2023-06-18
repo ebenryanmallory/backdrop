@@ -17,6 +17,7 @@ export const createUserRoute = async (_req, res) => {
     created_at: timestamp,
     free_count: 5, 
     plan_type: 'free',
+    plan_id: 'none',
     compression: 20,
     use_compression: true,
     bg_color: '#FFFFFF',
@@ -30,12 +31,13 @@ export const createUserRoute = async (_req, res) => {
       created_at,
       free_count,
       plan_type,
+      plan_id,
       compression,
       use_compression,
       bg_color,
       use_transparency
     )
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const insertParams = [
@@ -44,6 +46,7 @@ export const createUserRoute = async (_req, res) => {
     user.created_at,
     user.free_count,
     user.plan_type,
+    user.plan_id,
     user.compression,
     user.use_compression,
     user.bg_color,

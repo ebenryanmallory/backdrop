@@ -3,7 +3,8 @@ import {
     Text,
     HorizontalGrid,
     Card,
-    DescriptionList
+    DescriptionList,
+    Toast
 } from "@shopify/polaris";
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
@@ -13,13 +14,16 @@ import { Studio } from "../assets";
 
 export function PlanModal({ setPlanModalOpen }) {
   
+    const emptyToastProps = { content: null };
+    
     const fetch = useAuthenticatedFetch();
     const freeRef = useRef(null);
     const professionalRef = useRef(null);
     const studioRef = useRef(null);
 
+    const [toastProps, setToastProps] = useState(emptyToastProps);
     const [isLoading, setIsLoading] = useState(true);
-    const [targetPlan, setTargetPlan] = useState(true);
+    const [targetPlan, setTargetPlan] = useState('free');
     const [active, setActive] = useState(true);
     const toggleActive = useCallback(() => {
         setPlanModalOpen(false);
@@ -41,7 +45,9 @@ export function PlanModal({ setPlanModalOpen }) {
       });
 
     useEffect(() => {
-        data && data.plan_type && document.querySelectorAll('.Polaris-Modal-Section .Polaris-Box').forEach(card => card.classList.remove('border'));
+        data && data.plan_type && 
+            document.querySelectorAll('.Polaris-Modal-Section .Polaris-Box').forEach(card => card.classList.remove('border')) && 
+            setTargetPlan(data.plan_type);
         data && data.plan_type === 'free' && freeRef.current.firstElementChild.classList.add('border')
         data && data.plan_type === 'professional' && professionalRef.current.firstElementChild.classList.add('border')
         data && data.plan_type === 'studio' && studioRef.current.firstElementChild.classList.add('border')
@@ -52,8 +58,12 @@ export function PlanModal({ setPlanModalOpen }) {
         selected.closest('.Polaris-Box').classList.add('border')
     }
 
+    const toastMarkup = toastProps.content && (
+        <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
+    );
+
     const updatePlan = async () => {
-        data.plan_type = 'professional';
+        data.plan_type = 'free';
         if (data && data.plan_type === 'free') {
             const createSubscriptionResponse = await fetch("/api/create-subscription", {
                 method: 'POST',
@@ -67,8 +77,9 @@ export function PlanModal({ setPlanModalOpen }) {
                     error: true
                 });
             }
-            if (jsonContent.message.contains('/RecurringApplicationCharge/confirm_recurring_application_charge?')) {
-                window.URL = jsonContent.message;
+            if (jsonContent.message.includes('/RecurringApplicationCharge/confirm_recurring_application_charge?')) {
+                console.log(jsonContent.message)
+                window.parent.location.href = jsonContent.message;
             } else {
                 setToastProps({
                     content: "There was an error updating your plan",
@@ -91,8 +102,7 @@ export function PlanModal({ setPlanModalOpen }) {
             }
             console.log(jsonContent.message)
             setToastProps({
-                content: jsonContent.message,
-                error: true
+                content: jsonContent.message
             });
         }
     };
@@ -128,9 +138,13 @@ export function PlanModal({ setPlanModalOpen }) {
             ]}
         >
             <style>{css}</style>
+            {toastMarkup}
             <Modal.Section>
                 <HorizontalGrid gap="4" columns={3}>
-                    <div onClick={(e) => borderSelect(e.target)} ref={freeRef}>
+                    <div onClick={(e) => {
+                        borderSelect(e.target);
+                        setTargetPlan('free')
+                    }} ref={freeRef}>
                         <Card className="hover-card"
                             background={"bg-subdued"}>
                             <Text as="h2" variant="headingXl">
@@ -169,7 +183,10 @@ export function PlanModal({ setPlanModalOpen }) {
                             />
                         </Card>
                     </div>
-                    <div onClick={(e) => borderSelect(e.target)} ref={professionalRef}>
+                    <div onClick={(e) => {
+                        borderSelect(e.target);
+                        setTargetPlan('professional');
+                        }} ref={professionalRef}>
                         <Card background="bg-subdued">
                             <Text as="h2" variant="headingXl">
                                 Professional
@@ -199,7 +216,10 @@ export function PlanModal({ setPlanModalOpen }) {
                             />
                         </Card>
                     </div>
-                    <div onClick={(e) => borderSelect(e.target)} ref={studioRef}>
+                    <div onClick={(e) => {
+                        borderSelect(e.target);
+                        setTargetPlan('studio');
+                        }} ref={studioRef}>
                         <Card background="bg-subdued">
                             <Text as="h2" variant="headingXl">
                                 Studio

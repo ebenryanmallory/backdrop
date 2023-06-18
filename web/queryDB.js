@@ -24,7 +24,7 @@ function createUsersTable() {
   
   function addField() {
     db = db ?? new sqlite3.Database(DB_PATH);
-    const sql = `ALTER TABLE users ADD COLUMN bg_color VARCHAR(9)`;
+    const sql = `ALTER TABLE users ADD COLUMN plan_id TEXT`;
 
     db.run(sql, (err) => {
       if (err) {
@@ -39,7 +39,7 @@ function createUsersTable() {
   function updateField() {
     db = db ?? new sqlite3.Database(DB_PATH);
     const sql = `ALTER TABLE users
-    ALTER COLUMN free_count SET DEFAULT 5;
+    ALTER COLUMN plan_id SET DEFAULT 'none';
     `;
 
     db.run(sql, (err) => {
@@ -148,11 +148,12 @@ async function getAll(userId) {
     if (err) {
       console.error(err.message);
     } else {
-      const { id, created_at, free_count, plan_type, compression, use_compression, bg_color, use_transparency } = row;
+      const { id, created_at, free_count, plan_type, plan_id, compression, use_compression, bg_color, use_transparency } = row;
       const responseObject = {
         id: id,
         created_at: created_at,
         plan: plan_type,
+        plan_id: plan_id,
         free: free_count,
         compression: compression,
         use_compression: use_compression,
@@ -261,10 +262,10 @@ async function addImageUrl(userId, imageUrl, timestamp) {
 // printUserIds();
 // deleteField()
 // printUserInfo()
-// getAll('offline_motionstoryline-dev.myshopify.com')
+getAll('offline_motionstoryline-dev.myshopify.com')
 // getAllImages()
 // deleteUserImages('offline_motionstoryline-dev.myshopify.com', '')
-getUserImages('offline_motionstoryline-dev.myshopify.com')
+// getUserImages('offline_motionstoryline-dev.myshopify.com')
 // deleteUser('offline_motionstoryline-dev.myshopify.com')
 // updatePreferences('offline_motionstoryline-dev.myshopify.com', 80, false, '#FFFFFF', false)
 // getPreferences('offline_motionstoryline-dev.myshopify.com')

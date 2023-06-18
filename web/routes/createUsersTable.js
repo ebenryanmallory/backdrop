@@ -16,6 +16,7 @@ export const createUsersTable = async (_req, res) => {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           free_count INTEGER DEFAULT,
           plan_type TEXT DEFAULT,
+          plan_id TEXT DEFAUlT,
           compression INTEGER DEFAULT,
           use_compression BOOLEAN DEFAULT,
           bg_color TEXT DEFAULT,

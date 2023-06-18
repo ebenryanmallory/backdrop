@@ -7,8 +7,7 @@ export const createSubscription = async (_req, res) => {
     const session = res.locals.shopify.session;
     const { id, shop } = session;
     const client = new shopify.api.clients.Graphql({ session });
-    const { plan_type } = _req.body;
-    console.log(plan_type)
+    const { subscription } = _req.body;
 
   try {
     const returnedStatus = await client.query({
@@ -46,31 +45,9 @@ export const createSubscription = async (_req, res) => {
       },
     });
 
-    console.log(returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.id)
     const plan_id = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.id;
-    async function updatePlanType(userId, plan_type, plan_id) {
-      const db = new sqlite3.Database('database.sqlite');
-      db.on('error', (err) => {
-        console.error('Database error:', err);
-      });
-      try {
-        const sql = `UPDATE users SET plan_type = $plan_type, plan_type = $plan_type WHERE WHERE user_id = $userID`;
-        const updateParams = {
-          $plan_type: plan_type,
-          $plan_id: plan_id,
-          $userID: userId
-        };
-        db.run(sql, updateParams, function(err) {
-          console.log(this.changes)
-          if (this.changes < 1) { return res.send({ message: 'Something went wrong. Please try again.'})}
-        });
-      } catch (err) {
-        return res.send({ message: 'Something went wrong. Please try again.'})
-      } finally {
-        db.close();
-      }
-    }
-    updatePlanType(id, plan_type, plan_id);
+    
+    await updatePlanType(id, subscription, plan_id);
 
     return res.send({ message: returnedStatus.body.data.appSubscriptionCreate?.confirmationUrl})
   } catch (error) {
@@ -81,5 +58,28 @@ export const createSubscription = async (_req, res) => {
     } else {
       throw error;
     }
+  }
+}
+
+async function updatePlanType(userId, plan_type, plan_id) {
+  const db = new sqlite3.Database('database.sqlite');
+  db.on('error', (err) => {
+    console.error('Database error:', err);
+  });
+  try {
+    const sql = `UPDATE users SET plan_type = $plan_type, plan_id = $plan_id WHERE user_id = $userID`;
+    const updateParams = {
+      $plan_type: plan_type,
+      $plan_id: plan_id,
+      $userID: userId
+    };
+    db.run(sql, updateParams, function(err) {
+      if (this.changes < 1) { return res.send({ message: 'Something went wrong. Please try again.'})}
+    });
+  } catch (err) {
+    console.log(err)
+    return res.send({ message: 'Something went wrong. Please try again.'})
+  } finally {
+    db.close();
   }
 }
