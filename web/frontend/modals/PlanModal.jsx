@@ -3,9 +3,9 @@ import {
     Text,
     HorizontalGrid,
     Card,
-    DescriptionList,
-    Toast
+    DescriptionList
 } from "@shopify/polaris";
+import { Toast } from "@shopify/app-bridge-react";
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useAppQuery, useAuthenticatedFetch } from "../hooks";
 import { Free } from "../assets";
@@ -63,12 +63,11 @@ export function PlanModal({ setPlanModalOpen }) {
     );
 
     const updatePlan = async () => {
-        data.plan_type = 'free';
-        if (data && data.plan_type === 'free') {
+        if (data && data.plan_type === 'free' || (data.plan_type === 'professional' && targetPlan === 'studio')) {
             const createSubscriptionResponse = await fetch("/api/create-subscription", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({subscription: targetPlan})
+                body: JSON.stringify({targetPlan: targetPlan})
             })
             const jsonContent = await createSubscriptionResponse.json();
             if (!createSubscriptionResponse.ok) {
@@ -78,7 +77,6 @@ export function PlanModal({ setPlanModalOpen }) {
                 });
             }
             if (jsonContent.message.includes('/RecurringApplicationCharge/confirm_recurring_application_charge?')) {
-                console.log(jsonContent.message)
                 window.parent.location.href = jsonContent.message;
             } else {
                 setToastProps({
@@ -87,11 +85,11 @@ export function PlanModal({ setPlanModalOpen }) {
                 });
             }
         }
-        if (data && (data.plan_type === 'professional' || data.plan_type === 'studio')) {
+        if (data && (data.plan_type === 'professional' || data.plan_type === 'studio') && targetPlan === 'free') {
             const createSubscriptionResponse = await fetch("/api/cancel-subscription", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ subscription_target: targetPlan })
+                body: JSON.stringify({ targetPlan: targetPlan })
             })
             const jsonContent = await createSubscriptionResponse.json();
             if (!createSubscriptionResponse.ok) {
@@ -100,10 +98,10 @@ export function PlanModal({ setPlanModalOpen }) {
                     error: true
                 });
             }
-            console.log(jsonContent.message)
             setToastProps({
                 content: jsonContent.message
             });
+            toggleActive();
         }
     };
 

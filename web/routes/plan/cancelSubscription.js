@@ -6,6 +6,9 @@ export const cancelSubscription = async (_req, res) => {
 
   const session = res.locals.shopify.session;
   const { id, shop } = session;
+  const { targetPlan } = _req.body;
+  if (targetPlan !== 'free') { return res.send({ message: 'No plan provided.'}) };
+
   const db = new sqlite3.Database('database.sqlite');
   db.on('error', (err) => {
     console.error('Database error:', err);
@@ -38,29 +41,35 @@ export const cancelSubscription = async (_req, res) => {
               },
             },
           });
-          console.log(returnedStatus.body.data.appSubscriptionCancel?.appSubscription?.status)
-          if (returnedStatus.body.data.appSubscriptionCancel?.appSubscription?.status === "CANCELLED") {
-            async function setFreePlan(userId) {
-              const db = new sqlite3.Database('database.sqlite');
-              db.on('error', (err) => {
-                console.error('Database error:', err);
-              });
-              try {
-                const sql = 'UPDATE users SET plan_type = ? WHERE user_id = ?';
-                db.run(sql, ['free', userId], function(err) {
-                  console.log(this.changes)
-                  return res.send({
-                    plan_type: 'free'
-                  });
-                });
-              } catch (err) {
-                console.error(err);
-              } finally {
-                db.close();
-              }
-            }
-            setFreePlan(id);
+
+          if (returnedStatus.body.data.appSubscriptionCancel?.appSubscription === null) {
+            console.log(returnedStatus.body.data.appSubscriptionCancel?.userErrors)
+            console.log(returnedStatus.body.data.appSubscriptionCancel?.userErrors[0]?.message)
+          };
+
+          if (returnedStatus.body.data.appSubscriptionCancel?.appSubscription?.status !== "CANCELLED") {
+            console.log(returnedStatus.body.data.appSubscriptionCancel?.appSubscription?.status)
           }
+          async function setFreePlan(userId) {
+            const db = new sqlite3.Database('database.sqlite');
+            db.on('error', (err) => {
+              console.error('Database error:', err);
+            });
+            try {
+              const sql = 'UPDATE users SET plan_type = ? WHERE user_id = ?';
+              db.run(sql, ['free', userId], function(err) {
+                console.log(this.changes)
+                return res.send({
+                  message: 'Update to free plan successful'
+                });
+              });
+            } catch (err) {
+              console.error(err);
+            } finally {
+              db.close();
+            }
+          }
+          setFreePlan(id);
         } catch (error) {
           if (error instanceof GraphqlQueryError) {
             throw new Error(

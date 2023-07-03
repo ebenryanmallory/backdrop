@@ -74,6 +74,9 @@ export function UserImagesCard() {
         .absolute {
           position: absolute;
         }
+        .relative {
+          position: relative;
+        }
         .hidden {
           display: none;
         }
@@ -83,8 +86,15 @@ export function UserImagesCard() {
           padding: 3px;
           cursor: pointer;
         }
+        .w-max-content {
+          width: max-content;
+        }
         .image--container {
-          position: relative;
+          width: 8rem;
+          align-self: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         .image--container:hover .hidden {
           display: block;
@@ -105,23 +115,25 @@ export function UserImagesCard() {
                   key={`user-image-${index}`}
                   className="image--container"
                 >
-                  <div className="absolute hidden cursor-pointer icon--container"
-                    onClick={async () => {
-                      await deleteImage(data.images, index, fetch);
-                      refetchProducts();
-                    }}>
-                    <Icon
-                      source={DeleteMinor}
-                      color="base"
+                  <div className="relative w-max-content">
+                    <div className="absolute hidden cursor-pointer icon--container"
+                      onClick={async () => {
+                        await deleteImage(data.images, index, fetch);
+                        refetchProducts();
+                      }}>
+                      <Icon
+                        source={DeleteMinor}
+                        color="base"
+                      />
+                    </div>
+                    <img
+                      className="thumbnail"
+                      src={image}
+                      alt={image}
+                      onError={(e) => testImage(e, index)}
+                      onClick={() => setImageIndex(index)}
                     />
                   </div>
-                  <img
-                    className="thumbnail"
-                    src={image}
-                    alt={image}
-                    onError={(e) => testImage(e, index)}
-                    onClick={() => setImageIndex(index)}
-                  />
                 </div>
               );
             })

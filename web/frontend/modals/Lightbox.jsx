@@ -19,12 +19,6 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
         .Polaris-Modal-Dialog__Modal .Polaris-Box {
             border-color: var(--p-color-bg-inverse);
         }
-        .w-full {
-            width: 100%
-        }
-        .h-full {
-            height: 100%
-        }
         .Polaris-Modal-Dialog__Modal {
             background-color: #1a1a1a;
             color: #f1f1f1;
@@ -32,8 +26,17 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
         .flex {
             display: flex;
         }
+        .grid {
+            display: grid;
+        }
+        .w-full {
+            width: 100%
+        }
         .items-center {
             align-items: center;
+        }
+        .justify-center {
+            justify-items: center;
         }
         .absolute {
             position: absolute;
@@ -56,10 +59,16 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
             padding-top: 5px;
             padding-bottom: 5px;
         }
+        .lightbox-image {
+            max-height: 70vh;
+            width: auto;
+            max-width: 100%;
+        }
     `;
+    
     return (
         <Modal
-            title={`Media ${ imageIndex + 1 } of ${ images.length }`}
+            title={`Image ${ imageIndex + 1 } of ${ images.length }`}
             instant={true}
             large={true}
             fullScreen={true}
@@ -78,10 +87,8 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
             <style>{css}</style>
             <Modal.Section className="modal-section">
                 <HorizontalGrid columns={{ xs: 1, md: "2fr 1fr" }} gap="4">
-                    <VerticalStack
-                        className="bg-inverse"
-                    >
-                        <div className="flex items-center relative">
+                    <VerticalStack className="bg-inverse">
+                        <div className="flex items-center justify-center relative">
                             <div onClick={() => {
                                 if ((imageIndex - 1) >= 0) {
                                     setImageIndex(imageIndex - 1)
@@ -93,10 +100,12 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                                     accessibilityLabel="Previous image"
                                 />
                             </div>
-                            <img
-                                src={images[imageIndex]}
-                                className="w-full h-full"
-                            />
+                            <div className="grid w-full items-center justify-center">
+                                <img
+                                    src={images[imageIndex]}
+                                    className="lightbox-image"
+                                />
+                            </div>
                             <div onClick={() => {
                                 if ((imageIndex + 1) < images.length) {
                                     setImageIndex(imageIndex + 1)

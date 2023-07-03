@@ -22,6 +22,7 @@ import { updatePreferencesRoute } from './routes/updatePreferencesRoute.js'
 import { getPreferencesRoute } from './routes/getPreferencesRoute.js'
 
 import { createSubscription } from './routes/plan/createSubscription.js'
+import { confirmSubscription } from './routes/plan/confirmSubscription.js'
 import { cancelSubscription } from './routes/plan/cancelSubscription.js'
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
@@ -70,6 +71,7 @@ app.post("/api/update-collection-image", updateCollectionImageRoute);
 app.post("/api/update-preferences", updatePreferencesRoute);
 app.post("/api/update-free-count", updateFreeCountRoute);
 app.post("/api/create-subscription", createSubscription);
+app.post("/api/confirm-subscription", confirmSubscription);
 app.post("/api/cancel-subscription", cancelSubscription);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));

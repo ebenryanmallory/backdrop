@@ -4,10 +4,14 @@ import sqlite3 from "sqlite3";
 
 export const createSubscription = async (_req, res) => {
 
-    const session = res.locals.shopify.session;
-    const { id, shop } = session;
-    const client = new shopify.api.clients.Graphql({ session });
-    const { subscription } = _req.body;
+  const appname = '04e6705a1f39e47c62e5816f3e38a770';
+
+  const session = res.locals.shopify.session;
+  const { id, shop } = session;
+  const client = new shopify.api.clients.Graphql({ session });
+  const { targetPlan } = _req.body;
+
+  if (targetPlan !== 'professional' && targetPlan !== 'studio') { return res.send({ message: 'No plan provided.'}) };
 
   try {
     const returnedStatus = await client.query({
@@ -20,20 +24,24 @@ export const createSubscription = async (_req, res) => {
             }
             appSubscription {
               id
+              status
+              lineItems {
+                id
+              }
             }
             confirmationUrl
           }
         }`,
         "variables": {
-          "name": "Professional Plan",
-          "returnUrl": "http://super-duper.shopifyapps.com/",
-          "test": true,
+          "name": `${targetPlan.charAt(0).toUpperCase() + targetPlan.slice(1)}`,
+          "returnUrl": `https://${shop}/admin/apps/${appname}/confirmation`, //https://motionstoryline-dev.myshopify.com/admin/apps/04e6705a1f39e47c62e5816f3e38a770/confirmation
+          // "test": true,
           "lineItems": [
             {
               "plan": {
                 "appRecurringPricingDetails": {
                   "price": {
-                    "amount": 10.0,
+                    "amount": targetPlan === "professional" ? 10.0 : targetPlan === "studio" ? 20 : null,
                     "currencyCode": "USD"
                   },
                   "interval": "EVERY_30_DAYS"
@@ -46,8 +54,9 @@ export const createSubscription = async (_req, res) => {
     });
 
     const plan_id = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.id;
-    
-    await updatePlanType(id, subscription, plan_id);
+    const line_item_id = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.lineItems[0]?.id;
+
+    await updatePlanID(id, line_item_id);
 
     return res.send({ message: returnedStatus.body.data.appSubscriptionCreate?.confirmationUrl})
   } catch (error) {
@@ -61,15 +70,14 @@ export const createSubscription = async (_req, res) => {
   }
 }
 
-async function updatePlanType(userId, plan_type, plan_id) {
+async function updatePlanID(userId, plan_id) {
   const db = new sqlite3.Database('database.sqlite');
   db.on('error', (err) => {
     console.error('Database error:', err);
   });
   try {
-    const sql = `UPDATE users SET plan_type = $plan_type, plan_id = $plan_id WHERE user_id = $userID`;
+    const sql = `UPDATE users SET plan_id = $plan_id WHERE user_id = $userID`;
     const updateParams = {
-      $plan_type: plan_type,
       $plan_id: plan_id,
       $userID: userId
     };
