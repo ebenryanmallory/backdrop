@@ -128,6 +128,8 @@ export default function Preferences() {
         })
     })
   }
+  window.modifyWebhooks = modifyWebhooks;
+
   return (
     <Page
       divider
@@ -204,7 +206,6 @@ export default function Preferences() {
           }
         </HorizontalGrid>
       </VerticalStack>
-      <div onClick={modifyWebhooks}>Hello</div>
       <FooterHelp>
       Learn more about{' '}
         <Link url="https://backdrop.motionstoryline.com/preferences/"
