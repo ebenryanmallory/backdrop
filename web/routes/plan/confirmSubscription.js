@@ -10,38 +10,21 @@ export const confirmSubscription = async (_req, res) => {
 
   async function confirmStatus(plan_id) {
     try {
-      const returnedStatus = await client.query({
-        data: {
-          "query": `mutation appSubscriptionLineItemUpdate($cappedAmount: MoneyInput!, $id: ID!) {
-            appSubscriptionLineItemUpdate(cappedAmount: $cappedAmount, id: $id) {
-              userErrors {
-                field
-                message
-              }
-              confirmationUrl
-              appSubscription {
-                id
-                status
-                name
-              }
-            }
-          }`,
-          "variables": {
-            "id": plan_id,
-            "cappedAmount": {
-              "amount": 20,
-              "currencyCode": "USD"
-            }
-          },
-        },
+      const chargeResult = await shopify.api.rest.RecurringApplicationCharge.find({
+        session: session,
+        id: plan_id
       });
-      const status = returnedStatus.body.data.appSubscriptionLineItemUpdate?.appSubscription?.status;
-      const name = returnedStatus.body.data.appSubscriptionLineItemUpdate?.appSubscription?.name;
-      // https://shopify.dev/docs/api/admin-graphql/2023-04/enums/AppSubscriptionStatus
-      if (status === 'ACTIVE') {
-        await updateFreeCount(id, name === 'professional' ? 100 : name === 'studio' ? 250 : 5);
+      const status = chargeResult.status;
+      const confirmation_url = chargeResult.confirmation_url;
+      const name = chargeResult.name;
+      if (status === 'active') {
+        await updateFreeCount(id, name === 'Professional' ? 100 : name === 'Studio' ? 250 : 5);
       };
-      if (status === 'PENDING') { return };
+      if (status === 'pending') {
+        console.log('pending')
+        return res.send({ message: confirmation_url}) 
+      };
+
     } catch (error) {
       if (error instanceof GraphqlQueryError) {
         throw new Error(
@@ -66,7 +49,6 @@ export const confirmSubscription = async (_req, res) => {
         });
       } else {
         const { plan_id } = row;
-        console.log(plan_id)
         confirmStatus(plan_id)
       }
     });

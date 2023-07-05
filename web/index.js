@@ -6,7 +6,7 @@ import serveStatic from "serve-static";
 import multer from 'multer';
 
 import shopify from "./shopify.js";
-import GDPRWebhookHandlers from "./gdpr.js";
+import webhookHandlers from "./webhook-handlers.js";
 
 import { compressRoute } from './routes/compressRoute.js'
 import { createUserRoute } from './routes/createUserRoute.js'
@@ -24,6 +24,7 @@ import { getPreferencesRoute } from './routes/getPreferencesRoute.js'
 import { createSubscription } from './routes/plan/createSubscription.js'
 import { confirmSubscription } from './routes/plan/confirmSubscription.js'
 import { cancelSubscription } from './routes/plan/cancelSubscription.js'
+import { modifyWebhooks } from "./routes/webhookAPI.js";
 
 const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 
@@ -41,10 +42,9 @@ app.get(
   shopify.auth.callback(),
   shopify.redirectToShopifyOrAppRoot()
 );
-app.post(
-  shopify.config.webhooks.path,
-  shopify.processWebhooks({ webhookHandlers: GDPRWebhookHandlers })
-);
+app.post( shopify.config.webhooks.path, shopify.processWebhooks({
+  webhookHandlers
+}) );
 
 // If you are adding routes outside of the /api path, remember to
 // also add a proxy rule for them in web/frontend/vite.config.js
@@ -73,6 +73,7 @@ app.post("/api/update-free-count", updateFreeCountRoute);
 app.post("/api/create-subscription", createSubscription);
 app.post("/api/confirm-subscription", confirmSubscription);
 app.post("/api/cancel-subscription", cancelSubscription);
+app.post("/api/modify-webhooks", modifyWebhooks);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 

@@ -2,6 +2,46 @@ import { DeliveryMethod } from "@shopify/shopify-api";
 import sqlite3 from "sqlite3";
 
 export default {
+  PRODUCTS_UPDATE: {
+    deliveryMethod: DeliveryMethod.Http,
+    callbackUrl: "/api/webhooks",
+    callback: async (topic, shop, body, webhookId) => {
+      console.log('--- Product update ---');
+      const payload = JSON.parse(body);
+      console.log(payload);
+      console.log('--- /Product update ---');
+    },
+  },
+  SUBSCRIPTION_BILLING_ATTEMPTS_SUCCESS: {
+    deliveryMethod: DeliveryMethod.Http,
+    callbackUrl: "/api/webhooks",
+    callback: async (topic, shop, body, webhookId) => {
+      console.log('--- Payment Success update ---');
+      const payload = JSON.parse(body);
+      console.log(payload);
+      console.log('--- /Payment Success update ---');
+    },
+  },
+  SUBSCRIPTION_BILLING_ATTEMPTS_FAILURE: {
+    deliveryMethod: DeliveryMethod.Http,
+    callbackUrl: "/api/webhooks",
+    callback: async (topic, shop, body, webhookId) => {
+      console.log('--- Failure update ---');
+      const payload = JSON.parse(body);
+      console.log(payload);
+      console.log('--- /Failure update ---');
+    },
+  },
+  APP_SUBSCRIPTIONS_UPDATE: {
+    deliveryMethod: DeliveryMethod.Http,
+    callbackUrl: "/api/webhooks",
+    callback: async (topic, shop, body, webhookId) => {
+      console.log('--- APP_SUBSCRIPTIONS_UPDATE ---');
+      const payload = JSON.parse(body);
+      console.log(payload);
+      console.log('--- / APP_SUBSCRIPTIONS_UPDATE ---');
+    },
+  },
   /**
    * Customers can request their data from a store owner. When this happens,
    * Shopify invokes this webhook.

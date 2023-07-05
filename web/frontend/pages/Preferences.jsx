@@ -119,6 +119,15 @@ export default function Preferences() {
     <Toast {...toastProps} onDismiss={() => setToastProps(emptyToastProps)} />
   );
 
+  const modifyWebhooks = async () => {
+    const imageResponse = await fetch('/api/modify-webhooks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+          hello: 'world'
+        })
+    })
+  }
   return (
     <Page
       divider
@@ -195,6 +204,7 @@ export default function Preferences() {
           }
         </HorizontalGrid>
       </VerticalStack>
+      <div onClick={modifyWebhooks}>Hello</div>
       <FooterHelp>
       Learn more about{' '}
         <Link url="https://backdrop.motionstoryline.com/preferences/"

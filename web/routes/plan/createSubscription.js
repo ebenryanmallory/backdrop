@@ -53,10 +53,10 @@ export const createSubscription = async (_req, res) => {
       },
     });
 
-    const plan_id = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.id;
-    const line_item_id = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.lineItems[0]?.id;
+    const gid = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.id;
+    const plan_id = gid.replace('gid://shopify/AppSubscription/', '');
 
-    await updatePlanID(id, line_item_id);
+    await updatePlanID(id, plan_id);
 
     return res.send({ message: returnedStatus.body.data.appSubscriptionCreate?.confirmationUrl})
   } catch (error) {
