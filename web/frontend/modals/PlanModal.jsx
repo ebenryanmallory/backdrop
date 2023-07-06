@@ -251,3 +251,5 @@ export function PlanModal({ setPlanModalOpen }) {
         </Modal>
     )
 }
+
+export default PlanModal;

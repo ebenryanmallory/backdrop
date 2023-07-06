@@ -66,3 +66,5 @@ export function CompressionCard({ setShowSavebar, useCompression, setUseCompress
     </Card>
   );
 }
+
+export default CompressionCard;

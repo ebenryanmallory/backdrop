@@ -55,3 +55,5 @@ export function AboutCard() {
     </Card>
   );
 }
+
+export default AboutCard;

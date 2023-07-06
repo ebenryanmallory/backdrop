@@ -65,3 +65,5 @@ export function PricingCard({ setPlanModalOpen }) {
     </>
   );
 }
+
+export default PricingCard;

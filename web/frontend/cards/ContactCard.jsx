@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   VerticalStack,
@@ -8,7 +7,6 @@ import {
   Text,
   Link
 } from "@shopify/polaris";
-import { SkeletonLabel } from "../components/SkeletonLabel";
 
 export function ContactCard() {
 
@@ -37,3 +35,5 @@ export function ContactCard() {
     </Card>
   );
 }
+
+export default ContactCard;

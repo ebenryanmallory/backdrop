@@ -16,18 +16,20 @@ import { useNavigate } from '@shopify/app-bridge-react';
 
 import { useAuthenticatedFetch } from "../hooks";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+
+import { SkeletonLabel } from "../components/SkeletonLabel";
+import { BackdropSVG } from "../assets/BackdropSVG";
 
 import { EmptyStateCard } from "../cards/EmptyStateCard";
-import { PlanModal } from "../modals/PlanModal";
 import { UserImagesCard } from "../cards/UserImagesCard";
-import { PricingCard } from "../cards/PricingCard";
-import { AboutCard } from "../cards/AboutCard";
-import { ContactCard } from "../cards/ContactCard";
-import { BackdropSVG } from "../assets/BackdropSVG";
-import { SkeletonLabel } from "../components/SkeletonLabel";
 
-export default function HomePage() {
+const PricingCard = React.lazy(() => import('../cards/PricingCard'));
+const AboutCard = React.lazy(() => import('../cards/AboutCard'));
+const ContactCard = React.lazy(() => import('../cards/ContactCard'));
+const PlanModal = React.lazy(() => import('../modals/PlanModal'));
+
+export function HomePage() {
   
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -117,10 +119,14 @@ export default function HomePage() {
         </Link>
       </FooterHelp>
       { planModalOpen &&
-        <PlanModal 
-          setPlanModalOpen={setPlanModalOpen}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <PlanModal 
+            setPlanModalOpen={setPlanModalOpen}
+          />
+        </Suspense>
       }
     </Page>
   );
 }
+
+export default HomePage

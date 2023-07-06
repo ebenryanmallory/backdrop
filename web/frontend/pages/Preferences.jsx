@@ -12,16 +12,19 @@ import {
   hexToRgb,
   rgbToHsb
 } from "@shopify/polaris";
+
+import React, { useState, useEffect, Suspense } from 'react';
+import { useAppQuery, useAuthenticatedFetch } from "../hooks";
+
+import { BackdropSVG } from "../assets/BackdropSVG";
 import { PlanMinor } from '@shopify/polaris-icons';
 import { ContextualSaveBar, Toast } from '@shopify/app-bridge-react';
-import { PlanModal } from "../modals/PlanModal";
-import { CompressionCard } from "../cards--preferences/CompressionCard";
+
+const PlanModal = React.lazy(() => import('../modals/PlanModal'));
 import { CompressionCardLoading } from "../cards--preferences/CompressionCardLoading";
-import { ColorCard } from "../cards--preferences/ColorCard";
+const CompressionCard = React.lazy(() => import('../cards--preferences/CompressionCard'));
 import { ColorCardLoading } from "../cards--preferences/ColorCardLoading";
-import { BackdropSVG } from "../assets/BackdropSVG";
-import { useAppQuery, useAuthenticatedFetch } from "../hooks";
-import { useState, useEffect } from 'react';
+const ColorCard = React.lazy(() => import('../cards--preferences/ColorCard'));
 
 export default function Preferences() {
 
@@ -120,7 +123,7 @@ export default function Preferences() {
   );
 
   const modifyWebhooks = async () => {
-    const imageResponse = await fetch('/api/modify-webhooks', {
+    const modifyResponse = await fetch('/api/modify-webhooks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 

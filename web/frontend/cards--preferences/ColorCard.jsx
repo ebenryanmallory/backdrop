@@ -100,3 +100,5 @@ export function ColorCard({ setShowSavebar, color, setColor, useTransparent, set
     </Card>
   );
 }
+
+export default ColorCard;
