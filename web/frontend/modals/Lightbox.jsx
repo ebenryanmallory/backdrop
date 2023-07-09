@@ -1,6 +1,5 @@
 import {
     Modal,
-    Text,
     HorizontalGrid,
     VerticalStack,
     Icon,
@@ -120,18 +119,17 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
                         </div>
                     </VerticalStack>
                     <VerticalStack gap={{ xs: "4", md: "2" }}>
-                        <Text>Push this image out to a product image, product variant image, or collection image.</Text>
                         <Link monochrome removeUnderline={true} onClick={() => {
                             setLightboxOpen(false);
                             setProductPickerOpen(true);
                         }}>
-                            Push to product image
+                            Use as product image
                         </Link>
                         <Link monochrome removeUnderline={true} onClick={() => {
                             setLightboxOpen(false);
                             setCollectionPickerOpen(true);
                         }}>
-                            Push to collection
+                            Use as collection image
                         </Link>
                     </VerticalStack>
                 </HorizontalGrid>

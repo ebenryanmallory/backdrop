@@ -29,7 +29,7 @@ export const removeRoute = async (_req, res) => {
 		responseType: 'arraybuffer',
 		headers: {
 		  ...formData.getHeaders(),
-		  'X-Api-Key': process.env.REMOVE_API
+		  'X-Api-Key': '97EeePwnYjb2rZbj3sjqoyMd' // process.env.REMOVE_API
 		},
 		format: use_transparency ? 'png' : 'jpg', // 'auto
 		bg_color: bg_color,

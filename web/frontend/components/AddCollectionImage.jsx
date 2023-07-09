@@ -36,7 +36,10 @@ export function AddCollectionImage({ images, imageIndex, collectionPickerOpen, s
             showDraft={true}
             showVariants={true}
             selectMultiple={true}
-            onCancel={() => setCollectionPickerOpen(false)}
+            onCancel={() => {
+                setCollectionPickerOpen(false);
+                setLightboxOpen(true);
+            }}
         />
     )
 }

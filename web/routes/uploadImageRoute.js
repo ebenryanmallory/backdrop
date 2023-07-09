@@ -19,6 +19,7 @@ export const uploadImageRoute = async (_req, res) => {
   const filePath = use_compression === true ? `${process.cwd()}/images/${shop}/compressed/${filename}` :
     `${process.cwd()}/images/${shop}/${filename}`;
   const imageFile = fs.readFileSync(filePath);
+  const isPNG = filename.includes('.png');
 
   try {
     // image staging to CDN
@@ -29,7 +30,7 @@ export const uploadImageRoute = async (_req, res) => {
           input: [
             {
               filename: filename,
-              mimeType: "image/jpeg",
+              mimeType: isPNG ? "image/png" : "image/jpeg",
               resource: "IMAGE",
               httpMethod: "PUT"
             }
@@ -38,6 +39,7 @@ export const uploadImageRoute = async (_req, res) => {
       },
     });
 
+    console.log(stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0])
     const stagedUploadUrl = stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0].url;
     const urlRemoved = stagedUploadUrl.substring(stagedUploadUrl.lastIndexOf('/') + 1);
     const queryRemoved = urlRemoved.split('?')[0];

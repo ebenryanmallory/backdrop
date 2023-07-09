@@ -2,7 +2,8 @@ import {
   Icon,
   Card,
   Box,
-  HorizontalStack
+  HorizontalStack,
+  Tooltip
 } from "@shopify/polaris";
 import {
   DeleteMinor
@@ -111,20 +112,20 @@ export function UserImagesCard() {
         <HorizontalStack>
           { data && data.images.map((image, index) => {
               return (
-                <div 
-                  key={`user-image-${index}`}
-                  className="image--container"
-                >
+                <div key={`user-image-${index}`} className="image--container">
                   <div className="relative w-max-content">
                     <div className="absolute hidden cursor-pointer icon--container"
                       onClick={async () => {
                         await deleteImage(data.images, index, fetch);
+                        setToastProps({ content: 'Image removed' });
                         refetchProducts();
                       }}>
-                      <Icon
-                        source={DeleteMinor}
-                        color="base"
-                      />
+                      <Tooltip dismissOnMouseOut content="Delete Image" preferredPosition="mostSpace">
+                        <Icon
+                          source={DeleteMinor}
+                          color="base"
+                        />
+                      </Tooltip>
                     </div>
                     <img
                       className="thumbnail"

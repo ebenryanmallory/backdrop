@@ -51,7 +51,7 @@ export function PricingCard({ setPlanModalOpen }) {
             <Text>You have { data.free_count } free images left.</Text>
           }
           { !isLoading && data && data.plan_type === 'free' && data.free_count === 0 &&
-            <Text>You have used all your free images.
+            <Text>You have used all your free images.&nbsp;
               <Link onClick={() => setPlanModalOpen(true)} monochrome removeUnderline={true}>
                 Upgrade
               </Link>

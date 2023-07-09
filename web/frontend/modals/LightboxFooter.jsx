@@ -1,6 +1,7 @@
 import {
     HorizontalStack,
-    Icon
+    Icon,
+    Tooltip
 } from "@shopify/polaris";
 import {
     DeleteMajor,
@@ -21,17 +22,21 @@ export const LightboxFooter = ({ images, imageIndex, refetchProducts }) => {
                     await deleteImage(images, imageIndex, fetch);
                     refetchProducts();
                 }}>
-                <Icon
-                    source={DeleteMajor}
-                    color="base"
-                />
+                <Tooltip dismissOnMouseOut content="Delete Image">
+                    <Icon
+                        source={DeleteMajor}
+                        color="base"
+                    />
+                </Tooltip>
             </div>
             <div className="cursor-pointer"
                 onClick={() => downloadImage(images, imageIndex)}>
-                <Icon
-                    source={PageDownMajor}
-                    color="base"
-                />
+                <Tooltip dismissOnMouseOut content="Download">
+                    <Icon
+                        source={PageDownMajor}
+                        color="base"
+                    />
+                </Tooltip>
             </div>
         </HorizontalStack>
     )

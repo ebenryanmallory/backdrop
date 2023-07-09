@@ -46,7 +46,10 @@ export function AddProductImage({ images, imageIndex, productPickerOpen, setProd
                 showDraft={true}
                 showVariants={true}
                 selectMultiple={true}
-                onCancel={() => setProductPickerOpen(false)}
+                onCancel={() => {
+                    setProductPickerOpen(false);
+                    setLightboxOpen(true);
+                }}
             />
         </>
     )

@@ -21,7 +21,8 @@ export function ImportProductImage({ files, setFiles, productPickerOpen, setProd
                         const imageName = queryStringIndex !== -1 ? 
                             imageURL.substring(imageURL.lastIndexOf('/') + 1, queryStringIndex) : 
                             imageURL.substring(imageURL.lastIndexOf('/') + 1);
-                        const file = new File([buffer], imageName, { type: 'image/jpeg' });
+                        const isPNG = imageName.includes('.png');
+                        const file = new File([buffer], imageName, { type: isPNG ? "image/png" : "image/jpeg" });
                         setFiles((files) => [...files, file]); 
                     })
                 })
