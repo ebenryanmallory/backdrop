@@ -39,7 +39,7 @@ export const uploadImageRoute = async (_req, res) => {
       },
     });
 
-    console.log(stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0])
+    // console.log(stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0])
     const stagedUploadUrl = stagedUpload.body.data.stagedUploadsCreate.stagedTargets[0].url;
     const urlRemoved = stagedUploadUrl.substring(stagedUploadUrl.lastIndexOf('/') + 1);
     const queryRemoved = urlRemoved.split('?')[0];
@@ -48,7 +48,7 @@ export const uploadImageRoute = async (_req, res) => {
     const imageUploadResponse = await fetch(stagedUploadUrl, {
       method: "PUT",
       headers: {
-        "Content-Type": "image/jpeg",
+        "Content-Type": isPNG ? "image/png" : "image/jpeg",
         "acl": "private"
       },
       body: imageFile
@@ -77,7 +77,6 @@ export const uploadImageRoute = async (_req, res) => {
         },
       });
       const createdFilter = createdFile.body.data.fileCreate.files[0].createdAt;
-      console.log(createdFilter)
       const altFilter = createdFile.body.data.fileCreate.files[0].alt;
       let altImageQuery = await client.query({
         data: `query {

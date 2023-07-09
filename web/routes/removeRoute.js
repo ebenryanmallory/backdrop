@@ -19,8 +19,13 @@ export const removeRoute = async (_req, res) => {
 	}
 
 	const formData = new FormData();
-	formData.append('size', 'auto');
 	formData.append('image_file', buffer);
+	formData.append('format', use_transparency ? 'png' : 'jpg'); // 'auto
+	formData.append('bg_color', bg_color.replace('#', ''));
+	formData.append('size', 'auto'); // 'preview', 'full'
+	formData.append('crop', 'true');
+	formData.append('crop_margin', '30px 30px 30px 30px'); // 5%
+	// formData.append('encoding', 'null');
 
 	const removeBGresponse = await axios({
 		method: 'post',
@@ -29,14 +34,8 @@ export const removeRoute = async (_req, res) => {
 		responseType: 'arraybuffer',
 		headers: {
 		  ...formData.getHeaders(),
-		  'X-Api-Key': '97EeePwnYjb2rZbj3sjqoyMd' // process.env.REMOVE_API
-		},
-		format: use_transparency ? 'png' : 'jpg', // 'auto
-		bg_color: bg_color,
-		size: 'auto', // 'preview', 'full'
-		crop: true,
-		crop_margin: '30px', // 5%
-		encoding: null
+		  'X-Api-Key': process.env.REMOVE_API
+		}
 	}).catch((error) => {
 		console.log(error)
 		return res.send(error)
