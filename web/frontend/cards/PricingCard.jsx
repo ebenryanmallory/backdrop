@@ -40,8 +40,8 @@ export function PricingCard({ setPlanModalOpen }) {
             </Bleed>
           </Box>
           <Text>Free - up to 5 images</Text>
-          <Text>Professional - up to 100 images, $10</Text>
-          <Text>Studio - up to 250 images, $20</Text>
+          <Text>Professional - up to 50 images, $10</Text>
+          <Text>Studio - up to 100 images, $20</Text>
           <Divider borderStyle="divider" />
 
           { isLoading &&

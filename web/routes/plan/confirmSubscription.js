@@ -18,7 +18,7 @@ export const confirmSubscription = async (_req, res) => {
       const confirmation_url = chargeResult.confirmation_url;
       const name = chargeResult.name;
       if (status === 'active') {
-        await updateFreeCount(id, name === 'Professional' ? 100 : name === 'Studio' ? 250 : 5);
+        await updateFreeCount(id, name === 'Professional' ? 50 : name === 'Studio' ? 100 : 5);
       };
       if (status === 'pending') {
         console.log('pending')
