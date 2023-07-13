@@ -219,9 +219,11 @@ export default function Preferences() {
         </Link>
       </FooterHelp>
       { planModalOpen &&
-        <PlanModal 
-          setPlanModalOpen={setPlanModalOpen}
-        />
+        <Suspense fallback={<div></div>}>
+          <PlanModal 
+            setPlanModalOpen={setPlanModalOpen}
+          />
+        </Suspense>
       }
       { showSavebar &&
         <ContextualSaveBar

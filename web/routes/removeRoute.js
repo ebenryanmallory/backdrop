@@ -7,7 +7,7 @@ export const removeRoute = async (_req, res) => {
 	const session = res.locals.shopify.session;
 	const { id, shop } = session;
 	const buffer = _req.files[0].buffer;
-	const { filename, bg_color, use_transparency } = _req.body;
+	const { filename, bg_color, use_transparency, plan_type } = _req.body;
 
 	const imagesFolder = `${process.cwd()}/images`;
 	if (!fs.existsSync(imagesFolder)) {
@@ -20,12 +20,15 @@ export const removeRoute = async (_req, res) => {
 
 	const formData = new FormData();
 	formData.append('image_file', buffer);
-	formData.append('format', use_transparency ? 'png' : 'jpg'); // 'auto
-	formData.append('bg_color', bg_color.replace('#', ''));
-	formData.append('size', 'auto'); // 'preview', 'full'
+	formData.append('format', use_transparency === 'true' ? 'png' : 'jpg'); // 'auto
+	if (use_transparency === 'false') {
+		formData.append('bg_color', bg_color.replace('#', ''));
+		console.log(bg_color.replace('#', ''))
+	}
+	formData.append('size', (plan_type === 'professional') || (plan_type === 'studio') ? 'auto' : 'preview'); 
+	// 'full', auto is full with fallback if account runs low on credits
 	formData.append('crop', 'true');
-	formData.append('crop_margin', '30px 30px 30px 30px'); // 5%
-	// formData.append('encoding', 'null');
+	formData.append('crop_margin', '10% 10% 10% 10%');
 
 	const removeBGresponse = await axios({
 		method: 'post',

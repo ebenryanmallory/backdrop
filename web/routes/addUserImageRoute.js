@@ -14,7 +14,9 @@ export const uploadImageRoute = async (_req, res) => {
         db = new sqlite3.Database('database.sqlite')
         const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
         db.run(query, [userId, imageUrl, timestamp], function() {
-          console.log(this.changes)
+          if (this.changes !== 1) {
+            console.log('Image URL not inserted')
+          }
         });
       } catch (err) {
         console.error(err);

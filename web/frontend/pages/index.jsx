@@ -119,7 +119,7 @@ export function HomePage() {
         </Link>
       </FooterHelp>
       { planModalOpen &&
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <PlanModal 
             setPlanModalOpen={setPlanModalOpen}
           />

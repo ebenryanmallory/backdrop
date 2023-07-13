@@ -20,7 +20,7 @@ export function ContactCard() {
           </Bleed>
         </Box>
         <Link monochrome
-          url="https://backdrop.motionstoryline.com/" 
+          url="https://backdrop.motionstoryline.com/chat/" 
           external={true}
           target="_blank"
           removeUnderline={true}

@@ -110,7 +110,7 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
       // setUserHasUploadedFile is passed in only from empty state
       const preferencesResponse = await fetch("/api/get-preferences");
       const preferences = await preferencesResponse.json();
-      const { userNotFound, compression, use_compression, bg_color, use_transparency, free_count } = preferences;
+      const { userNotFound, compression, use_compression, bg_color, use_transparency, free_count, plan_type } = preferences;
       formData.set('compression', compression);
       settings['compression'] = compression;
       formData.set('use_compression', use_compression);
@@ -119,6 +119,8 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
       settings['bg_color'] = bg_color;
       formData.set('use_transparency', use_transparency);
       settings['use_transparency'] = use_transparency;
+      formData.set('plan_type', plan_type);
+      settings['plan_type'] = plan_type;
       if (userNotFound) {
         const userResponse = await fetch("/api/create-user");
         if (userResponse.ok) {

@@ -20,9 +20,10 @@ export const compressRoute = async (_req, res) => {
 		destination: compressedDir,
 		plugins: [
 			imageminMozjpeg({quality: compression || 20}),
-			imageminPngquant({quality: [compression / 100, (compression + 5) / 100]  || [0.2, 0.2]})
+			imageminPngquant({quality: [(compression || 20) / 100, ((compression || 20) + 5) / 100]})
 		],
     
 	});
     return res.send('compressed')
+
   };
