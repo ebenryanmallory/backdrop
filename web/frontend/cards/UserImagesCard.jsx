@@ -83,8 +83,10 @@ export function UserImagesCard() {
         }
         .icon--container {
           right: 0px;
-          background: #00000094;
-          padding: 3px;
+          background: #f6f6f7;
+          padding: 0px 0.4rem;
+          border-radius: 0.3rem;
+          margin: 2px;
           cursor: pointer;
         }
         .w-max-content {
@@ -99,9 +101,6 @@ export function UserImagesCard() {
         }
         .image--container:hover .hidden {
           display: block;
-        }
-        .icon--container svg {
-          fill: var(--p-color-icon-on-color);
         }
       `
 
