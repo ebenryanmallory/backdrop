@@ -1,4 +1,5 @@
 import sqlite3 from "sqlite3";
+import { DB_PATH } from '../db_path.js';
 
 export const getUserFreeCountRoute = async (_req, res) => {
 
@@ -6,7 +7,7 @@ export const getUserFreeCountRoute = async (_req, res) => {
   const { id } = session;
 
   async function getUserImages(userId) {
-    const db = new sqlite3.Database('database.sqlite');
+    const db = new sqlite3.Database(DB_PATH);
     db.on('error', (err) => {
       console.error('Database error:', err);
     });

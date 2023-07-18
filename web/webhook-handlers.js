@@ -124,7 +124,7 @@ export default {
       const payload = JSON.parse(body);
       const { shop_id, shop_domain } = payload;
 
-      const db = new sqlite3.Database('database.sqlite');
+      const db = new sqlite3.Database(DB_PATH);
       const query = `DELETE FROM users WHERE user_id = ${shop_id}`;
       db.get(query, async (err, row) => {
         if (err) {

@@ -1,6 +1,7 @@
 import { GraphqlQueryError } from "@shopify/shopify-api";
 import shopify from "../../shopify.js";
 import sqlite3 from "sqlite3";
+import { DB_PATH } from '../../db_path.js';
 
 export const createSubscription = async (_req, res) => {
 
@@ -71,7 +72,7 @@ export const createSubscription = async (_req, res) => {
 }
 
 async function updatePlanID(userId, plan_id) {
-  const db = new sqlite3.Database('database.sqlite');
+  const db = new sqlite3.Database(DB_PATH);
   db.on('error', (err) => {
     console.error('Database error:', err);
   });

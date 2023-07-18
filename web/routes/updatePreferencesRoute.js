@@ -1,4 +1,5 @@
 import sqlite3 from "sqlite3";
+import { DB_PATH } from '../db_path.js';
 
 export const updatePreferencesRoute = async (_req, res) => {
 
@@ -7,7 +8,7 @@ export const updatePreferencesRoute = async (_req, res) => {
   const { compression, use_compression, bg_color, use_transparency } = _req.body;
 
   async function updatePreferences(userId, compression, use_compression, bg_color, use_transparency) {
-    const db = new sqlite3.Database('database.sqlite');
+    const db = new sqlite3.Database(DB_PATH);
     db.on('error', (err) => {
       console.error('Database error:', err);
     });

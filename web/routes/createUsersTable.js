@@ -1,8 +1,9 @@
 import sqlite3 from "sqlite3";
+import { DB_PATH } from '../db_path.js';
 
 export const createUsersTable = async (_req, res) => {
   
-  const db = new sqlite3.Database('database.sqlite');
+  const db = new sqlite3.Database(DB_PATH);
   db.on('error', (err) => {
     console.error('Database error:', err);
   });

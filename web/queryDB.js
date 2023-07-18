@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 
-const DB_PATH = `${process.cwd()}/database.sqlite`;
+import { DB_PATH } from "./db_path";
 
 let db = null;
 
@@ -242,7 +242,7 @@ async function getPreferences(userId) {
 async function addImageUrl(userId, imageUrl, timestamp) {
   let db = null;
   try {
-    db = new sqlite3.Database('database.sqlite')
+    db = new sqlite3.Database(DB_PATH)
     const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
     db.run(query, [userId, imageUrl, timestamp], function() {
       console.log(this.changes)

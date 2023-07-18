@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import fs from 'fs';
 import sqlite3 from "sqlite3";
 import { STAGE_UPLOAD_IMAGE_MUTATION } from './queries/STAGE_UPLOAD_IMAGE_MUTATION.js';
+import { DB_PATH } from '../db_path.js';
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -186,7 +187,7 @@ export const uploadImageRoute = async (_req, res) => {
 async function addImageUrl(userId, imageUrl, timestamp) {
   let db = null;
   try {
-    db = new sqlite3.Database('database.sqlite')
+    db = new sqlite3.Database(DB_PATH)
     const query = `INSERT INTO user_images (user_id, image_url, created_at) VALUES (?, ?, ?)`;
     db.run(query, [userId, imageUrl, timestamp], function() {
       if (this.changes !== 1) { console.log('no update made...')}
