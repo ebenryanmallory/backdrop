@@ -28,8 +28,8 @@ export const removeRoute = async (_req, res) => {
 	formData.append('size', (plan_type === 'professional') || (plan_type === 'studio') ? 'auto' : 'preview'); 
 	// 'full', auto is full with fallback if account runs low on credits
 	formData.append('crop', 'true');
-	// formData.append('crop_margin', '10% 10% 10% 10%');
-	formData.append('scale', '95%');
+	formData.append('crop_margin', '10% 10% 10% 10%');
+	// formData.append('scale', '90%');
 
 	const removeBGresponse = await axios({
 		method: 'post',

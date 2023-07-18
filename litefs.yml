@@ -33,7 +33,7 @@ lease:
 
 proxy:
   # Bind address for the proxy to listen on.
-  addr: ":8081"
+  addr: ":8080"
 
   # Hostport of your application - replace 8081 with whatever port
   # your application is listening on!
@@ -41,3 +41,6 @@ proxy:
 
   # Filename of the SQLite database you want to use for TXID tracking.
   db: "database.sqlite"
+
+exec:
+  - cmd: "npm run serve"
