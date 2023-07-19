@@ -17,7 +17,7 @@ export const getPreferencesRoute = async (_req, res) => {
         if (row === undefined) {
           return res.json({
             userNotFound: true,
-            compression: 20,
+            compression: 70,
             use_compression: true,
             bg_color: '#FFFFFF',
             use_transparency: false,

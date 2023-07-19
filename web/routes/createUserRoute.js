@@ -19,7 +19,7 @@ export const createUserRoute = async (_req, res) => {
     free_count: 5, 
     plan_type: 'free',
     plan_id: 'none',
-    compression: 20,
+    compression: 70,
     use_compression: true,
     bg_color: '#FFFFFF',
     use_transparency: false

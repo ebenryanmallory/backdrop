@@ -16,11 +16,15 @@ export const compressRoute = async (_req, res) => {
 	if (!fs.existsSync(compressedDir)) {
 	  fs.mkdirSync(compressedDir);
 	}
+	if (compression < 10) {
+		console.log('compression <= 10')
+	}
+	const pngCompression = { quality: [0.6, compression <= 10 ? .7 : .85] }
 	await imagemin([`${filePath}/*.jpg`, `${filePath}/*.jpeg`, `${filePath}/*.png`], {
 		destination: compressedDir,
 		plugins: [
-			imageminMozjpeg({quality: compression || 20}),
-			imageminPngquant({quality: [(compression || 20) / 100, ((compression || 20) + 5) / 100]})
+			imageminMozjpeg({quality: compression || 70}),
+			imageminPngquant(pngCompression)
 		],
     
 	});

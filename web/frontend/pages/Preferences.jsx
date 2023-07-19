@@ -36,7 +36,7 @@ export default function Preferences() {
   const [showSavebar, setShowSavebar] = useState(false);
 
   const [useCompression, setUseCompression] = useState(true);
-  const [compressionAmount, setCompressionAmount] = useState(80);
+  const [compressionAmount, setCompressionAmount] = useState(30);
   const [useTransparent, setUseTransparent] = useState(false);
   const [color, setColor] = useState({
     hue: 0,
