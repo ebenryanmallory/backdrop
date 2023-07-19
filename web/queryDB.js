@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 
-import { DB_PATH } from "./db_path";
+import { DB_PATH } from "./db_path.js";
 
 let db = null;
 

@@ -9,6 +9,11 @@ export const confirmSubscription = async (_req, res) => {
   const { id, shop } = session;
   const client = new shopify.api.clients.Graphql({ session });
 
+  const db = new sqlite3.Database(DB_PATH);
+  db.on('error', (err) => {
+    console.error('Database error:', err);
+  });
+  
   async function confirmStatus(plan_id) {
     try {
       const chargeResult = await shopify.api.rest.RecurringApplicationCharge.find({
@@ -18,8 +23,28 @@ export const confirmSubscription = async (_req, res) => {
       const status = chargeResult.status;
       const confirmation_url = chargeResult.confirmation_url;
       const name = chargeResult.name;
+      console.log(name)
       if (status === 'active') {
-        await updateFreeCount(id, name === 'Professional' ? 50 : name === 'Studio' ? 100 : 5);
+        try {
+          const planSQL = `UPDATE users SET free_count = $free_count, plan_type = $plan_type WHERE user_id = $userID`;
+          const updateParams = {
+            $plan_type: chargeResult.name.toLowerCase(),
+            $free_count: name === 'Professional' ? 50 : name === 'Studio' ? 100 : 5,
+            $userID: id
+          };
+          db.run(planSQL, updateParams, function(err) {
+            if (this.changes < 1) { 
+              return 'Something went wrong. Please try again.'
+            } else {
+              return res.send({ message: confirmation_url}) 
+            }
+          });
+        } catch (err) {
+          console.error(err);
+          return 'Something went wrong. Please try again.';
+        } finally {
+          db.close();
+        }
       };
       if (status === 'pending') {
         console.log('pending')
@@ -37,10 +62,6 @@ export const confirmSubscription = async (_req, res) => {
     }
   }
 
-  const db = new sqlite3.Database(DB_PATH);
-  db.on('error', (err) => {
-    console.error('Database error:', err);
-  });
   try {
     const sql = 'SELECT * FROM users WHERE user_id = ?';
     db.get(sql, [id], (err, row) => {
@@ -57,25 +78,7 @@ export const confirmSubscription = async (_req, res) => {
     console.log(err)
     return res.send({ message: 'Something went wrong. Please try again.'})
   } finally {
-    db.close();
+    // db.close();
   }
 
-}
-
-async function updateFreeCount(userId, count) {
-  const db = new sqlite3.Database(DB_PATH);
-  db.on('error', (err) => {
-    console.error('Database error:', err);
-  });
-  try {
-    const sql = 'UPDATE users SET free_count = ? WHERE user_id = ?';
-    db.run(sql, [count, userId], function(err) {
-      console.log(this.changes)
-      return res.send('ok');
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    db.close();
-  }
 }

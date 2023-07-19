@@ -121,6 +121,7 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
       settings['use_transparency'] = use_transparency;
       formData.set('plan_type', plan_type);
       settings['plan_type'] = plan_type;
+      
       if (userNotFound) {
         const userResponse = await fetch("/api/create-user");
         if (userResponse.ok) {
