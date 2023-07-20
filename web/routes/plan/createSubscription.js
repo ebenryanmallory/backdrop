@@ -36,7 +36,7 @@ export const createSubscription = async (_req, res) => {
         "variables": {
           "name": `${targetPlan.charAt(0).toUpperCase() + targetPlan.slice(1)}`,
           "returnUrl": `https://${shop}/admin/apps/${appname}/confirmation`, //https://motionstoryline-dev.myshopify.com/admin/apps/04e6705a1f39e47c62e5816f3e38a770/confirmation
-          // "test": true,
+          "test": false,
           "lineItems": [
             {
               "plan": {
@@ -57,9 +57,29 @@ export const createSubscription = async (_req, res) => {
     const gid = returnedStatus.body.data.appSubscriptionCreate?.appSubscription?.id;
     const plan_id = gid.replace('gid://shopify/AppSubscription/', '');
 
-    await updatePlanID(id, plan_id);
-
-    return res.send({ message: returnedStatus.body.data.appSubscriptionCreate?.confirmationUrl})
+    const db = new sqlite3.Database(DB_PATH);
+    db.on('error', (err) => {
+      console.error('Database error:', err);
+    });
+    try {
+      const sql = `UPDATE users SET plan_id = $plan_id WHERE user_id = $userID`;
+      const updateParams = {
+        $plan_id: plan_id,
+        $userID: id
+      };
+      db.run(sql, updateParams, function(err) {
+        if (this.changes < 1) { 
+          return res.send({ message: 'Something went wrong. Please try again.'})
+        } else {
+          return res.send({ message: returnedStatus.body.data.appSubscriptionCreate?.confirmationUrl})
+        }
+      });
+    } catch (err) {
+      console.log(err)
+      return res.send({ message: 'Something went wrong. Please try again.'})
+    } finally {
+      db.close();
+    }
   } catch (error) {
     if (error instanceof GraphqlQueryError) {
       throw new Error(
@@ -68,27 +88,5 @@ export const createSubscription = async (_req, res) => {
     } else {
       throw error;
     }
-  }
-}
-
-async function updatePlanID(userId, plan_id) {
-  const db = new sqlite3.Database(DB_PATH);
-  db.on('error', (err) => {
-    console.error('Database error:', err);
-  });
-  try {
-    const sql = `UPDATE users SET plan_id = $plan_id WHERE user_id = $userID`;
-    const updateParams = {
-      $plan_id: plan_id,
-      $userID: userId
-    };
-    db.run(sql, updateParams, function(err) {
-      if (this.changes < 1) { return res.send({ message: 'Something went wrong. Please try again.'})}
-    });
-  } catch (err) {
-    console.log(err)
-    return res.send({ message: 'Something went wrong. Please try again.'})
-  } finally {
-    db.close();
   }
 }

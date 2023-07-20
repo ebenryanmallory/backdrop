@@ -204,11 +204,11 @@ export function PlanModal({ setPlanModalOpen }) {
                                 items={[
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Up to 100 images per month',
+                                        description: 'Up to 50 images per month',
                                     },
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Billed only after you go over your free tier limit',
+                                        description: 'Full resolution images',
                                     }
                                 ]}
                             />
@@ -236,11 +236,11 @@ export function PlanModal({ setPlanModalOpen }) {
                                 items={[
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Up to 250 images per month',
+                                        description: 'Up to 100 images per month',
                                     },
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Billed only after you go over your professional tier limit, or you are billed at the lower rate.',
+                                        description: 'Full resolution images',
                                     }
                                 ]}
                             />

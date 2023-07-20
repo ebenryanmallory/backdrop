@@ -23,7 +23,6 @@ export const confirmSubscription = async (_req, res) => {
       const status = chargeResult.status;
       const confirmation_url = chargeResult.confirmation_url;
       const name = chargeResult.name;
-      console.log(name)
       if (status === 'active') {
         try {
           const planSQL = `UPDATE users SET free_count = $free_count, plan_type = $plan_type WHERE user_id = $userID`;
@@ -36,7 +35,7 @@ export const confirmSubscription = async (_req, res) => {
             if (this.changes < 1) { 
               return 'Something went wrong. Please try again.'
             } else {
-              return res.send({ message: confirmation_url}) 
+              return res.send({ message: confirmation_url }) 
             }
           });
         } catch (err) {
@@ -47,8 +46,7 @@ export const confirmSubscription = async (_req, res) => {
         }
       };
       if (status === 'pending') {
-        console.log('pending')
-        return res.send({ message: confirmation_url}) 
+        return res.send({ message: confirmation_url }) 
       };
 
     } catch (error) {
@@ -67,7 +65,7 @@ export const confirmSubscription = async (_req, res) => {
     db.get(sql, [id], (err, row) => {
       if (row === undefined) {
         return res.json({
-          error: "ID not found"
+          message: "ID not found"
         });
       } else {
         const { plan_id } = row;
@@ -77,8 +75,5 @@ export const confirmSubscription = async (_req, res) => {
   } catch (err) {
     console.log(err)
     return res.send({ message: 'Something went wrong. Please try again.'})
-  } finally {
-    // db.close();
   }
-
 }

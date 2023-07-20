@@ -39,14 +39,30 @@ export function PricingCard({ setPlanModalOpen }) {
               <Divider borderStyle="divider" />
             </Bleed>
           </Box>
-          <Text>Free - up to 5 images</Text>
-          <Text>Professional - up to 50 images, $10</Text>
-          <Text>Studio - up to 100 images, $20</Text>
-          <Divider borderStyle="divider" />
-
           { isLoading &&
             <SkeletonLabel />
           }
+          { !isLoading && data && data.plan_type === 'free' && data.free_count > 0 &&
+            <>
+              <Text>Free - up to 5 images</Text>
+              <Text>Professional - up to 50 images, $10</Text>
+              <Text>Studio - up to 100 images, $20</Text>
+            </>
+          }
+          { !isLoading && data && data.plan_type === 'professional' && data.free_count > 0 &&
+            <>
+              <Text>Professional plan</Text>
+              <Text>You have { data.free_count } images left.</Text>
+            </>
+          }
+          { !isLoading && data && data.plan_type === 'studio' && data.free_count > 0 &&
+            <>
+              <Text>Studio plan</Text>
+              <Text>You have { data.free_count } images left.</Text>
+            </>
+          }
+          <Divider borderStyle="divider" />
+
           { !isLoading && data && data.plan_type === 'free' && data.free_count > 0 &&
             <Text>You have { data.free_count } free images left.</Text>
           }

@@ -19,7 +19,7 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
             border-color: var(--p-color-bg-inverse);
         }
         .Polaris-Modal-Dialog__Modal {
-            background-color: #1a1a1a;
+            background-color: #151411;
             color: #f1f1f1;
         }
         .flex {

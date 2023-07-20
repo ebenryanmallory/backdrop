@@ -61,7 +61,7 @@ export function CompressionCard({ setShowSavebar, useCompression, setUseCompress
         <Text>Compression is recommended for web use.</Text>
       }
       { useCompression === true &&
-        <Text>A default of 80 provides a high amount of compression with a minimal amount of noticeable loss of quality.</Text>
+        <Text>A default of 30 provides a high amount of compression with a minimal amount of noticeable loss of quality.</Text>
       }
     </Card>
   );
