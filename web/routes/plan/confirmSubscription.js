@@ -33,9 +33,9 @@ export const confirmSubscription = async (_req, res) => {
           };
           db.run(planSQL, updateParams, function(err) {
             if (this.changes < 1) { 
-              return 'Something went wrong. Please try again.'
+              return res.send({ message: 'Something went wrong. Please try again.' });
             } else {
-              return res.send({ message: confirmation_url }) 
+              return res.send({ message: 'ok' });
             }
           });
         } catch (err) {

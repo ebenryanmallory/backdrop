@@ -31,10 +31,12 @@ export default function PurchaseConfirmation() {
         if (confirmationResponseJSON?.confirmationURL) {
           setConfirmationURL(confirmationResponseJSON?.confirmationURL)
         }
-        if (confirmationResponseJSON?.message = 'ID not found') {
+        if (confirmationResponseJSON?.message === 'ID not found') {
           setNoID(true)
         }
-        setIsLoading(false);
+        if (confirmationResponseJSON?.message === 'ok') {
+          setIsLoading(false);
+        }
       }
     }
     updateSubscription();
