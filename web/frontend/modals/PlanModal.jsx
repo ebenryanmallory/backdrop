@@ -63,6 +63,12 @@ export function PlanModal({ setPlanModalOpen }) {
     );
 
     const updatePlan = async () => {
+        if (data && data.userNotFound) {
+            const userResponse = await fetch("/api/create-user");
+            if (!userResponse.ok) {
+              throw new Error(userResponse.statusText);
+            }
+        }
         if (data && data.plan_type === 'free' || (data.plan_type === 'professional' && targetPlan === 'studio')) {
             const createSubscriptionResponse = await fetch("/api/create-subscription", {
                 method: 'POST',

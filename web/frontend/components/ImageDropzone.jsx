@@ -110,7 +110,7 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
       // setUserHasUploadedFile is passed in only from empty state
       const preferencesResponse = await fetch("/api/get-preferences");
       const preferences = await preferencesResponse.json();
-      const { userNotFound, compression, use_compression, bg_color, use_transparency, free_count, plan_type } = preferences;
+      const { userNotFound, compression, use_compression, bg_color, use_transparency, bypass_removal, free_count, plan_type } = preferences;
       formData.set('compression', compression);
       settings['compression'] = compression;
       formData.set('use_compression', use_compression);
@@ -119,6 +119,8 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
       settings['bg_color'] = bg_color;
       formData.set('use_transparency', use_transparency);
       settings['use_transparency'] = use_transparency;
+      formData.set('bypass_removal', bypass_removal);
+      settings['bypass_removal'] = bypass_removal;
       formData.set('plan_type', plan_type);
       settings['plan_type'] = plan_type;
       
@@ -144,11 +146,20 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
         if (!userFreeResponse.ok) {
           setProgress(100);
           setToastProps({
-            content: "There was an error removing the background from your image",
+            content: "Please check your connection and try again.",
             error: true
           });
           return
         }
+      } else {
+        setProgress(100);
+        setToastProps({
+          content: "You have no free images left. Please upgrade",
+          error: true
+        });
+        return
+      }
+      if (bypass_removal === false) {
         const imageResponse = await fetch('/api/remove-bg', {
           method: 'POST',
           body: formData
@@ -165,13 +176,6 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
           });
           return
         }
-      } else {
-        setProgress(100);
-        setToastProps({
-          content: "You have no free images left. Please upgrade",
-          error: true
-        });
-        return
       }
       if (settings['use_compression'] === true) {
         const compressedResponse = await fetch("/api/compress", {

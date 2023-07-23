@@ -5,20 +5,21 @@ export const updatePreferencesRoute = async (_req, res) => {
 
   const session = res.locals.shopify.session;
   const { id } = session;
-  const { compression, use_compression, bg_color, use_transparency } = _req.body;
+  const { compression, use_compression, bg_color, use_transparency, bypass_removal } = _req.body;
 
-  async function updatePreferences(userId, compression, use_compression, bg_color, use_transparency) {
+  async function updatePreferences(userId, compression, use_compression, bg_color, use_transparency, bypass_removal) {
     const db = new sqlite3.Database(DB_PATH);
     db.on('error', (err) => {
       console.error('Database error:', err);
     });
     try {
-      const sql = `Update users SET compression = $compression, use_compression = $use_compression, bg_color = $bg_color, use_transparency = $use_transparency WHERE user_id = $userID`;
+      const sql = `Update users SET compression = $compression, use_compression = $use_compression, bg_color = $bg_color, use_transparency = $use_transparency, bypass_removal = $bypass_removal WHERE user_id = $userID`;
       const updateParams = {
         $compression: compression,
         $use_compression: use_compression,
         $bg_color: bg_color,
         $use_transparency: use_transparency,
+        $bypass_removal: bypass_removal,
         $userID: userId
       };
       db.run(sql, updateParams, function(err, rows) {
@@ -33,5 +34,5 @@ export const updatePreferencesRoute = async (_req, res) => {
       db.close();
     }
   }
-  updatePreferences(id, compression, use_compression, bg_color, use_transparency);
+  updatePreferences(id, compression, use_compression, bg_color, use_transparency, bypass_removal);
 }

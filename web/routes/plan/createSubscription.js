@@ -69,7 +69,7 @@ export const createSubscription = async (_req, res) => {
       };
       db.run(sql, updateParams, function(err) {
         if (this.changes < 1) { 
-          return res.send({ message: 'Something went wrong. Please try again.'})
+          console.log('No change made...') // return res.send({ message: 'Something went wrong. Please try again.'})
         } else {
           return res.send({ message: returnedStatus.body.data.appSubscriptionCreate?.confirmationUrl})
         }

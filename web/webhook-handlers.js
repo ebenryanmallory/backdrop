@@ -2,16 +2,6 @@ import { DeliveryMethod } from "@shopify/shopify-api";
 import sqlite3 from "sqlite3";
 
 export default {
-  PRODUCTS_UPDATE: {
-    deliveryMethod: DeliveryMethod.Http,
-    callbackUrl: "/api/webhooks",
-    callback: async (topic, shop, body, webhookId) => {
-      console.log('--- Product update ---');
-      const payload = JSON.parse(body);
-      console.log(payload);
-      console.log('--- /Product update ---');
-    },
-  },
   SUBSCRIPTION_BILLING_ATTEMPTS_SUCCESS: {
     deliveryMethod: DeliveryMethod.Http,
     callbackUrl: "/api/webhooks",
@@ -125,21 +115,22 @@ export default {
       const { shop_id, shop_domain } = payload;
 
       const db = new sqlite3.Database(DB_PATH);
-      const query = `DELETE FROM users WHERE user_id = ${shop_id}`;
-      db.get(query, async (err, row) => {
-        if (err) {
-          console.error(err);
-        } else if (!row) {
-          console.error(`User with id ${shop_id} not found`);
-        } else {
+      const userQuery = `DELETE FROM users WHERE user_id = ?`;
+      const imagesQuery = `DELETE FROM user_images WHERE user_id = ?`;
+      db.run(userQuery, [shop_domain], function() {
+        if (this.changes < 1) { res.status(200).send('No user found') }
+        db.run(imagesQuery, [shop_domain], function() {
           res.status(200).send('OK');
-        }
+        });
       });
+      db.close();
+
+
       // Payload has the following shape:
       // {
       //   "shop_id": 954889,
       //   "shop_domain": "{shop}.myshopify.com"
       // }
     },
-  },
+  }
 };

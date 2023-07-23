@@ -6,25 +6,29 @@ import {
   HorizontalStack,
   Text,
   Box,
-  Divider,
   hsbToHex
 } from "@shopify/polaris";
 import { useState, useCallback, useEffect, useRef } from 'react';
 
-export function ColorCard({ setShowSavebar, color, setColor, useTransparent, setUseTransparent }) {
+export function ColorCard({ setShowSavebar, color, setColor, useTransparent, setUseTransparent, bypassRemoval, setBypassRemoval }) {
   
   const popoverRef = useRef(null);
 
   const [colorOpen, setColorOpen] = useState(false);
   const [hexColor, setHexColor] = useState('transparent');
 
+  useEffect(() => {
+    setHexColor(hsbToHex(color));
+  }), [color];
+
   const toggleColor = useCallback(() => {
     setColorOpen((colorOpen) => !colorOpen);
   }, []);
 
-  useEffect(() => {
-    setHexColor(hsbToHex(color));
-  }), [color];
+  const toggleBypassRemoval = useCallback((updatedToggle) => {
+    setBypassRemoval(updatedToggle);
+    setShowSavebar(true);
+  }, []);
 
   const toggleUseTransparent = useCallback((updatedToggle) => {
     setUseTransparent(updatedToggle);
@@ -62,40 +66,53 @@ export function ColorCard({ setShowSavebar, color, setColor, useTransparent, set
   return (
     <Card roundedAbove="sm">
       <style>{css}</style>
-      <HorizontalStack gap="3">
-        <Box padding={'1'}>
-          <Checkbox
-            label="Transparent"
-            checked={useTransparent}
-            onChange={toggleUseTransparent}
-          />
-        </Box>
+      <Box padding={'1'}>
+        <Text>{bypassRemoval}</Text>
+        <Checkbox
+          label="Bypass background removal step"
+          checked={bypassRemoval}
+          onChange={toggleBypassRemoval}
+        />
+      </Box>
+      { bypassRemoval === false &&
         <HorizontalStack gap="3">
-          <Popover
-            active={colorOpen}
-            activator={colorCircle}
-            preferredPosition='below'
-            preferredAlignment='left'
-            autofocusTarget="first-node"
-            onClose={toggleColor}
-          >
-            <ColorPicker onChange={(color) => {
-              setColor(color);
-              setShowSavebar(true);
-            }} color={color} />
-            <Box padding="2">
-              <Text>{hexColor}</Text>
-            </Box>
-          </Popover>
-          <Text>Background color</Text>
+          <Box padding={'1'}>
+            <Checkbox
+              label="Transparent"
+              checked={useTransparent}
+              onChange={toggleUseTransparent}
+            />
+          </Box>
+          <HorizontalStack gap="3">
+            <Popover
+              active={colorOpen}
+              activator={colorCircle}
+              preferredPosition='below'
+              preferredAlignment='left'
+              autofocusTarget="first-node"
+              onClose={toggleColor}
+            >
+              <ColorPicker onChange={(color) => {
+                setColor(color);
+                setShowSavebar(true);
+              }} color={color} />
+              <Box padding="2">
+                <Text>{hexColor}</Text>
+              </Box>
+            </Popover>
+            <Text>Background color</Text>
+          </HorizontalStack>
         </HorizontalStack>
-      </HorizontalStack>
+      }
       <Box padding="1" />
-      { useTransparent === false &&
+      { useTransparent === false && bypassRemoval === false &&
         <Text>Background will be a solid color. Solid white denotes product photography.</Text>
       }
-      { useTransparent === true &&
+      { useTransparent === true && bypassRemoval === false &&
         <Text>Background will show transparency. PNG images will have larger file sizes.</Text>
+      }
+      { bypassRemoval === true &&
+        <Text>Bypassing background removal is useful for simple image compression.</Text>
       }
     </Card>
   );

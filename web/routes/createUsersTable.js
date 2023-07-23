@@ -21,7 +21,8 @@ export const createUsersTable = async (_req, res) => {
           compression INTEGER DEFAULT,
           use_compression BOOLEAN DEFAULT,
           bg_color TEXT DEFAULT,
-          use_transparency BOOLEAN DEFAULT
+          use_transparency BOOLEAN DEFAULT,
+          bypass_removal BOOLEAN DEFAULT
         )
       `);
     } catch (err) {

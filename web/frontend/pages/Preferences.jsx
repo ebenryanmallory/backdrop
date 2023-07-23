@@ -25,6 +25,8 @@ import { CompressionCardLoading } from "../cards--preferences/CompressionCardLoa
 const CompressionCard = React.lazy(() => import('../cards--preferences/CompressionCard'));
 import { ColorCardLoading } from "../cards--preferences/ColorCardLoading";
 const ColorCard = React.lazy(() => import('../cards--preferences/ColorCard'));
+import { AccountCardLoading } from "../cards--preferences/AccountCardLoading";
+const AccountCard = React.lazy(() => import('../cards--preferences/AccountCard'));
 
 export default function Preferences() {
 
@@ -38,6 +40,7 @@ export default function Preferences() {
   const [useCompression, setUseCompression] = useState(true);
   const [compressionAmount, setCompressionAmount] = useState(30);
   const [useTransparent, setUseTransparent] = useState(false);
+  const [bypassRemoval, setBypassRemoval] = useState(false);
   const [color, setColor] = useState({
     hue: 0,
     brightness: 1,
@@ -75,6 +78,9 @@ export default function Preferences() {
     if (data && data.use_transparency !== undefined) {
       setUseTransparent(data.use_transparency)
     };
+    if (data && data.bypass_removal !== undefined) {
+      setBypassRemoval(data.bypass_removal)
+    };
   }, [data]);
 
   const saveAction = {
@@ -94,7 +100,8 @@ export default function Preferences() {
             compression: 100 - compressionAmount,
             use_compression: useCompression,
             bg_color: hsbToHex(color),
-            use_transparency: useTransparent
+            use_transparency: useTransparent,
+            bypass_removal: bypassRemoval
           })
       })
       if (!imageResponse.ok) {
@@ -200,6 +207,8 @@ export default function Preferences() {
               setShowSavebar={setShowSavebar}
               useTransparent={useTransparent}
               setUseTransparent={setUseTransparent}
+              bypassRemoval={bypassRemoval}
+              setBypassRemoval={setBypassRemoval}
               color={color}
               setColor={setColor}
             />
@@ -208,6 +217,36 @@ export default function Preferences() {
             <ColorCardLoading />
           }
         </HorizontalGrid>
+        { data && !data.userNotFound &&
+          <>
+            {smUp ? <Divider borderStyle="base" /> : null}
+            <HorizontalGrid columns={{ xs: "1fr", md: "2fr 5fr" }} gap="4">
+              <Box
+                as="section"
+                paddingInlineStart={{ xs: 4, sm: 0 }}
+                paddingInlineEnd={{ xs: 4, sm: 0 }}
+              >
+                <VerticalStack gap="4">
+                  <Text as="h3" variant="headingMd">
+                    Account
+                  </Text>
+                  <Text as="p" variant="bodyMd">
+                    Complete control of your information with one click.
+                  </Text>
+                </VerticalStack>
+              </Box>
+              { isLoading === false &&
+                <AccountCard 
+                  toastProps={toastProps}
+                  setToastProps={setToastProps}
+                />
+              }
+              { isLoading === true &&
+                <AccountCardLoading />
+              }
+            </HorizontalGrid>
+          </>
+        }
       </VerticalStack>
       <FooterHelp>
       Learn more about{' '}

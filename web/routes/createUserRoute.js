@@ -22,7 +22,8 @@ export const createUserRoute = async (_req, res) => {
     compression: 70,
     use_compression: true,
     bg_color: '#FFFFFF',
-    use_transparency: false
+    use_transparency: false,
+    bypass_removal: false
   };
 
   const insertQuery = `
@@ -36,9 +37,10 @@ export const createUserRoute = async (_req, res) => {
       compression,
       use_compression,
       bg_color,
-      use_transparency
+      use_transparency,
+      bypass_removal
     )
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const insertParams = [
@@ -51,7 +53,8 @@ export const createUserRoute = async (_req, res) => {
     user.compression,
     user.use_compression,
     user.bg_color,
-    user.use_transparency
+    user.use_transparency,
+    user.bypass_removal
   ];
 
   // Check if user_id already exists

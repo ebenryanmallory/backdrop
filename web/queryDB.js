@@ -24,7 +24,7 @@ function createUsersTable() {
   
   function addField() {
     db = db ?? new sqlite3.Database(DB_PATH);
-    const sql = `ALTER TABLE users ADD COLUMN plan_id TEXT`;
+    const sql = `ALTER TABLE users ADD COLUMN bypass_removal BOOLEAN DEFAULT false`;
 
     db.run(sql, (err) => {
       if (err) {
@@ -148,9 +148,10 @@ async function getAll(userId) {
     if (err) {
       console.error(err.message);
     } else {
-      const { id, created_at, free_count, plan_type, plan_id, compression, use_compression, bg_color, use_transparency } = row;
+      const { id, user_id, created_at, free_count, plan_type, plan_id, compression, use_compression, bg_color, use_transparency, bypass_removal } = row;
       const responseObject = {
         id: id,
+        user_id: user_id,
         created_at: created_at,
         plan: plan_type,
         plan_id: plan_id,
@@ -158,7 +159,8 @@ async function getAll(userId) {
         compression: compression,
         use_compression: use_compression,
         bg_color: bg_color,
-        use_transparency: use_transparency
+        use_transparency: use_transparency,
+        bypass_removal: bypass_removal
       };
       console.log(responseObject)
     }
@@ -193,6 +195,15 @@ async function deleteUserImages(userId, imageURL) {
   db = db ?? new sqlite3.Database(DB_PATH);
   const sql = 'DELETE FROM user_images WHERE user_id = ? AND image_url = ?';
   db.run(sql, [userId, imageURL] , function() {
+    console.log(this.changes)
+  });
+  db.close();
+}
+
+async function deleteAllUserImages(userId) {
+  db = db ?? new sqlite3.Database(DB_PATH);
+  const sql = 'DELETE FROM user_images WHERE user_id = ?';
+  db.run(sql, [userId] , function() {
     console.log(this.changes)
   });
   db.close();
@@ -265,8 +276,9 @@ async function addImageUrl(userId, imageUrl, timestamp) {
 getAll('offline_motionstoryline-dev.myshopify.com')
 // getAllImages()
 // deleteUserImages('offline_motionstoryline-dev.myshopify.com', '')
+// deleteAllUserImages('tester')
 // getUserImages('offline_motionstoryline-dev.myshopify.com')
 // deleteUser('offline_motionstoryline-dev.myshopify.com')
 // updatePreferences('offline_motionstoryline-dev.myshopify.com', 80, false, '#FFFFFF', false)
 // getPreferences('offline_motionstoryline-dev.myshopify.com')
-// addImageUrl('offline_motionstoryline-dev.myshopify.com', '', new Date().toISOString())
+// addImageUrl('tester', 'test.jpg', new Date().toISOString())

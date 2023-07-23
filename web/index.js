@@ -16,6 +16,7 @@ import { updateFreeCountRoute } from './routes/updateFreeCountRoute.js'
 import { removeRoute } from './routes/removeRoute.js'
 import { uploadImageRoute } from './routes/uploadImageRoute.js'
 import { deleteUserImageRoute } from './routes/deleteUserImageRoute.js'
+import { deleteAllDataRoute } from './routes/deleteAllDataRoute.js'
 import { addProductImageRoute } from './routes/addProductImageRoute.js'
 import { updateCollectionImageRoute } from './routes/updateCollectionImageRoute.js'
 import { updatePreferencesRoute } from './routes/updatePreferencesRoute.js'
@@ -65,7 +66,6 @@ app.get("/api/get-preferences", getPreferencesRoute);
 app.post("/api/remove-bg", upload.any(), removeRoute);
 app.post("/api/compress", compressRoute);
 app.post("/api/upload", uploadImageRoute);
-app.post("/api/delete-user-image", deleteUserImageRoute);
 app.post("/api/add-product-image", addProductImageRoute);
 app.post("/api/update-collection-image", updateCollectionImageRoute);
 app.post("/api/update-preferences", updatePreferencesRoute);
@@ -74,6 +74,9 @@ app.post("/api/create-subscription", createSubscription);
 app.post("/api/confirm-subscription", confirmSubscription);
 app.post("/api/cancel-subscription", cancelSubscription);
 app.post("/api/modify-webhooks", modifyWebhooks);
+
+app.post("/api/delete-user-image", deleteUserImageRoute);
+app.post("/api/delete-all-data", deleteAllDataRoute);
 
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
