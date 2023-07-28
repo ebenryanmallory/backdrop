@@ -132,7 +132,6 @@ export function PlanModal({ setPlanModalOpen }) {
             primaryAction={{
             content: 'Update plan',
                 onAction: updatePlan
-
             }}
             secondaryActions={[
             {

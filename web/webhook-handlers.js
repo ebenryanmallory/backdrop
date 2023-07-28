@@ -10,6 +10,7 @@ export default {
       const payload = JSON.parse(body);
       console.log(payload);
       console.log('--- /Payment Success update ---');
+      res.status(200).send('OK');
     },
   },
   SUBSCRIPTION_BILLING_ATTEMPTS_FAILURE: {
@@ -20,6 +21,7 @@ export default {
       const payload = JSON.parse(body);
       console.log(payload);
       console.log('--- /Failure update ---');
+      res.status(200).send('OK');
     },
   },
   APP_SUBSCRIPTIONS_UPDATE: {
@@ -30,6 +32,7 @@ export default {
       const payload = JSON.parse(body);
       console.log(payload);
       console.log('--- / APP_SUBSCRIPTIONS_UPDATE ---');
+      res.status(200).send('OK');
     },
   },
   /**
