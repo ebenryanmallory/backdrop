@@ -9,35 +9,6 @@ export const modifyWebhooks = async (_req, res) => {
 
     try {
 
-        const created = await client.query({
-            data: {
-                "query": `mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
-                    webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
-                        webhookSubscription {
-                            id
-                            topic
-                            format
-                            endpoint {
-                                __typename
-                                ... on WebhookHttpEndpoint {
-                                    callbackUrl
-                                }
-                            }
-                        }
-                    }
-                }`,
-                "variables": {
-                    "topic": "SUBSCRIPTION_BILLING_ATTEMPTS_FAILURE",
-                    "webhookSubscription": {
-                        "callbackUrl": "https://backdrop.fly.dev/api/webhooks",
-                        "format": "JSON"
-                    }
-                },
-            },
-        });
-        console.log(created.body.data)
-        console.log(created.body.data.webhookSubscriptionCreate.webhookSubscription)
-
         const checkWebhooks = await client.query({
         data: `query {
             webhookSubscriptions(first: 3) {
@@ -79,6 +50,35 @@ export const modifyWebhooks = async (_req, res) => {
   }
 
 /*
+
+    const created = await client.query({
+        data: {
+            "query": `mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+                webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+                    webhookSubscription {
+                        id
+                        topic
+                        format
+                        endpoint {
+                            __typename
+                            ... on WebhookHttpEndpoint {
+                                callbackUrl
+                            }
+                        }
+                    }
+                }
+            }`,
+            "variables": {
+                "topic": "SUBSCRIPTION_BILLING_ATTEMPTS_FAILURE",
+                "webhookSubscription": {
+                    "callbackUrl": "https://backdrop.fly.dev/api/webhooks",
+                    "format": "JSON"
+                }
+            },
+        },
+    });
+    console.log(created.body.data)
+    console.log(created.body.data.webhookSubscriptionCreate.webhookSubscription)
 
     const updated = await client.query({
         data: {

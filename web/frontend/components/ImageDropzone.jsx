@@ -159,23 +159,21 @@ export function ImageDropzone({ setUserHasUploadedFile, refetchProducts }) {
         });
         return
       }
-      if (bypass_removal === false) {
-        const imageResponse = await fetch('/api/remove-bg', {
-          method: 'POST',
-          body: formData
-        })
-        const imageResponseJSON = await imageResponse.json();
-        if (imageResponse.ok && imageResponseJSON?.status !== 403) {
-          setProgress(60);
-        } else {
-          console.log('403 detected')
-          setProgress(100);
-          setToastProps({
-            content: "There was an error removing the background from your image",
-            error: true
-          });
-          return
-        }
+      const imageResponse = await fetch('/api/remove-bg', {
+        method: 'POST',
+        body: formData
+      })
+      const imageResponseJSON = await imageResponse.json();
+      if (imageResponse.ok && imageResponseJSON?.status !== 403) {
+        setProgress(60);
+      } else {
+        console.log('403 detected')
+        setProgress(100);
+        setToastProps({
+          content: "There was an error removing the background from your image",
+          error: true
+        });
+        return
       }
       if (settings['use_compression'] === true) {
         const compressedResponse = await fetch("/api/compress", {

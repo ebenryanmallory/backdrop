@@ -50,13 +50,10 @@ export function Lightbox({ lightboxOpen, setLightboxOpen, images, imageIndex, se
             cursor: pointer;
         }
         .next span, .prev span {
-            height: 2rem;
+            height: 3rem;
             width: 2rem;
-        }
-        .next:hover, .prev:hover {
-            border: #414141 0.5px solid;
-            padding-top: 5px;
-            padding-bottom: 5px;
+            background: #FFFFFF;
+            padding-top: .5rem;
         }
         .lightbox-image {
             max-height: 70vh;

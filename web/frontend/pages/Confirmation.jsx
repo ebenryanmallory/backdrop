@@ -18,17 +18,6 @@ export default function PurchaseConfirmation() {
   
   const fetch = useAuthenticatedFetch();
 
-  const modifyWebhooks = async () => {
-    const modifyResponse = await fetch('/api/modify-webhooks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-          hello: 'world'
-        })
-    })
-  }
-  window.modifyWebhooks = modifyWebhooks;
-  
   const [isLoading, setIsLoading] = useState(true);
   const [purchaseOK, setPurchaseOK] = useState(false);
   const emptyToastProps = { content: null };
@@ -119,7 +108,7 @@ export default function PurchaseConfirmation() {
                     Congratulations! If you need a refresher on how to get started, visit
                     <Link monochrome url="https://backdrop.motionstoryline.com/quickstart-guide/"
                       external removeUnderline={true} target="_blank">
-                      the documentation.
+                      {' '}the documentation.
                     </Link>
                   </p>
                 </>
