@@ -1,12 +1,36 @@
-import { Card, EmptyState, Page, Spinner, Frame, Loading, Link } from "@shopify/polaris";
+import { 
+  Card, 
+  EmptyState, 
+  Page, 
+  Spinner, 
+  Frame,
+  Box,
+  Loading, 
+  Link 
+} from "@shopify/polaris";
 import { Toast } from "@shopify/app-bridge-react";
 import { useAuthenticatedFetch } from "../hooks";
 import { useEffect, useState } from "react";
+import { dots } from "../assets";
+import { confettiRibbon } from "../assets";
 
 export default function PurchaseConfirmation() {
   
   const fetch = useAuthenticatedFetch();
+
+  const modifyWebhooks = async () => {
+    const modifyResponse = await fetch('/api/modify-webhooks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+          hello: 'world'
+        })
+    })
+  }
+  window.modifyWebhooks = modifyWebhooks;
+  
   const [isLoading, setIsLoading] = useState(true);
+  const [purchaseOK, setPurchaseOK] = useState(false);
   const emptyToastProps = { content: null };
   const [toastProps, setToastProps] = useState(emptyToastProps);
   const [confirmationURL, setConfirmationURL] = useState('');
@@ -28,14 +52,17 @@ export default function PurchaseConfirmation() {
             });
       } else {
         const confirmationResponseJSON = await confirmationResponse.json();
-        if (confirmationResponseJSON?.confirmationURL) {
-          setConfirmationURL(confirmationResponseJSON?.confirmationURL)
+        if (confirmationResponseJSON?.message.includes('https://')) {
+          setConfirmationURL(confirmationResponseJSON.message);
+          setIsLoading(false);
         }
         if (confirmationResponseJSON?.message === 'ID not found') {
-          setNoID(true)
+          setNoID(true);
+          setIsLoading(false);
         }
         if (confirmationResponseJSON?.message === 'ok') {
           setIsLoading(false);
+          setPurchaseOK(true);
         }
       }
     }
@@ -52,29 +79,50 @@ export default function PurchaseConfirmation() {
       <div style={{height: '100px'}}>
         <Frame>
           <Card>
-            <EmptyState heading="Thank you for your purchase">
-              { !isLoading &&
+            <EmptyState 
+              heading={purchaseOK ? "Thank you for your purchase" : ''}
+              image={purchaseOK ? confettiRibbon : dots}
+            >
+              { isLoading &&
                 <>
                   <Loading />
                   <Spinner></Spinner>
+                  <p style={{ textAlign: "center" }}>
+                    Just checking on a couple things...
+                  </p>
                 </>
               }
-              <p>
-                Check the some examples on how to get started.
-              </p>
               { confirmationURL !== '' &&
-                <p style={{ textAlign: "center" }}>
-                  Your order status is still pending. Head on back to your{' '}
-                  <Link monochrome url={confirmationURL}
-                    external removeUnderline={true}>
-                    order page.
-                  </Link>
-                </p>
+                <>
+                  <Box padding="4"></Box>
+                  <p style={{ textAlign: "center" }}>
+                    Your order status is still pending. Head on back to your{' '}
+                    <Link monochrome onClick={() => window.parent.location.href = confirmationURL}
+                      external removeUnderline={true}>
+                      order page.
+                    </Link>
+                  </p>
+                </>
               }
               { noID &&
-                <p style={{ textAlign: "center" }}>
-                  Your session expired. Please restart upgrade from the plan modal.
-                </p>
+                <>
+                  <Box padding="4"></Box>
+                  <p style={{ textAlign: "center" }}>
+                    Your session expired. Please restart upgrade from the plan modal.
+                  </p>
+                </>
+              }
+              { purchaseOK &&
+                <>
+                  <Box padding="4"></Box>
+                  <p style={{ textAlign: "center" }}>
+                    Congratulations! If you need a refresher on how to get started, visit
+                    <Link monochrome url="https://backdrop.motionstoryline.com/quickstart-guide/"
+                      external removeUnderline={true} target="_blank">
+                      the documentation.
+                    </Link>
+                  </p>
+                </>
               }
             </EmptyState>
           </Card>

@@ -9,6 +9,35 @@ export const modifyWebhooks = async (_req, res) => {
 
     try {
 
+        const created = await client.query({
+            data: {
+                "query": `mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
+                    webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
+                        webhookSubscription {
+                            id
+                            topic
+                            format
+                            endpoint {
+                                __typename
+                                ... on WebhookHttpEndpoint {
+                                    callbackUrl
+                                }
+                            }
+                        }
+                    }
+                }`,
+                "variables": {
+                    "topic": "SUBSCRIPTION_BILLING_ATTEMPTS_FAILURE",
+                    "webhookSubscription": {
+                        "callbackUrl": "https://backdrop.fly.dev/api/webhooks",
+                        "format": "JSON"
+                    }
+                },
+            },
+        });
+        console.log(created.body.data)
+        console.log(created.body.data.webhookSubscriptionCreate.webhookSubscription)
+
         const checkWebhooks = await client.query({
         data: `query {
             webhookSubscriptions(first: 3) {
@@ -37,6 +66,8 @@ export const modifyWebhooks = async (_req, res) => {
         console.log(checkWebhooks.body.data.webhookSubscriptions.edges[0])
         console.log(checkWebhooks.body.data.webhookSubscriptions.edges[1])
         console.log(checkWebhooks.body.data.webhookSubscriptions.edges[2])
+        console.log(checkWebhooks.body.data.webhookSubscriptions.edges[3])
+       
     } catch (error) {
     if (error instanceof GraphqlQueryError) {
       throw new Error(
@@ -49,34 +80,35 @@ export const modifyWebhooks = async (_req, res) => {
 
 /*
 
-        const updated = await client.query({
-            data: {
-                "query": `mutation webhookSubscriptionUpdate($id: ID!, $webhookSubscription: WebhookSubscriptionInput!) {
-                webhookSubscriptionUpdate(id: $id, webhookSubscription: $webhookSubscription) {
-                    userErrors {
-                        field
-                        message
-                    }
-                    webhookSubscription {
-                        id
-                        topic
-                        endpoint {
-                            ... on WebhookHttpEndpoint {
-                                callbackUrl
-                            }
+    const updated = await client.query({
+        data: {
+            "query": `mutation webhookSubscriptionUpdate($id: ID!, $webhookSubscription: WebhookSubscriptionInput!) {
+            webhookSubscriptionUpdate(id: $id, webhookSubscription: $webhookSubscription) {
+                userErrors {
+                    field
+                    message
+                }
+                webhookSubscription {
+                    id
+                    topic
+                    endpoint {
+                        ... on WebhookHttpEndpoint {
+                            callbackUrl
                         }
                     }
                 }
-                }`,
-                "variables": {
-                "id": "gid://shopify/WebhookSubscription/1334490693929",
-                "webhookSubscription": {
-                    "callbackUrl": "https://c8eb-216-82-140-151.ngrok-free.app/api/webhooks"
-                }
-                },
+            }
+            }`,
+            "variables": {
+            "id": "gid://shopify/WebhookSubscription/1348685824297",
+            "webhookSubscription": {
+                "callbackUrl": "https://backdrop.fly.dev/api/webhooks"
+            }
             },
-        });
-        console.log(updated.body.data)
+        },
+    });
+    console.log(updated.body.data)
+    
 
     const created = await client.query({
         data: {
@@ -123,7 +155,6 @@ export const modifyWebhooks = async (_req, res) => {
             },
         },
     });
-
     
 */
 }

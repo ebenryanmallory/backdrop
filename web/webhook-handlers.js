@@ -33,7 +33,18 @@ export default {
       console.log(payload);
       console.log('--- / APP_SUBSCRIPTIONS_UPDATE ---');
       res.status(200).send('OK');
-    },
+    }
+  },
+  APP_UNINSTALLED: {
+    deliveryMethod: DeliveryMethod.Http,
+    callbackUrl: "/api/webhooks",
+    callback: async (topic, shop, body, webhookId) => {
+      console.log('--- APP_UNINSTALLED ---');
+      const payload = JSON.parse(body);
+      console.log(payload);
+      console.log('--- / APP_UNINSTALLED ---');
+      res.status(200).send('OK');
+    }
   },
   /**
    * Customers can request their data from a store owner. When this happens,
