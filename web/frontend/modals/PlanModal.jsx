@@ -150,6 +150,9 @@ export function PlanModal({ setPlanModalOpen }) {
                     }} ref={freeRef}>
                         <Card className="hover-card"
                             background={"bg-subdued"}>
+                            <Text as="h5" variant="headingMd" color="subdued">
+                                Free Plan
+                            </Text>
                             <Text as="h2" variant="headingXl">
                                 Free
                             </Text>
@@ -172,15 +175,7 @@ export function PlanModal({ setPlanModalOpen }) {
                                     },
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Full functionality',
-                                    },
-                                    {
-                                        term: <div style={{ textAlign: 'right' }}>✓</div>,
                                         description: 'Free forever',
-                                    },
-                                    {
-                                        term: <div style={{ textAlign: 'right' }}>ⓧ</div>,
-                                        description: 'Intended only for feature and quality demonstration purposes.',
                                     }
                                 ]}
                             />
@@ -191,8 +186,11 @@ export function PlanModal({ setPlanModalOpen }) {
                         setTargetPlan('professional');
                         }} ref={professionalRef}>
                         <Card background="bg-subdued">
+                            <Text as="h5" variant="headingMd" color="subdued">
+                                Professional Plan
+                            </Text>
                             <Text as="h2" variant="headingXl">
-                                Professional
+                                $10/month
                             </Text>
                             <img
                                 alt=""
@@ -209,7 +207,7 @@ export function PlanModal({ setPlanModalOpen }) {
                                 items={[
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Up to 50 images per month',
+                                        description: 'Up to 50 images monthly',
                                     },
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
@@ -224,8 +222,11 @@ export function PlanModal({ setPlanModalOpen }) {
                         setTargetPlan('studio');
                         }} ref={studioRef}>
                         <Card background="bg-subdued">
+                            <Text as="h5" variant="headingMd" color="subdued">
+                                Studio Plan
+                            </Text>
                             <Text as="h2" variant="headingXl">
-                                Studio
+                                $20/month
                             </Text>
                             <img
                                 alt=""
@@ -241,7 +242,7 @@ export function PlanModal({ setPlanModalOpen }) {
                                 items={[
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,
-                                        description: 'Up to 100 images per month',
+                                        description: 'Up to 100 images monthly',
                                     },
                                     {
                                         term: <div style={{ textAlign: 'right' }}>✓</div>,

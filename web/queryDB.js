@@ -266,6 +266,21 @@ async function addImageUrl(userId, imageUrl, timestamp) {
     }
   }
 }
+
+async function setPlanType(planType, userId) {
+  let db = null;
+  try {
+    db = new sqlite3.Database(DB_PATH);
+    const query = 'UPDATE users SET plan_type = ? WHERE user_id = ?';
+    db.run(query, [planType, userId], function() {
+      console.log(this.changes)
+    });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    db.close();
+  }
+}
 // createUserImagesTable();
 // printTableInfo();
 // addField();
@@ -273,7 +288,7 @@ async function addImageUrl(userId, imageUrl, timestamp) {
 // printUserIds();
 // deleteField()
 // printUserInfo()
-getAll('offline_motionstoryline-dev.myshopify.com')
+// getAll('offline_motionstoryline-dev.myshopify.com')
 // getAllImages()
 // deleteUserImages('offline_motionstoryline-dev.myshopify.com', '')
 // deleteAllUserImages('tester')
@@ -282,3 +297,4 @@ getAll('offline_motionstoryline-dev.myshopify.com')
 // updatePreferences('offline_motionstoryline-dev.myshopify.com', 80, false, '#FFFFFF', false)
 // getPreferences('offline_motionstoryline-dev.myshopify.com')
 // addImageUrl('tester', 'test.jpg', new Date().toISOString())
+setPlanType('free', 'offline_motionstoryline-dev.myshopify.com')

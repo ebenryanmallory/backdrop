@@ -45,8 +45,8 @@ export function PricingCard({ setPlanModalOpen }) {
           { !isLoading && data && data.plan_type === 'free' && data.free_count > 0 &&
             <>
               <Text>Free - up to 5 images</Text>
-              <Text>Professional - up to 50 images, $10</Text>
-              <Text>Studio - up to 100 images, $20</Text>
+              <Text>Professional - up to 50 images monthly, $10</Text>
+              <Text>Studio - up to 100 images monthly, $20</Text>
             </>
           }
           { !isLoading && data && data.plan_type === 'professional' && data.free_count > 0 &&

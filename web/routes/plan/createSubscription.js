@@ -42,7 +42,7 @@ export const createSubscription = async (_req, res) => {
               "plan": {
                 "appRecurringPricingDetails": {
                   "price": {
-                    "amount": targetPlan === "professional" ? 10.0 : targetPlan === "studio" ? 20 : null,
+                    "amount": targetPlan === "professional" ? 10 : targetPlan === "studio" ? 20 : null,
                     "currencyCode": "USD"
                   },
                   "interval": "EVERY_30_DAYS"
