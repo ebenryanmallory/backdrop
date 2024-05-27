@@ -2,6 +2,8 @@
 
 Backdrop is a Shopify App that allows users to easily remove backgrounds from images using an API. This app simplifies the process of editing product images, making it easier for store owners to create professional-looking product photos.
 
+![Backdrop App Screenshot](Backdrop-Listing.jpg)
+
 ## Features
 
 - Seamless integration with Shopify stores
