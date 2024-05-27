@@ -6,10 +6,9 @@ Backdrop is a Shopify App that allows users to easily remove backgrounds from im
 
 ## Features
 
-- Seamless integration with Shopify stores
 - Simple and intuitive user interface
-- Utilizes an API for accurate background removal
-- Enhances product images for a more professional appearance
+- Utilizes an API for background removal
+- Professional quality background removal and image compression for product photography
 
 ## Installation
 
@@ -55,11 +54,3 @@ As this is a personal project, contributions are not currently accepted. However
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
-## Contact
-
-If you have any questions or suggestions regarding this project, please feel free to reach out to the project owner:
-
-Eben Mallory
-- GitHub: [ebenryanmallory](https://github.com/ebenryanmallory)
-- Email: [eben@motionstoryline](mailto:eben@motionstoryline)
