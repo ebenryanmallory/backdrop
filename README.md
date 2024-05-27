@@ -13,7 +13,7 @@ Backdrop is a Shopify App that allows users to easily remove backgrounds from im
 
 ## Installation
 
-As the app has been shut down permanently and is not currently live, installation is not possible. Tthe code in this repository demonstrates how the app is structured and how it interacts with the Shopify API. Feel free to use for guidance or a building block to make your own!
+As the app has been shut down permanently and is not currently live, installation is not possible. The code in this repository demonstrates how the app is structured and how it interacts with the Shopify API. Feel free to use for guidance or as a building block to make your own app!
 
 ## Technologies Used
 
