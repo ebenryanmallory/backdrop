@@ -32,3 +32,9 @@ web/database.sqlite
 # Temp image folder
 web/images/
 web/images/*
+
+# package managers
+package-lock.json
+web/package-lock.json
+web/yarn.lock
+yarn.lock

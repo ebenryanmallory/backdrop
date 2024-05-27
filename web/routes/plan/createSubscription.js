@@ -36,7 +36,7 @@ export const createSubscription = async (_req, res) => {
         "variables": {
           "name": `${targetPlan.charAt(0).toUpperCase() + targetPlan.slice(1)}`,
           "returnUrl": `https://${shop}/admin/apps/${appname}/confirmation`, //https://motionstoryline-dev.myshopify.com/admin/apps/04e6705a1f39e47c62e5816f3e38a770/confirmation
-          "test": false,
+          "test": null,
           "lineItems": [
             {
               "plan": {
